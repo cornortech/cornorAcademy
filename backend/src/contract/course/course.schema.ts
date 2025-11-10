@@ -58,6 +58,8 @@ export const getAllCoursesResponseSchema = z.array(
         teacher: z.object({
             id: z.string().uuid(),
             name: z.string(),
+            bio: z.string(),
+            expertise: z.string(),
         }).nullable(),
         createdAt: z.date(),
         updatedAt: z.date(),
@@ -97,6 +99,8 @@ export const getCourseByIdResponseSchema = z.object({
     teacher: z.object({
         id: z.string().uuid(),
         name: z.string(),
+        bio: z.string(),
+        expertise: z.string(),
     }).nullable(),
 });
 
@@ -131,4 +135,13 @@ export const updateCourseSchema = z.object({
 
 export const deleteCourseSchema = z.object({
     id: z.string().uuid(),
+});
+
+export const courseAgreementParamasSchema = z.object({
+    studentId: z.string(),
+});
+
+export const createcourseAgreementSchema = z.object({
+    id: z.string(),
+    agreementURL: z.string(),
 });

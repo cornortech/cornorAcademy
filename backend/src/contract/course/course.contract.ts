@@ -1,5 +1,7 @@
 import { initContract } from "@ts-rest/core";
 import {
+    courseAgreementParamasSchema,
+    createcourseAgreementSchema,
     createCourseSchema,
     deleteCourseSchema,
     getAllCoursesResponseSchema,
@@ -8,25 +10,14 @@ import {
     updateCourseParamsSchema,
     updateCourseSchema
 } from "./course.schema";
-import { 
-    errorSchema, 
-    successSchema 
+import {
+    errorSchema,
+    successSchema
 } from "../common.schema";
 
 const c = initContract();
 
 export const courseContract = c.router({
-    createCourse: {
-        method: "POST",
-        path: "/course",
-        body: createCourseSchema,
-        summary: "Make new course for students to enroll",
-        responses: {
-            201: successSchema,
-            400: errorSchema,
-            500: errorSchema,
-        },
-    },
 
     getAllCourses: {
         method: "GET",
@@ -46,6 +37,18 @@ export const courseContract = c.router({
         responses: {
             200: getCourseByIdResponseSchema,
             404: errorSchema,
+            500: errorSchema,
+        },
+    },
+
+    createCourse: {
+        method: "POST",
+        path: "/course",
+        body: createCourseSchema,
+        summary: "Make new course for students to enroll",
+        responses: {
+            201: successSchema,
+            400: errorSchema,
             500: errorSchema,
         },
     },
@@ -71,6 +74,18 @@ export const courseContract = c.router({
         responses: {
             200: successSchema,
             404: errorSchema,
+            500: errorSchema,
+        },
+    },
+
+    createCourseAgreement: {
+        method: "POST",
+        path: "/agreement/:studentId",
+        pathParams: courseAgreementParamasSchema,
+        body: createcourseAgreementSchema,
+        summary: "Make agreement for student who are enrolling",
+        responses: {
+            201: successSchema,
             500: errorSchema,
         },
     },

@@ -8,7 +8,16 @@ typeof courseMediaContract.createCourseMedia
 > = async ({ req }) => {
     try {
 
-        const { courseId, title, description, duration, pathURL, type } = req.body;
+        const 
+        { 
+            courseId, 
+            title, 
+            description, 
+            duration, 
+            pathURL, 
+            size,
+            type 
+        } = req.body;
 
         await prisma.courseMedia.create({
             data: {
@@ -17,6 +26,7 @@ typeof courseMediaContract.createCourseMedia
                 description,
                 duration,
                 pathURL,
+                size,
                 type,
             },
             include: {
@@ -51,7 +61,15 @@ typeof courseMediaContract.updateCourseMedia
 
         const { mediaId } = req.params;
 
-        const { title, description, pathURL } = req.body;
+        const 
+        { 
+            title, 
+            description, 
+            duration, 
+            pathURL, 
+            size, 
+            type 
+        } = req.body;
 
         const existingMedia = await prisma.courseMedia.findUnique({
             where: { 
@@ -72,7 +90,10 @@ typeof courseMediaContract.updateCourseMedia
         const updateData: any = {};
         if(title !== undefined) updateData.title = title;
         if(description !== undefined) updateData.description = description;
+        if (duration !== undefined) updateData.duration = duration;
         if(pathURL !== undefined) updateData.pathURL = pathURL;
+        if (size !== undefined) updateData.size = size;
+        if (type !== undefined) updateData.type = type;
 
         await prisma.courseMedia.update({
             where: { 

@@ -48,6 +48,8 @@ const getAllCourses: AppRouteQueryImplementation<
                     ? {
                         id: course.teacher.id,
                         name: course.teacher.name,
+                        bio: course.teacher.bio,
+                        expertise: course.teacher.expertise,
                     }
                     : null,
                 enrolledStudentsCount: course._count.enrolledCourses,
@@ -122,6 +124,8 @@ const getCourseById: AppRouteQueryImplementation<
                     ? {
                         id: courseById.teacher.id,
                         name: courseById.teacher.name,
+                        bio: courseById.teacher.bio,
+                        expertise: courseById.teacher.expertise,
                     }
                     : null,
                 createdAt: courseById.createdAt,

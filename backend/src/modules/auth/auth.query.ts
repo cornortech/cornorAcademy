@@ -38,6 +38,6 @@ typeof authContract.getProfile
     }
 };
 
-export const authQueryHandler = {
+export const authQueryHandlers = {
     getProfile
 }

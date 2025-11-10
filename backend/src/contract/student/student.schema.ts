@@ -1,12 +1,13 @@
 import z from 'zod';
 
 export const createStudentSchema = z.object({
+    uid: z.string().min(1), // Firebase UID
     name: z.string().min(2, "Name is required"),
     email: z.string().email("Email is required"),
     phoneNumber: z.string().min(10, "Phone number is required"),
-    gender: z.enum(['male', 'female']),
+    gender: z.enum(['male', 'female', 'other']),
     image: z.string().nullable().optional(),
-    dob: z.coerce.date(),
+    dob: z.date(),
     address: z.string().min(5, "Address is required"),
     city: z.string().min(2, "City is required"),
     district: z.string().min(3, "District is required"),
@@ -20,10 +21,11 @@ export const createStudentSchema = z.object({
 export const getAllStudentsResponseSchema = z.array(
     z.object({
         id: z.string(),
+        uid: z.string().min(1), // Firebase UID
         name: z.string(),
         email: z.string().email(),
         phoneNumber: z.string(),
-        gender: z.enum(['male', 'female']),
+        gender: z.enum(['male', 'female', 'other']),
         image: z.string().nullable().optional(),
         dob: z.date(),
         address: z.string(),
@@ -46,10 +48,11 @@ export const getStudentByIdSchema = z.object({
 
 export const getStudentByIdResponseSchema = z.object({
     id: z.string(),
+    uid: z.string().min(1), // Firebase UID
     name: z.string(),
     email: z.string().email(),
     phoneNumber: z.string(),
-    gender: z.enum(['male', 'female']),
+    gender: z.enum(['male', 'female', 'other']),
     image: z.string().nullable().optional(),
     dob: z.date(),
     address: z.string(),
@@ -73,7 +76,7 @@ export const updateStudentSchema = z.object({
     name: z.string().optional(),
     email: z.string().optional(),
     phoneNumber: z.string().optional(),
-    gender: z.enum(['male', 'female']).optional(),
+    gender: z.enum(['male', 'female', 'other']).optional(),
     image: z.string().nullable().optional(),
     dob: z.coerce.date().optional(),
     address: z.string().optional(),
@@ -84,7 +87,7 @@ export const updateStudentSchema = z.object({
     about: z.string().optional(),
     educationInstitute: z.string().optional(),
     qualification: z.string().optional(),
-    status: z.enum(['registered', 'portalActivated', 'portalDeactivated', 'rejected']),
+    status: z.enum(['registered', 'portalActivated', 'portalDeactivated', 'rejected']).optional(),
 });
 
 export const deleteStudentSchema = z.object({

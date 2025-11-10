@@ -80,7 +80,7 @@ typeof announcementContract.updateCourseAnnouncement
 
         const { title, message } = req.body;
 
-        const announcementExists = await prisma.announcement.findMany({
+        const announcementExists = await prisma.announcement.findUnique({
             where: {
                 id: announcementId,
             },

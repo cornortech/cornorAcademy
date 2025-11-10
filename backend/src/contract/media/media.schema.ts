@@ -1,4 +1,3 @@
-import path from "path";
 import z from "zod";
 
 export const createCourseMediaSchema = z.object({
@@ -7,6 +6,7 @@ export const createCourseMediaSchema = z.object({
     description: z.string().min(3).max(500),
     duration: z.number().optional(),
     pathURL: z.string(),
+    size: z.number(),
     type: z.enum([
         'pdf',
         'video',
@@ -37,7 +37,23 @@ export const getAllCourseMediaByCourseIdResponseSchema = z.array(
         description: z.string(),
         duration: z.number().nullable(),
         pathURL: z.string(),
-        type: z.string(),
+        size: z.number(),
+        type: z.enum([
+            'pdf',
+            'video',
+            'img',
+            'code',
+            'docx',
+            'xlsx',
+            'txt',
+            'jpg',
+            'png',
+            'mp3',
+            'mp4',
+            'zip',
+            'exe',
+            'other'
+        ]),
         createdAt: z.date(),
         updatedAt: z.date(),
     }),
@@ -54,7 +70,23 @@ export const getCourseMediaByIdResponseSchema = z.object({
     description: z.string(),
     duration: z.number().nullable(),
     pathURL: z.string(),
-    type: z.string(),
+    size: z.number(),
+    type: z.enum([
+        'pdf',
+        'video',
+        'img',
+        'code',
+        'docx',
+        'xlsx',
+        'txt',
+        'jpg',
+        'png',
+        'mp3',
+        'mp4',
+        'zip',
+        'exe',
+        'other'
+    ]),
     createdAt: z.date(),
     updatedAt: z.date(),
 });
@@ -66,7 +98,25 @@ export const updateCourseMediaParamsSchema = z.object({
 export const updateCourseMediaSchema = z.object({
     title: z.string().min(3).optional(),
     description: z.string().min(3).max(500).optional(),
+    duration: z.number().optional(),
     pathURL: z.string().optional(),
+    size: z.number().optional(),
+    type: z.enum([
+        'pdf',
+        'video',
+        'img',
+        'code',
+        'docx',
+        'xlsx',
+        'txt',
+        'jpg',
+        'png',
+        'mp3',
+        'mp4',
+        'zip',
+        'exe',
+        'other'
+    ]),
 });
 
 export const deleteCourseMediaSchema = z.object({

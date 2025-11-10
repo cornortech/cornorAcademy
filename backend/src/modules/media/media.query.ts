@@ -9,7 +9,10 @@ const getAllCourseMediaByCourseId: AppRouteQueryImplementation<
 
         // const teacherId = req.user.id;
 
-        const { courseId } = req.params;
+        const 
+        { 
+            courseId 
+        } = req.params;
 
         const courseMedia = await prisma.courseMedia.findMany({
             where: {
@@ -26,6 +29,7 @@ const getAllCourseMediaByCourseId: AppRouteQueryImplementation<
                 description: media.description,
                 duration: media.duration,
                 pathURL: media.pathURL,
+                size: media.size,
                 type: media.type,
                 createdAt: media.createdAt,
                 updatedAt: media.updatedAt,
@@ -76,9 +80,10 @@ const getCourseMediaById: AppRouteQueryImplementation<
                 description: media.description,
                 duration: media.duration,
                 pathURL: media.pathURL,
+                size:  media.size,
                 type: media.type,
                 createdAt: media.createdAt,
-                updatedAt: media.updatedAt,
+                updatedAt: media.updatedAt, //announcement add admin
             },
         };
 

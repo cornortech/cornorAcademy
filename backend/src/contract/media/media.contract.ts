@@ -5,17 +5,6 @@ import { createCourseMediaSchema, deleteCourseMediaSchema, getAllCourseMediaByCo
 const c = initContract();
 
 export const courseMediaContract = c.router({
-    createCourseMedia: {
-        method: "POST",
-        path: "/course-media",
-        body: createCourseMediaSchema,
-        summary: "Create new course media upload for teacher",
-        responses: {
-            201: successSchema,
-            400: errorSchema,
-            500: errorSchema,
-        },
-    },
 
     getAllCourseMediaByCourseId: {
         method: "GET",
@@ -38,6 +27,18 @@ export const courseMediaContract = c.router({
             200: getCourseMediaByIdResponseSchema,
             400: errorSchema,
             404: errorSchema,
+            500: errorSchema,
+        },
+    },
+
+    createCourseMedia: {
+        method: "POST",
+        path: "/course-media",
+        body: createCourseMediaSchema,
+        summary: "Create new course media upload for teacher",
+        responses: {
+            201: successSchema,
+            400: errorSchema,
             500: errorSchema,
         },
     },

@@ -167,7 +167,48 @@ const updateCourse: AppRouteMutationImplementation<
     }
 };
 
+const createCourseAgreement:AppRouteMutationImplementation<
+typeof courseContract.createCourseAgreement
+> = async({ req }) => {
+    try {
+        const { studentId } = req.params;
+
+        const {
+            agreementURL,
+        } = req.body;
+
+        await prisma.courseAgreement.create({
+            data: {
+                studentId,
+                agreementURL,
+            },
+            include: {
+                student: true,
+            }
+        });
+
+        return {
+            status: 201,
+            body: {
+                success: true,
+                message: "Agreement for course created successfully",
+            },
+        };
+
+    } catch (error) {
+        console.error("Failed to create agreement", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Internal server error" || error,
+            },
+        }
+    }
+};
+
 export const courseMutationHandlers = {
     createCourse,
     updateCourse,
+    createCourseAgreement,
 }

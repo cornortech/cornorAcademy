@@ -7,7 +7,7 @@ const createTeacher: AppRouteMutationImplementation<
 > = async ({ req }) => {
     try {
 
-        const { name, email, bio, noOfYearsExperience, expertise, dob, gender } = req.body;
+        const { name, email, image, bio, noOfYearsExperience, expertise, dob, gender } = req.body;
 
         const teacherExists = await prisma.teacher.findUnique({
             where: {
@@ -29,6 +29,7 @@ const createTeacher: AppRouteMutationImplementation<
             data: {
                 name,
                 email,
+                image,
                 bio,
                 noOfYearsExperience,
                 expertise,
@@ -63,7 +64,7 @@ const updateTeacher: AppRouteMutationImplementation<
     try {
         const { id } = req.params;
 
-        const { name, email, bio, noOfYearsExperience, expertise, dob, gender, status } = req.body;
+        const { name, email, image, bio, noOfYearsExperience, expertise, dob, gender, status } = req.body;
 
         const teacherExists = await prisma.teacher.findUnique({
             where: {
@@ -88,6 +89,7 @@ const updateTeacher: AppRouteMutationImplementation<
             data: {
                 name,
                 email,
+                image,
                 bio, 
                 noOfYearsExperience,
                 expertise,

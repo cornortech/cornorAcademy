@@ -6,17 +6,6 @@ import { updateStudentParamsSchema, updateStudentSchema } from "../student/stude
 const c = initContract();
 
 export const teacherContract = c.router({
-    createTeacher: {
-        method: "POST",
-        path: "/teacher",
-        body: createTeacherSchema,
-        summary: "Create new teacher profile",
-        responses: {
-            201: successSchema,
-            400: errorSchema,
-            500: errorSchema,
-        },
-    },
 
     getAllTeachers: {
         method: "GET",
@@ -40,6 +29,18 @@ export const teacherContract = c.router({
         },
     },
 
+    createTeacher: {
+        method: "POST",
+        path: "/teacher",
+        body: createTeacherSchema,
+        summary: "Create new teacher profile",
+        responses: {
+            201: successSchema,
+            400: errorSchema,
+            500: errorSchema,
+        },
+    },
+
     updateTeacher: {
         method: "PUT",
         path: "/teacher/update/:id",
@@ -59,9 +60,9 @@ export const teacherContract = c.router({
         pathParams: deleteTeacherSchema,
         summary: "Delete teacher profile by id",
         responses: {
-           200: successSchema,
-           404: errorSchema,
-           500: errorSchema, 
+            200: successSchema,
+            404: errorSchema,
+            500: errorSchema,
         },
     },
 });
