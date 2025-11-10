@@ -44,16 +44,16 @@ export default function LoginPage() {
       // Redirect based on role
       switch (formData.role) {
         case "student":
-          router.push("/dashboard/student");
+          router.push("/student");
           break;
         case "teacher":
-          router.push("/dashboard/teacher");
+          router.push("/teacher");
           break;
         case "admin":
-          router.push("/dashboard/admin");
+          router.push("/admin");
           break;
         default:
-          router.push("/dashboard/student");
+          router.push("/student");
       }
     }, 1500);
   };

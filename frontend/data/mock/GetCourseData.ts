@@ -1,0 +1,258 @@
+// Mock course data - in a real app, this would come from a database
+export const getCourseData = (courseId: string) => {
+  const courses = {
+    "1": {
+      id: "1",
+      title: "Web Development Fundamentals",
+      description:
+        "Master the fundamentals of web development with HTML, CSS, JavaScript, and modern frameworks. Build real-world projects and launch your career in tech.",
+      longDescription:
+        "This comprehensive course covers everything you need to know to become a proficient web developer. Starting with the basics of HTML and CSS, you'll progress through JavaScript fundamentals, responsive design principles, and modern development tools. By the end of this course, you'll have built multiple projects and have the skills to create professional websites and web applications.",
+      instructor: {
+        name: "Sarah Johnson",
+        title: "Senior Full-Stack Developer",
+        avatar: "/teacher-avatar.png",
+        bio: "Sarah has over 8 years of experience in web development, working with companies like Google and Spotify. She's passionate about teaching and has helped over 10,000 students launch their tech careers.",
+        rating: 4.9,
+        students: 12500,
+      },
+      price: 299,
+      originalPrice: 399,
+      duration: "12 weeks",
+      level: "Beginner",
+      imagesrc: "image.png",
+      students: 2840,
+      rating: 4.9,
+      reviews: 1250,
+      language: "English",
+      lastUpdated: "December 2024",
+      certificate: true,
+      modules: [
+        {
+          title: "Introduction to Web Development",
+          lessons: 8,
+          duration: "2 hours",
+        },
+        {
+          title: "HTML Fundamentals",
+          lessons: 12,
+          duration: "3 hours",
+        },
+        {
+          title: "CSS Styling and Layout",
+          lessons: 15,
+          duration: "4 hours",
+        },
+        {
+          title: "JavaScript Basics",
+          lessons: 18,
+          duration: "5 hours",
+        },
+        {
+          title: "Responsive Design",
+          lessons: 10,
+          duration: "3 hours",
+        },
+        {
+          title: "Modern Development Tools",
+          lessons: 8,
+          duration: "2 hours",
+        },
+        {
+          title: "Final Project",
+          lessons: 5,
+          duration: "4 hours",
+        },
+      ],
+      features: [
+        "76 video lessons",
+        "23 hours of content",
+        "7 hands-on projects",
+        "Lifetime access",
+        "Certificate of completion",
+        "Direct instructor support",
+        "Mobile and desktop access",
+        "30-day money-back guarantee",
+      ],
+      requirements: [
+        "No prior programming experience required",
+        "A computer with internet connection",
+        "Willingness to learn and practice",
+      ],
+      outcomes: [
+        "Build responsive websites from scratch",
+        "Understand HTML, CSS, and JavaScript fundamentals",
+        "Use modern development tools and workflows",
+        "Create interactive web applications",
+        "Deploy projects to the web",
+        "Start a career in web development",
+      ],
+    },
+    "2": {
+      id: "2",
+      title: "Data Science & Analytics",
+      description:
+        "Learn data science fundamentals, statistical analysis, and machine learning with Python. Work with real datasets and build predictive models.",
+      longDescription:
+        "Dive deep into the world of data science with this comprehensive course. You'll learn Python programming, statistical analysis, data visualization, and machine learning algorithms. Through hands-on projects with real-world datasets, you'll develop the skills needed to extract insights from data and build predictive models.",
+      instructor: {
+        name: "Dr. Michael Chen",
+        title: "Data Science Lead",
+        avatar: "/teacher-avatar.png",
+        bio: "Dr. Chen holds a PhD in Statistics and has led data science teams at major tech companies. He's published numerous research papers and is passionate about making data science accessible to everyone.",
+        rating: 4.8,
+        students: 8900,
+      },
+      price: 399,
+      originalPrice: 499,
+      duration: "16 weeks",
+      imagesrc: "image.png",
+      level: "Intermediate",
+      students: 1920,
+      rating: 4.8,
+      reviews: 890,
+      language: "English",
+      lastUpdated: "November 2024",
+      certificate: true,
+      modules: [
+        {
+          title: "Python for Data Science",
+          lessons: 15,
+          duration: "4 hours",
+        },
+        {
+          title: "Statistical Analysis",
+          lessons: 12,
+          duration: "3.5 hours",
+        },
+        {
+          title: "Data Visualization",
+          lessons: 10,
+          duration: "3 hours",
+        },
+        {
+          title: "Machine Learning Basics",
+          lessons: 18,
+          duration: "5 hours",
+        },
+        {
+          title: "Advanced ML Algorithms",
+          lessons: 14,
+          duration: "4 hours",
+        },
+        {
+          title: "Real-world Projects",
+          lessons: 8,
+          duration: "6 hours",
+        },
+      ],
+      features: [
+        "77 video lessons",
+        "25.5 hours of content",
+        "5 real-world projects",
+        "Jupyter notebooks included",
+        "Certificate of completion",
+        "Career guidance",
+        "Community access",
+        "30-day money-back guarantee",
+      ],
+      requirements: [
+        "Basic programming knowledge helpful",
+        "High school level mathematics",
+        "Computer with Python installation capability",
+      ],
+      outcomes: [
+        "Master Python for data analysis",
+        "Perform statistical analysis on datasets",
+        "Create compelling data visualizations",
+        "Build machine learning models",
+        "Work with real-world data problems",
+        "Launch a career in data science",
+      ],
+    },
+    "3": {
+      id: "3",
+      title: "Digital Marketing Mastery",
+      description:
+        "Master digital marketing strategies including SEO, social media, content marketing, and paid advertising. Grow your business or career.",
+      longDescription:
+        "This comprehensive digital marketing course covers all aspects of modern marketing. From SEO and content marketing to social media advertising and analytics, you'll learn proven strategies to grow businesses online. Perfect for entrepreneurs, marketers, and business owners.",
+      instructor: {
+        name: "Emma Rodriguez",
+        title: "Digital Marketing Expert",
+        avatar: "/teacher-avatar.png",
+        bio: "Emma has helped hundreds of businesses grow their online presence. With over 6 years in digital marketing, she's worked with startups to Fortune 500 companies and is a certified Google Ads and Facebook Marketing expert.",
+        rating: 4.9,
+        students: 15600,
+      },
+      price: 249,
+      originalPrice: 349,
+      duration: "10 weeks",
+      imagesrc: "image.png",
+      level: "Beginner",
+      students: 3150,
+      rating: 4.9,
+      reviews: 1680,
+      language: "English",
+      lastUpdated: "December 2024",
+      certificate: true,
+      modules: [
+        {
+          title: "Digital Marketing Fundamentals",
+          lessons: 8,
+          duration: "2.5 hours",
+        },
+        {
+          title: "Search Engine Optimization",
+          lessons: 12,
+          duration: "3.5 hours",
+        },
+        {
+          title: "Content Marketing Strategy",
+          lessons: 10,
+          duration: "3 hours",
+        },
+        {
+          title: "Social Media Marketing",
+          lessons: 14,
+          duration: "4 hours",
+        },
+        {
+          title: "Paid Advertising",
+          lessons: 11,
+          duration: "3.5 hours",
+        },
+        {
+          title: "Analytics and Optimization",
+          lessons: 9,
+          duration: "2.5 hours",
+        },
+      ],
+      features: [
+        "64 video lessons",
+        "19 hours of content",
+        "6 marketing campaigns",
+        "Templates and tools included",
+        "Certificate of completion",
+        "Live Q&A sessions",
+        "Marketing toolkit",
+        "30-day money-back guarantee",
+      ],
+      requirements: [
+        "No prior marketing experience required",
+        "Basic computer skills",
+        "Access to social media platforms",
+      ],
+      outcomes: [
+        "Create effective marketing strategies",
+        "Master SEO and content marketing",
+        "Run successful social media campaigns",
+        "Set up and optimize paid ads",
+        "Analyze marketing performance",
+        "Grow your business or career",
+      ],
+    },
+  };
+
+  return courses[courseId as keyof typeof courses] || courses["1"];
+};
