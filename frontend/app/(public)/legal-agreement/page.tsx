@@ -11,12 +11,11 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { BookOpen, Check, AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Canvas } from "@/components/signature-canvas";
-import AgreementContent from "@/components/legal/agreement-content";
+import AgreementContent from "@/components/features/legal/agreement-content";
 
 export default function LegalAgreementPage() {
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -68,7 +67,7 @@ export default function LegalAgreementPage() {
                 <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
                   <BookOpen className="h-5 w-5 text-primary-foreground" />
                 </div>
-                <span className="text-xl font-bold">Corner Academy</span>
+                <span className="text-xl font-bold">Cornor Academy</span>
               </Link>
             </div>
           </div>
@@ -89,7 +88,7 @@ export default function LegalAgreementPage() {
             <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6 text-sm">
               <p className="text-green-800 dark:text-green-200">
                 You are now authorized to proceed with course enrollment. This
-                agreement establishes the terms between you and Corner Academy
+                agreement establishes the terms between you and Cornor Academy
                 for your course participation.
               </p>
             </div>
@@ -120,7 +119,7 @@ export default function LegalAgreementPage() {
               <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
                 <BookOpen className="h-5 w-5 text-primary-foreground" />
               </div>
-              <span className="text-xl font-bold">Corner Academy</span>
+              <span className="text-xl font-bold">Cornor Academy</span>
             </Link>
             <Button variant="ghost" asChild>
               <Link href="/">
@@ -150,7 +149,7 @@ export default function LegalAgreementPage() {
               <CardHeader>
                 <CardTitle>Terms & Conditions</CardTitle>
                 <CardDescription>
-                  Legal agreement between Corner Academy and Student regarding
+                  Legal agreement between Cornor Academy and Student regarding
                   course enrollment and participation
                 </CardDescription>
               </CardHeader>

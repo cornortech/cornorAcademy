@@ -1,9 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { upcomingClasses } from "@/data/mock/upcomingClasses";
+import { mockUpcomingClasses } from "@/lib/data";
 import { Calendar } from "lucide-react";
 import Link from "next/link";
-import React from "react";
 
 const UpcomingClasses = () => {
   return (
@@ -12,7 +11,7 @@ const UpcomingClasses = () => {
         <CardTitle className="text-lg">Upcoming Classes</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {upcomingClasses.map((class_) => (
+        {mockUpcomingClasses.map((class_) => (
           <div
             key={class_.id}
             className="p-3 border border-border/50 rounded-lg space-y-2"

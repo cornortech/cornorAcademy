@@ -8,31 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import {
-  BookOpen,
-  Award,
-  Shield,
-  CheckCircle,
-  Search,
-  Download,
-  Share,
-  Calendar,
-  User,
-  GraduationCap,
-  ArrowLeft,
-  AlertCircle,
-} from "lucide-react";
-import Link from "next/link";
-import PublicHeader from "@/components/layouts/public-header";
-import { mockCertificates } from "@/data/mock/certificates";
-import CertificateVerificationForm from "@/components/certificate/certificate-verification-form";
-import { CertificateDetails } from "@/components/certificate/certificate-details";
-import { VerificationError } from "@/components/certificate/verification-error";
-import { Certificate } from "@/types/certificate";
+import { Award, Search } from "lucide-react";
+import PublicHeader from "@/components/shared/public-header";
+import CertificateVerificationForm from "@/components/features/certificate/certificate-verification-form";
+import { CertificateDetails } from "@/components/features/certificate/certificate-details";
+import { VerificationError } from "@/components/features/certificate/verification-error";
+import { Certificate } from "@/types";
+import { mockCertificates } from "@/lib/data";
 
 export default function VerifyCertificatePage() {
   const [certificateId, setCertificateId] = useState("");
@@ -87,7 +69,7 @@ export default function VerifyCertificatePage() {
   const handleShareCertificate = () => {
     if (verificationResult?.certificate) {
       navigator.clipboard.writeText(
-        `https://corneracademy.com/verify-certificate?id=${verificationResult.certificate.id}`
+        `https://Cornoracademy.com/verify-certificate?id=${verificationResult.certificate.id}`
       );
       alert("Certificate verification link copied to clipboard!");
     }
@@ -109,7 +91,7 @@ export default function VerifyCertificatePage() {
               Certificate Verification
             </h1>
             <p className="text-xl text-muted-foreground text-balance max-w-2xl mx-auto">
-              Verify the authenticity of Corner Academy certificates and view
+              Verify the authenticity of Cornor Academy certificates and view
               detailed information about the achievement.
             </p>
           </div>

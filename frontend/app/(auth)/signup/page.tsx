@@ -24,6 +24,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { BookOpen, Eye, EyeOff, ArrowLeft, CheckCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { APP_NAME } from "@/lib/config";
 
 export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -74,8 +75,8 @@ export default function SignupPage() {
               Account Created Successfully!
             </h1>
             <p className="text-muted-foreground">
-              Welcome to Corner Academy! Your account has been created and is
-              ready to use.
+              Welcome to {APP_NAME}! Your account has been created and is ready
+              to use.
             </p>
           </div>
 
@@ -120,7 +121,7 @@ export default function SignupPage() {
             <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
               <BookOpen className="h-6 w-6 text-primary-foreground" />
             </div>
-            <span className="text-2xl font-bold">Corner Academy</span>
+            <span className="text-2xl font-bold">{APP_NAME}</span>
           </div>
 
           <h1 className="text-2xl font-bold text-balance">

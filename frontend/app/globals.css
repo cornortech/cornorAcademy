@@ -4,7 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  /* Updated theme for Corner Academy with purple primary color #9334EB */
+  /* Updated theme for Cornor Academy with purple primary color #9334EB */
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);

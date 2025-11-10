@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { enrolledCourses } from "@/data/mock/enrolledCourse";
+import { mockEnrolledCourses } from "@/lib/data";
 import { CheckCircle, LogIn, Play, Video } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -29,7 +29,7 @@ const StudentSearchFilter = () => {
   const [courseFilter, setCourseFilter] = useState("all");
   const [searchCourse, setSearchCourse] = useState("");
 
-  const filteredCourses = enrolledCourses.filter((course) => {
+  const filteredCourses = mockEnrolledCourses.filter((course) => {
     const matchesStatus =
       courseFilter === "all" || course.status === courseFilter;
     const matchesSearch =
