@@ -119,6 +119,8 @@ export const updateCourseMediaSchema = z.object({
     ]),
 });
 
-export const deleteCourseMediaSchema = z.object({
+export const deleteCourseMediaParamsSchema = z.object({
     mediaId: z.string(),
 });
+
+export const deleteCourseMediaSchema = z.object ({});

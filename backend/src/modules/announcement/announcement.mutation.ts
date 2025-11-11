@@ -127,7 +127,57 @@ typeof announcementContract.updateCourseAnnouncement
     }
 };
 
+const deleteCourseAnnouncement:AppRouteMutationImplementation<
+typeof announcementContract.deleteCourseAnnouncement
+> = async ({ req }) => {
+    try {
+
+        const { announcementId } = req.params;
+
+        const deleteAnnouncement = await prisma.announcement.findFirst({
+            where:  {
+               id: announcementId, 
+            },
+        });
+
+        if(!deleteAnnouncement) {
+            return {
+                status: 404,
+                body: {
+                    success: false,
+                    error: "Cannot find announcement",
+                },
+            };
+        };
+
+        await prisma.announcement.delete({
+            where: {
+                id: announcementId,
+            },
+        });
+
+        return {
+            status: 200,
+            body: {
+                success: true,
+                message: "Announcement deleted successfully",
+            },
+        };
+
+    } catch (error) {
+        console.error("Failed to delete", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Internal Server Error" || error,
+            },
+        };
+    }
+};
+
 export const announcementMutationHandlers = {
     createCourseAnnouncement,
     updateCourseAnnouncement,
+    deleteCourseAnnouncement,
 }

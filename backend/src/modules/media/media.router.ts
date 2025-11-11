@@ -14,5 +14,5 @@ export const courseMediaRouter = s.router(courseMediaContract, {
 
     updateCourseMedia: courseMediaMutationHandlers.updateCourseMedia,
 
-    deleteCourseMedia: courseMediaQueryHandlers.deleteCourseMedia,
+    deleteCourseMedia: courseMediaMutationHandlers.deleteCourseMedia,
 })

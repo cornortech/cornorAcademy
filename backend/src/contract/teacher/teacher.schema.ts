@@ -15,7 +15,7 @@ export const createTeacherSchema = z.object({
 export const getAllTeachersResponseSchema = z.array(
     z.object({
         id: z.string().uuid(),
-        uid: z.string(),
+        uid: z.string().nullable().optional(),
         name: z.string(),
         email: z.string().email(),
         image: z.string(),
@@ -31,12 +31,12 @@ export const getAllTeachersResponseSchema = z.array(
 );
 
 export const getTeacherByIdSchema = z.object({
-    id: z.string().uuid(),
+    teacherId: z.string().uuid(),
 });
 
 export const getTeacherByIdResponseSchema = z.object({
     id: z.string().uuid(),
-    uid: z.string(),
+    uid: z.string().nullable().optional(),
     name: z.string(),
     email: z.string().email(),
     image: z.string(),
@@ -51,7 +51,7 @@ export const getTeacherByIdResponseSchema = z.object({
 });
 
 export const updateTeacherParamsSchema = z.object({
-    id: z.string().uuid(),
+    teacherId: z.string().uuid(),
 });
 
 export const updateTeacherSchema = z.object({
@@ -66,6 +66,8 @@ export const updateTeacherSchema = z.object({
     status: z.enum(['registered', 'portalActivated', 'portalDeactivated', 'rejected']).optional(),
 });
 
-export const deleteTeacherSchema = z.object({
-    id: z.string().uuid(),
+export const deleteTeacherParamsSchema = z.object({
+    teacherId: z.string().uuid(),
 });
+
+export const deleteTeacherSchema = z.object({});

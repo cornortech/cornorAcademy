@@ -99,57 +99,7 @@ const getCourseMediaById: AppRouteQueryImplementation<
     }
 };
 
-const deleteCourseMedia: AppRouteQueryImplementation<
-    typeof courseMediaContract.deleteCourseMedia
-> = async ({ req }) => {
-    try {
-
-        const { mediaId } = req.params;
-
-        const media = await prisma.courseMedia.findUnique({
-            where: {
-                id: mediaId,
-            },
-        });
-
-        if (!media) {
-            return {
-                status: 404,
-                body: {
-                    success: false,
-                    error: "Course Media not found",
-                },
-            };
-        }
-
-        await prisma.courseMedia.delete({
-            where: {
-                id: mediaId,
-            },
-        });
-
-        return {
-            status: 200,
-            body: {
-                success: true,
-                message: "Course Media deleted successfully",
-            },
-        };
-
-    } catch (error) {
-        console.error("Failed to delete course media", error);
-        return {
-            status: 500,
-            body: {
-                success: false,
-                error: "Internal Server Error" || error,
-            },
-        };
-    }
-};
-
 export const courseMediaQueryHandlers = {
     getAllCourseMediaByCourseId,
     getCourseMediaById,
-    deleteCourseMedia,
 }

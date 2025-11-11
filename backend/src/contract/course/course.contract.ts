@@ -3,6 +3,7 @@ import {
     courseAgreementParamasSchema,
     createcourseAgreementSchema,
     createCourseSchema,
+    deleteCourseParamsSchema,
     deleteCourseSchema,
     getAllCoursesResponseSchema,
     getCourseByIdResponseSchema,
@@ -31,7 +32,7 @@ export const courseContract = c.router({
 
     getCourseById: {
         method: "GET",
-        path: "/course/:id",
+        path: "/course/:courseId",
         pathParams: getCourseByIdSchema,
         summary: "Get required course by id",
         responses: {
@@ -55,7 +56,7 @@ export const courseContract = c.router({
 
     updateCourse: {
         method: "PUT",
-        path: "/course/update/:id",
+        path: "/course/:courseId",
         pathParams: updateCourseParamsSchema,
         body: updateCourseSchema,
         summary: "Update course by id",
@@ -68,8 +69,9 @@ export const courseContract = c.router({
 
     deleteCourse: {
         method: "DELETE",
-        path: "/course/:id",
-        pathParams: deleteCourseSchema,
+        path: "/course/:courseId",
+        pathParams: deleteCourseParamsSchema,
+        body: deleteCourseSchema,
         summary: "Delete available course list by id",
         responses: {
             200: successSchema,

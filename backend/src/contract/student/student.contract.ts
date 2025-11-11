@@ -1,5 +1,5 @@
 import { initContract } from "@ts-rest/core";
-import { createStudentSchema, deleteStudentSchema, getAllStudentsResponseSchema, getStudentByIdResponseSchema, getStudentByIdSchema, updateStudentParamsSchema, updateStudentSchema } from "./student.schema";
+import { createStudentSchema, deleteStudentParamsSchema, deleteStudentSchema, getAllStudentsResponseSchema, getStudentByIdResponseSchema, getStudentByIdSchema, updateStudentParamsSchema, updateStudentSchema } from "./student.schema";
 import { errorSchema, successSchema } from "../common.schema";
 
 const c = initContract();
@@ -56,7 +56,8 @@ export const studentContract = c.router({
     deleteStudent: {
         method: "DELETE",
         path: "/student/:studentId",
-        pathParams: deleteStudentSchema,
+        pathParams: deleteStudentParamsSchema,
+        body: deleteStudentSchema,
         summary: "Delete student profile by id",
         responses: {
             200: successSchema,

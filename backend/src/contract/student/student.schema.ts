@@ -21,7 +21,7 @@ export const createStudentSchema = z.object({
 export const getAllStudentsResponseSchema = z.array(
     z.object({
         id: z.string(),
-        uid: z.string().min(1), // Firebase UID
+        uid: z.string().min(1).nullable().optional(), // Firebase UID
         name: z.string(),
         email: z.string().email(),
         phoneNumber: z.string(),
@@ -48,7 +48,7 @@ export const getStudentByIdSchema = z.object({
 
 export const getStudentByIdResponseSchema = z.object({
     id: z.string(),
-    uid: z.string().min(1), // Firebase UID
+    uid: z.string().min(1).nullable().optional(), // Firebase UID
     name: z.string(),
     email: z.string().email(),
     phoneNumber: z.string(),
@@ -90,6 +90,8 @@ export const updateStudentSchema = z.object({
     status: z.enum(['registered', 'portalActivated', 'portalDeactivated', 'rejected']).optional(),
 });
 
-export const deleteStudentSchema = z.object({
+export const deleteStudentParamsSchema = z.object({
     studentId: z.string(),
 });
+
+export const deleteStudentSchema = z.object({});

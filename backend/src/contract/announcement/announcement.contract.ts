@@ -3,6 +3,7 @@ import
 {
     createCourseAnnouncementParamSchema,
     createCourseAnnouncementSchema,
+    deleteCourseAnnouncementParamsSchema,
     deleteCourseAnnouncementSchema,
     getAllCourseAnnouncementByIdParamSchema,
     getAllCourseAnnouncementByIdResponseSchema,
@@ -21,7 +22,7 @@ export const announcementContract = c.router({
 
     getAllCourseAnnouncementById: {
         method: "GET",
-        path: "/course/:courseId/announcement",
+        path: "/course/announcement/:courseId/",
         pathParams: getAllCourseAnnouncementByIdParamSchema,
         summary: "Get all announcements for a specific course",
         responses: {
@@ -59,7 +60,8 @@ export const announcementContract = c.router({
     deleteCourseAnnouncement: {
         method: "DELETE",
         path: "/course/:announcementId",
-        pathParams: deleteCourseAnnouncementSchema,
+        pathParams: deleteCourseAnnouncementParamsSchema,
+        body: deleteCourseAnnouncementSchema,
         summary: "Delete course announcement",
         responses: {
             200: successSchema,

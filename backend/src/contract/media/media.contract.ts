@@ -1,6 +1,6 @@
 import { initContract } from "@ts-rest/core";
 import { errorSchema, successSchema } from "../common.schema";
-import { createCourseMediaSchema, deleteCourseMediaSchema, getAllCourseMediaByCourseIdResponseSchema, getAllCourseMediaByCourseIdSchema, getCourseMediaByIdResponseSchema, getCourseMediaByIdSchema, updateCourseMediaParamsSchema, updateCourseMediaSchema } from "./media.schema";
+import { createCourseMediaSchema, deleteCourseMediaParamsSchema, deleteCourseMediaSchema, getAllCourseMediaByCourseIdResponseSchema, getAllCourseMediaByCourseIdSchema, getCourseMediaByIdResponseSchema, getCourseMediaByIdSchema, updateCourseMediaParamsSchema, updateCourseMediaSchema } from "./media.schema";
 
 const c = initContract();
 
@@ -59,7 +59,8 @@ export const courseMediaContract = c.router({
     deleteCourseMedia: {
         method: "DELETE",
         path: "/course-media/:mediaId",
-        pathParams: deleteCourseMediaSchema,
+        pathParams: deleteCourseMediaParamsSchema,
+        body: deleteCourseMediaSchema,
         summary: "Delete course media by ID",
         responses: {
             200: successSchema,
