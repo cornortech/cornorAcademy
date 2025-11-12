@@ -1,6 +1,9 @@
 import { initContract } from "@ts-rest/core";
 import {
+    courseAgreementParamasSchema,
+    createcourseAgreementSchema,
     createCourseSchema,
+    deleteCourseParamsSchema,
     deleteCourseSchema,
     getAllCoursesResponseSchema,
     getCourseByIdResponseSchema,
@@ -8,25 +11,14 @@ import {
     updateCourseParamsSchema,
     updateCourseSchema
 } from "./course.schema";
-import { 
-    errorSchema, 
-    successSchema 
+import {
+    errorSchema,
+    successSchema
 } from "../common.schema";
 
 const c = initContract();
 
 export const courseContract = c.router({
-    createCourse: {
-        method: "POST",
-        path: "/course",
-        body: createCourseSchema,
-        summary: "Make new course for students to enroll",
-        responses: {
-            201: successSchema,
-            400: errorSchema,
-            500: errorSchema,
-        },
-    },
 
     getAllCourses: {
         method: "GET",
@@ -40,7 +32,7 @@ export const courseContract = c.router({
 
     getCourseById: {
         method: "GET",
-        path: "/course/:id",
+        path: "/course/:courseId",
         pathParams: getCourseByIdSchema,
         summary: "Get required course by id",
         responses: {
@@ -50,9 +42,21 @@ export const courseContract = c.router({
         },
     },
 
+    createCourse: {
+        method: "POST",
+        path: "/course",
+        body: createCourseSchema,
+        summary: "Make new course for students to enroll",
+        responses: {
+            201: successSchema,
+            400: errorSchema,
+            500: errorSchema,
+        },
+    },
+
     updateCourse: {
         method: "PUT",
-        path: "/course/update/:id",
+        path: "/course/:courseId",
         pathParams: updateCourseParamsSchema,
         body: updateCourseSchema,
         summary: "Update course by id",
@@ -65,12 +69,25 @@ export const courseContract = c.router({
 
     deleteCourse: {
         method: "DELETE",
-        path: "/course/:id",
-        pathParams: deleteCourseSchema,
+        path: "/course/:courseId",
+        pathParams: deleteCourseParamsSchema,
+        body: deleteCourseSchema,
         summary: "Delete available course list by id",
         responses: {
             200: successSchema,
             404: errorSchema,
+            500: errorSchema,
+        },
+    },
+
+    createCourseAgreement: {
+        method: "POST",
+        path: "/agreement/:studentId",
+        pathParams: courseAgreementParamasSchema,
+        body: createcourseAgreementSchema,
+        summary: "Make agreement for student who are enrolling",
+        responses: {
+            201: successSchema,
             500: errorSchema,
         },
     },

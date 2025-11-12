@@ -12,5 +12,5 @@ export const announcementRouter = s.router(announcementContract, {
 
     updateCourseAnnouncement: announcementMutationHandlers.updateCourseAnnouncement,
 
-    deleteCourseAnnouncement: announcementQueryHandlers.deleteCourseAnnouncement,
+    deleteCourseAnnouncement: announcementMutationHandlers.deleteCourseAnnouncement,
 });

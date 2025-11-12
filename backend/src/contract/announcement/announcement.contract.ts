@@ -3,6 +3,7 @@ import
 {
     createCourseAnnouncementParamSchema,
     createCourseAnnouncementSchema,
+    deleteCourseAnnouncementParamsSchema,
     deleteCourseAnnouncementSchema,
     getAllCourseAnnouncementByIdParamSchema,
     getAllCourseAnnouncementByIdResponseSchema,
@@ -18,6 +19,18 @@ import {
 const c = initContract();
 
 export const announcementContract = c.router({
+
+    getAllCourseAnnouncementById: {
+        method: "GET",
+        path: "/course/announcement/:courseId/",
+        pathParams: getAllCourseAnnouncementByIdParamSchema,
+        summary: "Get all announcements for a specific course",
+        responses: {
+            200: getAllCourseAnnouncementByIdResponseSchema,
+            500: errorSchema,
+        },
+    },
+    
     createCourseAnnouncement: {
         method: "POST",
         path: "/:teacherId/courses/:courseid/announcement",
@@ -27,17 +40,6 @@ export const announcementContract = c.router({
         responses: {
             201: successSchema,
             400: errorSchema,
-            500: errorSchema,
-        },
-    },
-
-    getAllCourseAnnouncementById: {
-        method: "GET",
-        path: "/course/:courseId/announcement",
-        pathParams: getAllCourseAnnouncementByIdParamSchema,
-        summary: "Get all announcements for a specific course",
-        responses: {
-            200: getAllCourseAnnouncementByIdResponseSchema,
             500: errorSchema,
         },
     },
@@ -58,7 +60,8 @@ export const announcementContract = c.router({
     deleteCourseAnnouncement: {
         method: "DELETE",
         path: "/course/:announcementId",
-        pathParams: deleteCourseAnnouncementSchema,
+        pathParams: deleteCourseAnnouncementParamsSchema,
+        body: deleteCourseAnnouncementSchema,
         summary: "Delete course announcement",
         responses: {
             200: successSchema,

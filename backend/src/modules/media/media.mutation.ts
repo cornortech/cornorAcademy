@@ -8,7 +8,16 @@ typeof courseMediaContract.createCourseMedia
 > = async ({ req }) => {
     try {
 
-        const { courseId, title, description, duration, pathURL, type } = req.body;
+        const 
+        { 
+            courseId, 
+            title, 
+            description, 
+            duration, 
+            pathURL, 
+            size,
+            type 
+        } = req.body;
 
         await prisma.courseMedia.create({
             data: {
@@ -17,6 +26,7 @@ typeof courseMediaContract.createCourseMedia
                 description,
                 duration,
                 pathURL,
+                size,
                 type,
             },
             include: {
@@ -51,7 +61,15 @@ typeof courseMediaContract.updateCourseMedia
 
         const { mediaId } = req.params;
 
-        const { title, description, pathURL } = req.body;
+        const 
+        { 
+            title, 
+            description, 
+            duration, 
+            pathURL, 
+            size, 
+            type 
+        } = req.body;
 
         const existingMedia = await prisma.courseMedia.findUnique({
             where: { 
@@ -72,7 +90,10 @@ typeof courseMediaContract.updateCourseMedia
         const updateData: any = {};
         if(title !== undefined) updateData.title = title;
         if(description !== undefined) updateData.description = description;
+        if (duration !== undefined) updateData.duration = duration;
         if(pathURL !== undefined) updateData.pathURL = pathURL;
+        if (size !== undefined) updateData.size = size;
+        if (type !== undefined) updateData.type = type;
 
         await prisma.courseMedia.update({
             where: { 
@@ -101,7 +122,57 @@ typeof courseMediaContract.updateCourseMedia
     }
 };
 
+const deleteCourseMedia: AppRouteMutationImplementation<
+    typeof courseMediaContract.deleteCourseMedia
+> = async ({ req }) => {
+    try {
+
+        const { mediaId } = req.params;
+
+        const media = await prisma.courseMedia.findUnique({
+            where: {
+                id: mediaId,
+            },
+        });
+
+        if (!media) {
+            return {
+                status: 404,
+                body: {
+                    success: false,
+                    error: "Course Media not found",
+                },
+            };
+        }
+
+        await prisma.courseMedia.delete({
+            where: {
+                id: mediaId,
+            },
+        });
+
+        return {
+            status: 200,
+            body: {
+                success: true,
+                message: "Course Media deleted successfully",
+            },
+        };
+
+    } catch (error) {
+        console.error("Failed to delete course media", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Internal Server Error" || error,
+            },
+        };
+    }
+};
+
 export const courseMediaMutationHandlers = {
     createCourseMedia,
     updateCourseMedia,
+    deleteCourseMedia,
 }  

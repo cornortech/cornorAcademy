@@ -13,8 +13,10 @@ const getAllTeachers: AppRouteQueryImplementation<
             status: 200,
             body: allTeachers.map(teacher => ({
                 id: teacher.id,
+                uid: teacher.uid,
                 name: teacher.name,
                 email: teacher.email,
+                image: teacher.image,
                 bio: teacher.bio,
                 noOfYearsExperience: teacher.noOfYearsExperience,
                 expertise: teacher.expertise,
@@ -43,11 +45,11 @@ const getTeacherById: AppRouteQueryImplementation<
 > = async ({ req }) => {
     try {
 
-        const { id } = req.params;
+        const { teacherId } = req.params;
 
         const teacherById = await prisma.teacher.findUnique({
             where: {
-                id,
+                id: teacherId,
             },
         });
 
@@ -65,8 +67,10 @@ const getTeacherById: AppRouteQueryImplementation<
             status: 200,
             body: {
                 id: teacherById.id,
+                uid: teacherById.uid,
                 name: teacherById.name,
                 email: teacherById.email,
+                image: teacherById.image,
                 bio: teacherById.bio,
                 noOfYearsExperience: teacherById.noOfYearsExperience,
                 expertise: teacherById.expertise,
@@ -89,56 +93,7 @@ const getTeacherById: AppRouteQueryImplementation<
     }
 };
 
-const deleteTeacher:AppRouteQueryImplementation<
-typeof teacherContract.deleteTeacher
-> = async ({ req }) => {
-    try {
-
-        const { id } = req.params;
-
-        const teacherExists = await prisma.teacher.findUnique({
-            where: {
-                id,
-            },
-        });
-
-        if (!teacherExists) {
-            return {
-                status: 404,
-                body: {
-                    success: false,
-                    error: "Teacher profile not found",
-                },
-            };
-        }
-
-        await prisma.teacher.delete({
-            where: {
-                id,
-            },
-        });
-
-        return {
-            status: 200,
-            body: {
-                success: true,
-                message: "Teacher Profile Deleted Successfully",
-            },
-        };
-    } catch (error) {
-        console.error("Error deleting teacher profile:", error);
-        return {
-            status: 500,
-            body: {
-                success: false,
-                error: "Internal Server Error",
-            },
-        };
-    }
-};
-
 export const teacherQueryHandlers = {
     getAllTeachers,
     getTeacherById,
-    deleteTeacher,
 }

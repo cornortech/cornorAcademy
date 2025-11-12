@@ -178,7 +178,57 @@ const updateStudent: AppRouteMutationImplementation<
     }
 };
 
+const deleteStudent: AppRouteMutationImplementation<
+    typeof studentContract.deleteStudent
+> = async ({ req }) => {
+    try {
+
+        const { studentId } = req.params;
+
+        const studentExists = await prisma.student.findUnique({
+            where: { 
+                id: studentId,
+             },
+        });
+
+        if (!studentExists) {
+            return {
+                status: 404,
+                body: {
+                    success: false,
+                    error: "Student not found",
+                },
+            };
+        }
+
+        const deletedStudentById = await prisma.student.delete({
+            where: { 
+                id: studentId,
+             },
+        });
+
+        return {
+            status: 200,
+            body: {
+                success: true,
+                message: "Student Profile Deleted Successfully",
+            },
+        };
+
+    } catch (error) {
+        console.error("Error deleting student:", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Internal Server Error",
+            },
+        };
+    }
+};
+
 export const studentMutationHandlers = {
     createStudent,
     updateStudent,
+    deleteStudent,
 }

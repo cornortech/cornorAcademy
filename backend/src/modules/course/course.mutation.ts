@@ -87,7 +87,7 @@ const updateCourse: AppRouteMutationImplementation<
 > = async ({ req }) => {
     try {
 
-        const { id } = req.params;
+        const { courseId } = req.params;
 
         const
             {
@@ -109,7 +109,7 @@ const updateCourse: AppRouteMutationImplementation<
             } = req.body;
 
         const courseExists = await prisma.course.findUnique({
-            where: { id },
+            where: { id: courseId },
         });
 
         if (!courseExists) {
@@ -124,7 +124,7 @@ const updateCourse: AppRouteMutationImplementation<
 
         const courseUpdated = await prisma.course.update({
             where: {
-                id
+                id: courseId,
             },
             data: {
                 title,
@@ -167,7 +167,99 @@ const updateCourse: AppRouteMutationImplementation<
     }
 };
 
+const createCourseAgreement:AppRouteMutationImplementation<
+typeof courseContract.createCourseAgreement
+> = async({ req }) => {
+    try {
+        const { studentId } = req.params;
+
+        const {
+            agreementURL,
+        } = req.body;
+
+        await prisma.courseAgreement.create({
+            data: {
+                studentId,
+                agreementURL,
+            },
+            include: {
+                student: true,
+            }
+        });
+
+        return {
+            status: 201,
+            body: {
+                success: true,
+                message: "Agreement for course created successfully",
+            },
+        };
+
+    } catch (error) {
+        console.error("Failed to create agreement", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Internal server error" || error,
+            },
+        }
+    }
+};
+
+const deleteCourse: AppRouteMutationImplementation<
+    typeof courseContract.deleteCourse
+> = async ({ req }) => {
+    try {
+
+        const { courseId } = req.params;
+
+        const courseExists = await prisma.course.findUnique({
+            where: {
+                id: courseId,
+            }
+        });
+
+        if (!courseExists) {
+            return {
+                status: 404,
+                body: {
+                    success: false,
+                    error: "Course Not Found",
+                },
+            };
+        }
+
+        await prisma.course.delete({
+            where: {
+                id: courseId,
+            },
+        });
+
+        return {
+            status: 200,
+            body: {
+                success: true,
+                message: "Course Deleted Successfully",
+            },
+        }
+
+    } catch (error) {
+
+        console.error("Error deleting course:", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Internal Server Error",
+            },
+        };
+    }
+};
+
 export const courseMutationHandlers = {
     createCourse,
     updateCourse,
+    createCourseAgreement,
+    deleteCourse,
 }

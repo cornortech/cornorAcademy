@@ -38,6 +38,7 @@ enum media {
 enum gender {
   male
   female
+  other
 }
 
 enum category {
@@ -64,6 +65,12 @@ enum courseStatus {
   completed
 }
 
+enum courseEnrollStatus {
+  requested
+  approved
+  rejected
+}
+
 model Student {
   id                 String            @id @default(uuid())
   uid                String? // firebase uid
@@ -85,6 +92,7 @@ model Student {
   enrolledCourses    enrolledCourses[]
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
+  courseAgreement    courseAgreement[]
 }
 
 model Teacher {
@@ -140,7 +148,7 @@ model course {
   announcements    announcement[]
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
-  courseCurriculum  courseCurriculum[]
+  courseCurriculum courseCurriculum[]
 }
 
 model courseCurriculum {
@@ -154,13 +162,16 @@ model courseCurriculum {
 }
 
 model enrolledCourses {
-  id        String   @id @default(uuid())
-  studentId String
-  courseId  String
-  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  course    course   @relation(fields: [courseId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id              String             @id @default(uuid())
+  studentId       String
+  courseId        String
+  paymentURL      String
+  status          courseEnrollStatus @default(requested)
+  rejectionReason String?
+  student         Student            @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course          course             @relation(fields: [courseId], references: [id])
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
 }
 
 model courseMedia {
@@ -186,4 +197,14 @@ model announcement {
   updatedAt DateTime @updatedAt
 
   course course @relation(fields: [courseId], references: [id])
+}
+
+model courseAgreement {
+  id           String   @id @default(uuid())
+  studentId    String
+  agreementURL String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id])
 }

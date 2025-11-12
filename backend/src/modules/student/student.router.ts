@@ -14,5 +14,5 @@ export const studentRouter = s.router(studentContract, {
 
     getStudentById: studentQueryHandlers.getStudentById,
     
-    deleteStudent: studentQueryHandlers.deleteStudent
+    deleteStudent: studentMutationHandlers.deleteStudent
 });

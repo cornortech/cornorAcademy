@@ -14,5 +14,7 @@ export const courseRouter = s.router(courseContract, {
 
     getCourseById: courseQueryHandlers.getCourseById,
 
-    deleteCourse: courseQueryHandlers.deleteCourse,
+    deleteCourse: courseMutationHandlers.deleteCourse,
+
+    createCourseAgreement: courseMutationHandlers.createCourseAgreement,
 });
