@@ -1,7 +1,8 @@
 "use client";
 
+import { ProtectedRoute } from "@/components/features/auth/ProtectedRoute";
 import { DashboardHeader } from "@/components/shared/dashboard-header";
-import { mockAdmin } from "@/lib/data";
+import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
@@ -11,23 +12,27 @@ export default function AdminDashboardLayout({
   children: ReactNode;
 }) {
   const pathname = usePathname();
-  const user = mockAdmin;
+  const { user } = useAuth();
 
   const hideHeader = pathname.includes("/courses");
 
-  if (hideHeader) return <>{children}</>;
-
   return (
-    <div className="min-h-screen bg-background">
-      <DashboardHeader
-        userRole={user.role}
-        userName={user.name}
-        userEmail={user.email}
-        userAvatar={user.avatar}
-      />
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {children}
-      </main>
-    </div>
+    <ProtectedRoute>
+      {hideHeader ? (
+        <>{children}</>
+      ) : (
+        <div className="min-h-screen bg-background">
+          <DashboardHeader
+            userRole="admin"
+            userName={user?.displayName || "Admin"}
+            userEmail={user?.email || ""}
+            userAvatar={user?.photoURL || ""}
+          />
+          <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {children}
+          </main>
+        </div>
+      )}
+    </ProtectedRoute>
   );
 }

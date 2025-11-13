@@ -1,9 +1,12 @@
+"use client";
 import { BookOpen, LogOut } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { APP_NAME } from "@/lib/config";
+import { useAuth } from "@/contexts/AuthContext";
 
 export function ProfileHeader() {
+  const { logout } = useAuth();
   return (
     <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -16,11 +19,14 @@ export function ProfileHeader() {
               <span className="text-xl font-bold">{APP_NAME}</span>
             </Link>
           </div>
-          <Button variant="ghost" size="sm" asChild>
-            <Link href="/login">
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
-            </Link>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={logout}
+            className="flex items-center gap-2"
+          >
+            <LogOut className="h-4 w-4" />
+            Logout
           </Button>
         </div>
       </div>

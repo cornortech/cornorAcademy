@@ -17,6 +17,7 @@ import { AccountStep } from "./signup-steps/AccountStep";
 import { PersonalStep } from "./signup-steps/PersonalStep";
 import { ProfessionalStep } from "./signup-steps/ProfessionalStep";
 import { AuthHeader } from "./AuthHeader";
+import { useAuth } from "@/contexts/AuthContext";
 
 const initialFormData: SignupFormData = {
   name: "",
@@ -39,10 +40,12 @@ const initialFormData: SignupFormData = {
 };
 
 export function SignupForm() {
+  const router = useRouter();
+  const { signup } = useAuth();
+
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<SignupFormData>(initialFormData);
-  const router = useRouter();
 
   const handleNext = () => setStep((prev) => prev + 1);
   const handleBack = () => setStep((prev) => prev - 1);
@@ -52,12 +55,26 @@ export function SignupForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    // In a real app, you would send `formData` to your API here
-    setTimeout(() => {
+
+    if (formData.password !== formData.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+
+    if (!formData.agreeToTerms) {
+      alert("You must agree to the terms and conditions.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      await signup(formData.email, formData.password, formData.name);
+      setStep(4);
+    } catch (error: any) {
+      console.error("Signup failed:", error);
+    } finally {
       setIsLoading(false);
-      setStep(4); // Go to success step
-    }, 2000);
+    }
   };
 
   if (step === 4) {

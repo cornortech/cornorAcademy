@@ -23,23 +23,40 @@ import {
 import Link from "next/link";
 import { UserRole } from "@/types";
 import { PasswordInput } from "./PasswordInput";
+import { useAuth } from "@/contexts/AuthContext";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { AlertCircle } from "lucide-react";
 
 export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     role: "" as UserRole | "",
   });
+
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null);
     setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
+
+    try {
+      await login(formData.email, formData.password);
       router.push(`/${formData.role || "student"}`);
-    }, 1500);
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        console.error("Login Failed:", error.message);
+        setError("Invalid email or password.");
+      } else {
+        console.error("Failed to log in. Please try again later.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -52,6 +69,12 @@ export function LoginForm() {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
+          {error && (
+            <Alert variant="destructive">
+              <AlertCircle className="h-4 w-4" />
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -63,6 +86,7 @@ export function LoginForm() {
                 setFormData({ ...formData, email: e.target.value })
               }
               required
+              disabled={isLoading}
             />
           </div>
           <div className="space-y-2">

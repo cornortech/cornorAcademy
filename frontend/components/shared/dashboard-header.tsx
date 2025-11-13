@@ -9,6 +9,7 @@ import { BookOpen, Bell, Settings, LogOut } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 import type { UserRole } from "@/types";
 import { APP_NAME } from "@/lib/config";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface DashboardHeaderProps {
   userRole: UserRole;
@@ -24,6 +25,7 @@ export function DashboardHeader({
   userAvatar,
 }: DashboardHeaderProps) {
   const router = useRouter();
+  const { logout } = useAuth();
 
   const getRoleBadge = () => {
     switch (userRole) {
@@ -85,9 +87,11 @@ export function DashboardHeader({
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => router.push("/login")}
+              onClick={logout}
+              className="flex items-center gap-2"
             >
               <LogOut className="h-4 w-4" />
+              Logout
             </Button>
           </div>
         </div>
