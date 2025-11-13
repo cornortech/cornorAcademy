@@ -1,0 +1,210 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator zod {
+  provider = "prisma-zod-generator"
+}
+
+enum UserStatus {
+  registered
+  portalActivated
+  portalDeactivated
+  rejected
+}
+
+enum media {
+  pdf
+  video
+  img
+  code
+  docx
+  xlsx
+  txt
+  jpg
+  png
+  mp3
+  mp4
+  zip
+  exe
+  other
+}
+
+enum gender {
+  male
+  female
+  other
+}
+
+enum category {
+  WebDevelopment
+  ui
+  DataScience
+  DigitalMarketing
+}
+
+enum language {
+  nepali
+  english
+}
+
+enum courseLevel {
+  beginner
+  intermediate
+  advanced
+}
+
+enum courseStatus {
+  upcoming
+  active
+  completed
+}
+
+enum courseEnrollStatus {
+  requested
+  approved
+  rejected
+}
+
+model Student {
+  id                 String            @id @default(uuid())
+  uid                String? // firebase uid
+  name               String
+  email              String            @unique
+  phoneNumber        String            @unique
+  gender             gender
+  image              String?
+  dob                DateTime
+  address            String
+  city               String
+  district           String
+  pincode            String
+  country            String
+  about              String
+  educationInstitute String
+  qualification      String
+  status             UserStatus        @default(registered)
+  enrolledCourses    enrolledCourses[]
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+  courseAgreement    courseAgreement[]
+}
+
+model Teacher {
+  id                  String     @id @default(uuid())
+  name                String
+  email               String     @unique
+  image               String
+  uid                 String?
+  bio                 String
+  noOfYearsExperience Int
+  expertise           String
+  dob                 DateTime
+  gender              gender
+  status              UserStatus @default(registered)
+  course              course[]
+  createdAt           DateTime   @default(now())
+  updatedAt           DateTime   @updatedAt
+}
+
+model Admin {
+  id        String   @id @default(uuid())
+  email     String
+  uid       String?
+  course    course[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+}
+
+model course {
+  id               String             @id @default(uuid())
+  teacherId        String?
+  adminId          String
+  title            String
+  description      String
+  requirements     String[]
+  includes         String[]
+  whatYouWillLearn String[]
+  meetingUrl       String
+  meetingTime      DateTime
+  isOngoing        Boolean            @default(false)
+  language         language
+  level            courseLevel
+  thumbnail        String
+  category         category
+  status           courseStatus       @default(upcoming)
+  startDate        DateTime
+  duration         Int //in weeks 
+  price            Int
+  teacher          Teacher?           @relation(fields: [teacherId], references: [id], onDelete: SetNull)
+  admin            Admin              @relation(fields: [adminId], references: [id])
+  enrolledCourses  enrolledCourses[]
+  courseMedia      courseMedia[]
+  announcements    announcement[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+  courseCurriculum courseCurriculum[]
+}
+
+model courseCurriculum {
+  id         String   @id @default(uuid())
+  courseId   String
+  title      String
+  noOfLesson Int
+  duration   Int //in hours
+  content    String[]
+  course     course   @relation(fields: [courseId], references: [id])
+}
+
+model enrolledCourses {
+  id              String             @id @default(uuid())
+  studentId       String
+  courseId        String
+  paymentURL      String
+  status          courseEnrollStatus @default(requested)
+  rejectionReason String?
+  student         Student            @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course          course             @relation(fields: [courseId], references: [id])
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+}
+
+model courseMedia {
+  id          String   @id @default(uuid())
+  courseId    String
+  title       String
+  description String
+  duration    Int?
+  pathURL     String
+  size        Int // byte 
+  type        media
+  course      course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model announcement {
+  id        String   @id @default(uuid())
+  courseId  String
+  title     String
+  message   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  course course @relation(fields: [courseId], references: [id])
+}
+
+model courseAgreement {
+  id           String   @id @default(uuid())
+  studentId    String
+  agreementURL String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id])
+}
