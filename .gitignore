@@ -1,0 +1,40 @@
+# Ignore node_modules everywhere
+node_modules
+backend/node_modules/
+frontend/node_modules/
+
+# Ignore logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# Ignore build output
+/build/
+/dist/
+/.next/
+/out/
+
+# Ignore environment files
+.env
+.env.*
+backend/.env
+frontend/.env
+
+# Ignore coverage and misc
+coverage/
+.nyc_output/
+lib-cov/
+.grunt/
+bower_components/
+
+#prisma dependencies
+.prisma/
+/backend/prisma/generated
+/backend/prisma/migrations/
+
+# VSCode and system files
+.vscode/
+.DS_Store
