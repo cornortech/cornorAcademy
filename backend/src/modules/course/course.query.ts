@@ -140,56 +140,6 @@ const getCourseById: AppRouteQueryImplementation<
     }
 };
 
-const deleteCourse: AppRouteQueryImplementation<
-    typeof courseContract.deleteCourse
-> = async ({ req }) => {
-    try {
-
-        const { id } = req.params;
-
-        const courseExists = await prisma.course.findUnique({
-            where: {
-                id
-            }
-        });
-
-        if (!courseExists) {
-            return {
-                status: 404,
-                body: {
-                    success: false,
-                    error: "Course Not Found",
-                },
-            };
-        }
-
-        await prisma.course.delete({
-            where: {
-                id
-            },
-        });
-
-        return {
-            status: 200,
-            body: {
-                success: true,
-                message: "Course Deleted Successfully",
-            },
-        }
-
-    } catch (error) {
-
-        console.error("Error deleting course:", error);
-        return {
-            status: 500,
-            body: {
-                success: false,
-                error: "Internal Server Error",
-            },
-        };
-    }
-};
-
 const getCoursesByCategory: AppRouteQueryImplementation<
     typeof courseContract.getCoursesByCategory
 > = async ({ req }) => {
@@ -490,7 +440,6 @@ const searchCourses: AppRouteQueryImplementation<
 export const courseQueryHandlers = {
     getAllCourses,
     getCourseById,
-    deleteCourse,
     getCoursesByCategory,
     getCoursesByTeacher,
     getCoursesByStatus,
