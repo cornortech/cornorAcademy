@@ -73,12 +73,12 @@ enum courseEnrollStatus {
 
 model Student {
   id                 String            @id @default(uuid())
-  uid                String? // firebase uid
+  uid                String            @unique // firebase uid
   name               String
   email              String            @unique
   phoneNumber        String            @unique
   gender             gender
-  image              String?
+  image              String            @unique
   dob                DateTime
   address            String
   city               String
@@ -97,10 +97,10 @@ model Student {
 
 model Teacher {
   id                  String     @id @default(uuid())
+  uid                 String     @unique
   name                String
   email               String     @unique
   image               String
-  uid                 String?
   bio                 String
   noOfYearsExperience Int
   expertise           String
@@ -114,8 +114,8 @@ model Teacher {
 
 model Admin {
   id        String   @id @default(uuid())
-  email     String
-  uid       String?
+  uid       String   @unique
+  email     String   @unique
   course    course[]
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt

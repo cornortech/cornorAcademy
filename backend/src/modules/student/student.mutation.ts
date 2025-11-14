@@ -10,6 +10,7 @@ const createStudent: AppRouteMutationImplementation<
     try {
 
         const {
+            uid,
             name,
             email,
             phoneNumber,
@@ -44,6 +45,7 @@ const createStudent: AppRouteMutationImplementation<
 
         await prisma.student.create({
             data: {
+                uid,
                 name,
                 email,
                 phoneNumber,

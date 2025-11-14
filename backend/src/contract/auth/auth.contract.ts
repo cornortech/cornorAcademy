@@ -2,6 +2,8 @@ import { initContract } from "@ts-rest/core";
 
 import {
   getProfileSchema,
+  loginResponseSchema,
+  loginSchema,
   registerSchema,
   updateStudentDetailsSchema,
 } from "./auth.schema";
@@ -46,6 +48,20 @@ export const authContract = c.router({
     responses: {
       200: successSchema,
       400: errorSchema,
+      404: errorSchema,
+      500: errorSchema,
+    },
+  },
+
+  login: {
+    method: "POST",
+    path: "/auth/login",
+    body: loginSchema,
+    summary: "User Login",
+    responses: {
+      200: loginResponseSchema,
+      400: errorSchema,
+      401: errorSchema,
       404: errorSchema,
       500: errorSchema,
     },

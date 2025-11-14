@@ -6,7 +6,7 @@ export const createStudentSchema = z.object({
     email: z.string().email("Email is required"),
     phoneNumber: z.string().min(10, "Phone number is required"),
     gender: z.enum(['male', 'female', 'other']),
-    image: z.string().nullable().optional(),
+    image: z.string(),
     dob: z.date(),
     address: z.string().min(5, "Address is required"),
     city: z.string().min(2, "City is required"),
@@ -21,12 +21,12 @@ export const createStudentSchema = z.object({
 export const getAllStudentsResponseSchema = z.array(
     z.object({
         id: z.string(),
-        uid: z.string().min(1).nullable().optional(), // Firebase UID
+        uid: z.string(), // Firebase UID
         name: z.string(),
         email: z.string().email(),
         phoneNumber: z.string(),
         gender: z.enum(['male', 'female', 'other']),
-        image: z.string().nullable().optional(),
+        image: z.string(),
         dob: z.date(),
         address: z.string(),
         city: z.string(),
@@ -48,12 +48,12 @@ export const getStudentByIdSchema = z.object({
 
 export const getStudentByIdResponseSchema = z.object({
     id: z.string(),
-    uid: z.string().min(1).nullable().optional(), // Firebase UID
+    uid: z.string(), // Firebase UID
     name: z.string(),
     email: z.string().email(),
     phoneNumber: z.string(),
     gender: z.enum(['male', 'female', 'other']),
-    image: z.string().nullable().optional(),
+    image: z.string(),
     dob: z.date(),
     address: z.string(),
     city: z.string(),

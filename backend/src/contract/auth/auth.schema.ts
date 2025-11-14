@@ -6,7 +6,7 @@ export const registerSchema = z.object({
     email: z.string().email(),
     phoneNumber: z.string().min(8),
     gender: z.enum(['male', 'female', 'other']),
-    image: z.string().optional(),
+    image: z.string(),
     dob: z.date(),
     address: z.string(),
     city: z.string(),
@@ -28,6 +28,7 @@ export const loginResponseSchema = z.object({
     id: z.string(),
     name: z.string(),
     email: z.string().email(),
+    status: z.enum(["registered", "portalActivated", "portalDeactivated", "rejected"]).optional(),
     role: z.enum(["student", "teacher", "admin"]),
 });
 

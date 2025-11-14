@@ -15,7 +15,7 @@ export const createTeacherSchema = z.object({
 export const getAllTeachersResponseSchema = z.array(
     z.object({
         id: z.string().uuid(),
-        uid: z.string().nullable().optional(),
+        uid: z.string(),
         name: z.string(),
         email: z.string().email(),
         image: z.string(),
@@ -36,7 +36,7 @@ export const getTeacherByIdSchema = z.object({
 
 export const getTeacherByIdResponseSchema = z.object({
     id: z.string().uuid(),
-    uid: z.string().nullable().optional(),
+    uid: z.string(),
     name: z.string(),
     email: z.string().email(),
     image: z.string(),

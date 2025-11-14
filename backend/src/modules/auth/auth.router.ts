@@ -10,6 +10,8 @@ export const authRouter = s.router(authContract, {
 
     registerStudent: authMutationHandlers.registerStudent,
 
+    login: authMutationHandlers.login,
+
     getProfile: {
         middleware: [authenticate],
         handler: authQueryHandlers.getProfile
@@ -18,5 +20,5 @@ export const authRouter = s.router(authContract, {
     updateStudentDetails: {
         middleware: [authenticate],
         handler: authMutationHandlers.updateStudentDetails,
-    }
+    },
 });

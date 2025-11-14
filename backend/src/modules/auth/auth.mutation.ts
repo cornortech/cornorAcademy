@@ -27,6 +27,7 @@ const registerStudent: AppRouteMutationImplementation<
 
         const studentExists = await prisma.student.findUnique({
             where: {
+                uid,
                 email,
             },
         });
@@ -76,6 +77,119 @@ const registerStudent: AppRouteMutationImplementation<
             status: 500,
             body: {
                 success: false,
+                error: "Internal server error",
+            },
+        };
+    }
+};
+
+const login: AppRouteMutationImplementation<
+    typeof authContract.login
+> = async ({ req }) => {
+    try {
+
+        const {
+            email,
+            password,
+        } = req.body;
+
+        const student = await prisma.student.findUnique({
+            where: {
+                email,
+            },
+        });
+
+        const teacher = await prisma.teacher.findUnique({
+            where: {
+                email,
+            },
+        });
+
+        const admin = await prisma.student.findUnique({
+            where: {
+                email,
+            },
+        });
+
+        const users = student || teacher || admin;
+
+        let role: "student" | "teacher" | "admin";
+        if (student) role = "student";
+        else if (teacher) role = "teacher";
+        else role = "admin";
+
+        if (!users) {
+            return {
+                status: 404,
+                body: {
+                    success: false,
+                    error: "Email doesnot exists try again later",
+                },
+            };
+        };
+
+        if (role === "student" || role === "teacher") {
+            const status = users.status;
+            switch (status) {
+                case "registered":
+                    return {
+                        status: 403,
+                        body: {
+                            success: false,
+                            error: "Account is registered but not activated yet."
+                        },
+                    };
+
+                case "portalActivated":
+                    break;
+
+                case "portalDeactivated":
+                    return {
+                        status: 403,
+                        body: {
+                            success: false,
+                            error: "Platform access is deactivated."
+                        },
+                    };
+
+                case "rejected":
+                    return {
+                        status: 403,
+                        body: {
+                            success: false,
+                            error: "Registration rejected."
+                        },
+                    };
+
+                default:
+                    return {
+                        status: 500,
+                        body: {
+                            success: false,
+                            error: "Unknown status."
+                        },
+                    };
+            }
+        };
+
+        return {
+            status: 200,
+            body: {
+                uid: users.uid || "",
+                id: users.id,
+                name: users.name,
+                email: users.email,
+                role,
+                status: (role === "student" || role === "teacher") ? users.status : undefined,
+            },
+        };
+
+    } catch (error) {
+        console.error("Error Login:", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
                 error: "Internal server error" || error,
             },
         };
@@ -90,8 +204,8 @@ const updateStudentDetails: AppRouteMutationImplementation<
         const studentId = req.user!.id;
 
         const student = await prisma.student.findUnique({
-            where: { 
-                id: studentId 
+            where: {
+                id: studentId
             },
         });
 
@@ -140,8 +254,8 @@ const updateStudentDetails: AppRouteMutationImplementation<
         if (qualification) updateData.qualification = qualification;
 
         await prisma.student.update({
-            where: { 
-                id: studentId 
+            where: {
+                id: studentId
             },
             data: updateData,
         });
@@ -157,7 +271,7 @@ const updateStudentDetails: AppRouteMutationImplementation<
     } catch (error) {
         console.error("Error updating student details:", error);
         return {
-            status: 500,    
+            status: 500,
             body: {
                 success: false,
                 error: "Internal server error",
@@ -168,5 +282,6 @@ const updateStudentDetails: AppRouteMutationImplementation<
 
 export const authMutationHandlers = {
     registerStudent,
+    login,
     updateStudentDetails,
 }
