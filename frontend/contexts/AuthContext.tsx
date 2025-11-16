@@ -62,21 +62,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [isRegistering, setIsRegistering] = useState(false);
   const router = useRouter();
 
-  const fetchUserRole = async (uid: string): Promise<UserRole> => {
-    try {
-      const ref = doc(db, "users", uid);
-      const snapshot = await getDoc(ref);
+  // const fetchUserRole = async (uid: string): Promise<UserRole> => {
+  //   try {
+  //     const ref = doc(db, "users", uid);
+  //     const snapshot = await getDoc(ref);
 
-      if (snapshot.exists()) {
-        return snapshot.data().role as UserRole;
-      }
+  //     if (snapshot.exists()) {
+  //       return snapshot.data().role as UserRole;
+  //     }
 
-      return "student";
-    } catch (error) {
-      console.error("Error fetching user role:", error);
-      return "student";
-    }
-  };
+  //     return "student";
+  //   } catch (error) {
+  //     console.error("Error fetching user role:", error);
+  //     return "student";
+  //   }
+  // };
 
   const fetchUserProfile = async () => {
     try {
@@ -103,10 +103,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
         const profile = await fetchUserProfile();
 
-        if (!profile) {
-          const role = await fetchUserRole(firebaseUser.uid);
-          setUserRole(role);
-        }
+        // if (!profile) {
+        //   const role = await fetchUserRole(firebaseUser.uid);
+        //   setUserRole(role);
+        // }
       } else {
         setUserRole(null);
         setUserProfile(null);
@@ -120,8 +120,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const signup = async (
     email: string,
     password: string,
-    displayName: string,
-    role: UserRole
+    displayName: string
+    // role: UserRole
   ): Promise<{ uid: string } | undefined> => {
     try {
       setIsRegistering(true);
@@ -133,7 +133,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (userCredentials.user) {
         await updateProfile(userCredentials.user, { displayName });
-        await sendEmailVerification(userCredentials.user);
+        // await sendEmailVerification(userCredentials.user);
 
         return {
           uid: userCredentials.user.uid,
@@ -155,21 +155,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       await userCredentials.user.reload();
 
-      if (!userCredentials.user.emailVerified) {
-        await signOut(auth);
-        throw new Error(
-          "Please verify your email before logging in. Check you inbox."
-        );
-      }
+      // if (!userCredentials.user.emailVerified) {
+      //   await signOut(auth);
+      //   throw new Error(
+      //     "Please verify your email before logging in. Check you inbox."
+      //   );
+      // }
 
-      const profile = await fetchUserProfile();
-      if (!profile) {
-        const role = await fetchUserRole(userCredentials.user.uid);
-        setUserRole(role);
-        router.push(`/${role}`);
-      } else {
-        router.push(`/${profile.role}`);
-      }
+      // const profile = await fetchUserProfile();
+      // if (!profile) {
+      //   const role = await fetchUserRole(userCredentials.user.uid);
+      //   setUserRole(role);
+      //   router.push(`/${role}`);
+      // } else {
+      //   router.push(`/${profile.role}`);
+      // }
+      router.push("/");
     } catch (error: any) {
       console.error("Login error:", error);
       throw new Error(error.message);

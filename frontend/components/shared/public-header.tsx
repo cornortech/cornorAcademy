@@ -1,7 +1,9 @@
+"use client";
 import { ArrowLeft, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { APP_NAME } from "@/lib/config";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface PublicHeaderProps {
   showNav?: boolean;
@@ -12,6 +14,7 @@ const PublicHeader = ({
   showNav = true,
   showBackButton = false,
 }: PublicHeaderProps) => {
+  const { user } = useAuth();
   return (
     <nav className="border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -70,14 +73,20 @@ const PublicHeader = ({
             </nav>
           )}
 
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" asChild>
-              <Link href="/login">Sign In</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/signup">Get Started</Link>
-            </Button>
-          </div>
+          {user ? (
+            <>
+              <h1>Hello, {user.displayName}</h1>
+            </>
+          ) : (
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" asChild>
+                <Link href="/login">Sign In</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/signup">Get Started</Link>
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </nav>

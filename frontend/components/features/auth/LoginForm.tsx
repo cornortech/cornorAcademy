@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -40,7 +40,6 @@ export function LoginForm() {
 
     try {
       await login(data.email, data.password);
-      // router.push(`/${formData.role || "student"}`);
     } catch (err: any) {
       console.error("Login error:", err);
       setError(err.message || "Failed to login. Please try again.");
@@ -103,24 +102,6 @@ export function LoginForm() {
                 </p>
               )}
             </div>
-            {/* <div className="space-y-2">
-              <Label htmlFor="role">Role</Label>
-              <Select
-                value={formData.role}
-                onValueChange={(value: UserRole) =>
-                  setFormData({ ...formData, role: value })
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select your role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="student">Student</SelectItem>
-                  <SelectItem value="teacher">Teacher</SelectItem>
-                  <SelectItem value="admin">Administrator</SelectItem>
-                </SelectContent>
-              </Select>
-            </div> */}
 
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? (
