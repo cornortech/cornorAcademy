@@ -140,6 +140,7 @@ const getCourseById: AppRouteQueryImplementation<
     }
 };
 
+<<<<<<< HEAD
 const deleteCourse: AppRouteQueryImplementation<
     typeof courseContract.deleteCourse
 > = async ({ req }) => {
@@ -166,11 +167,30 @@ const deleteCourse: AppRouteQueryImplementation<
         await prisma.course.delete({
             where: {
                 id
+=======
+const getCoursesByCategory: AppRouteQueryImplementation<
+    typeof courseContract.getCoursesByCategory
+> = async ({ req }) => {
+    try {
+        const { category } = req.params;
+
+        const courses = await prisma.course.findMany({
+            where: { category: category as any },
+            include: {
+                teacher: true,
+                courseCurriculum: true,
+                _count: {
+                    select: {
+                        enrolledCourses: true,
+                    },
+                },
+>>>>>>> Course/Enrollment
             },
         });
 
         return {
             status: 200,
+<<<<<<< HEAD
             body: {
                 success: true,
                 message: "Course Deleted Successfully",
@@ -180,6 +200,274 @@ const deleteCourse: AppRouteQueryImplementation<
     } catch (error) {
 
         console.error("Error deleting course:", error);
+=======
+            body: courses.map(course => ({
+                id: course.id,
+                title: course.title,
+                description: course.description,
+                requirements: course.requirements,
+                includes: course.includes,
+                whatYouWillLearn: course.whatYouWillLearn,
+                meetingUrl: course.meetingUrl,
+                meetingTime: course.meetingTime,
+                language: course.language,
+                level: course.level,
+                thumbnail: course.thumbnail,
+                category: course.category,
+                startDate: course.startDate,
+                duration: course.duration,
+                price: course.price,
+                curriculum: course.courseCurriculum.map((c) => ({
+                    id: c.id,
+                    title: c.title,
+                    noOfLesson: c.noOfLesson,
+                    duration: c.duration,
+                    content: c.content,
+                })),
+                teacher: course.teacher
+                    ? {
+                        id: course.teacher.id,
+                        name: course.teacher.name,
+                    }
+                    : null,
+                enrolledStudentsCount: course._count.enrolledCourses,
+                createdAt: course.createdAt,
+                updatedAt: course.updatedAt,
+            })),
+        };
+    } catch (error) {
+        console.error("Error fetching courses by category:", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Internal Server Error",
+            },
+        };
+    }
+};
+
+const getCoursesByTeacher: AppRouteQueryImplementation<
+    typeof courseContract.getCoursesByTeacher
+> = async ({ req }) => {
+    try {
+        const { teacherId } = req.params;
+
+        const teacherExists = await prisma.teacher.findUnique({
+            where: { id: teacherId },
+        });
+
+        if (!teacherExists) {
+            return {
+                status: 404,
+                body: {
+                    success: false,
+                    error: "Teacher not found",
+                },
+            };
+        }
+
+        const courses = await prisma.course.findMany({
+            where: { teacherId },
+            include: {
+                teacher: true,
+                courseCurriculum: true,
+                _count: {
+                    select: {
+                        enrolledCourses: true,
+                    },
+                },
+            },
+        });
+
+        return {
+            status: 200,
+            body: courses.map(course => ({
+                id: course.id,
+                title: course.title,
+                description: course.description,
+                requirements: course.requirements,
+                includes: course.includes,
+                whatYouWillLearn: course.whatYouWillLearn,
+                meetingUrl: course.meetingUrl,
+                meetingTime: course.meetingTime,
+                language: course.language,
+                level: course.level,
+                thumbnail: course.thumbnail,
+                category: course.category,
+                startDate: course.startDate,
+                duration: course.duration,
+                price: course.price,
+                curriculum: course.courseCurriculum.map((c) => ({
+                    id: c.id,
+                    title: c.title,
+                    noOfLesson: c.noOfLesson,
+                    duration: c.duration,
+                    content: c.content,
+                })),
+                teacher: course.teacher
+                    ? {
+                        id: course.teacher.id,
+                        name: course.teacher.name,
+                    }
+                    : null,
+                enrolledStudentsCount: course._count.enrolledCourses,
+                createdAt: course.createdAt,
+                updatedAt: course.updatedAt,
+            })),
+        };
+    } catch (error) {
+        console.error("Error fetching courses by teacher:", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Internal Server Error",
+            },
+        };
+    }
+};
+
+const getCoursesByStatus: AppRouteQueryImplementation<
+    typeof courseContract.getCoursesByStatus
+> = async ({ req }) => {
+    try {
+        const { status } = req.params;
+
+        const courses = await prisma.course.findMany({
+            where: { status: status as any },
+            include: {
+                teacher: true,
+                courseCurriculum: true,
+                _count: {
+                    select: {
+                        enrolledCourses: true,
+                    },
+                },
+            },
+        });
+
+        return {
+            status: 200,
+            body: courses.map(course => ({
+                id: course.id,
+                title: course.title,
+                description: course.description,
+                requirements: course.requirements,
+                includes: course.includes,
+                whatYouWillLearn: course.whatYouWillLearn,
+                meetingUrl: course.meetingUrl,
+                meetingTime: course.meetingTime,
+                language: course.language,
+                level: course.level,
+                thumbnail: course.thumbnail,
+                category: course.category,
+                startDate: course.startDate,
+                duration: course.duration,
+                price: course.price,
+                curriculum: course.courseCurriculum.map((c) => ({
+                    id: c.id,
+                    title: c.title,
+                    noOfLesson: c.noOfLesson,
+                    duration: c.duration,
+                    content: c.content,
+                })),
+                teacher: course.teacher
+                    ? {
+                        id: course.teacher.id,
+                        name: course.teacher.name,
+                    }
+                    : null,
+                enrolledStudentsCount: course._count.enrolledCourses,
+                createdAt: course.createdAt,
+                updatedAt: course.updatedAt,
+            })),
+        };
+    } catch (error) {
+        console.error("Error fetching courses by status:", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Internal Server Error",
+            },
+        };
+    }
+};
+
+const searchCourses: AppRouteQueryImplementation<
+    typeof courseContract.searchCourses
+> = async ({ req }) => {
+    try {
+        const { query } = req.params;
+
+        const courses = await prisma.course.findMany({
+            where: {
+                OR: [
+                    {
+                        title: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                    {
+                        description: {
+                            contains: query,
+                            mode: 'insensitive',
+                        },
+                    },
+                ],
+            },
+            include: {
+                teacher: true,
+                courseCurriculum: true,
+                _count: {
+                    select: {
+                        enrolledCourses: true,
+                    },
+                },
+            },
+        });
+
+        return {
+            status: 200,
+            body: courses.map(course => ({
+                id: course.id,
+                title: course.title,
+                description: course.description,
+                requirements: course.requirements,
+                includes: course.includes,
+                whatYouWillLearn: course.whatYouWillLearn,
+                meetingUrl: course.meetingUrl,
+                meetingTime: course.meetingTime,
+                language: course.language,
+                level: course.level,
+                thumbnail: course.thumbnail,
+                category: course.category,
+                startDate: course.startDate,
+                duration: course.duration,
+                price: course.price,
+                curriculum: course.courseCurriculum.map((c) => ({
+                    id: c.id,
+                    title: c.title,
+                    noOfLesson: c.noOfLesson,
+                    duration: c.duration,
+                    content: c.content,
+                })),
+                teacher: course.teacher
+                    ? {
+                        id: course.teacher.id,
+                        name: course.teacher.name,
+                    }
+                    : null,
+                enrolledStudentsCount: course._count.enrolledCourses,
+                createdAt: course.createdAt,
+                updatedAt: course.updatedAt,
+            })),
+        };
+    } catch (error) {
+        console.error("Error searching courses:", error);
+>>>>>>> Course/Enrollment
         return {
             status: 500,
             body: {
@@ -193,5 +481,12 @@ const deleteCourse: AppRouteQueryImplementation<
 export const courseQueryHandlers = {
     getAllCourses,
     getCourseById,
+<<<<<<< HEAD
     deleteCourse,
+=======
+    getCoursesByCategory,
+    getCoursesByTeacher,
+    getCoursesByStatus,
+    searchCourses,
+>>>>>>> Course/Enrollment
 }

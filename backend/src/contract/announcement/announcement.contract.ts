@@ -23,7 +23,11 @@ export const announcementContract = c.router({
         path: "/:teacherId/courses/:courseid/announcement",
         pathParams: createCourseAnnouncementParamSchema,
         body: createCourseAnnouncementSchema,
+<<<<<<< HEAD
         summary: "Create a new announcement by teacher",
+=======
+        summary: "📢 Create Course Announcement - Create important announcements for course students",
+>>>>>>> Course/Enrollment
         responses: {
             201: successSchema,
             400: errorSchema,
@@ -35,7 +39,11 @@ export const announcementContract = c.router({
         method: "GET",
         path: "/course/:courseId/announcement",
         pathParams: getAllCourseAnnouncementByIdParamSchema,
+<<<<<<< HEAD
         summary: "Get all announcements for a specific course",
+=======
+        summary: "📰 Get Course Announcements - Retrieve all announcements for a specific course",
+>>>>>>> Course/Enrollment
         responses: {
             200: getAllCourseAnnouncementByIdResponseSchema,
             500: errorSchema,
@@ -47,7 +55,11 @@ export const announcementContract = c.router({
         path: "/course/:announcementId",
         pathParams: updateCourseAnnoucementParamsSchema,
         body: updateCourseAnnouncementSchema,
+<<<<<<< HEAD
         summary: "update course announceement for teacher",
+=======
+        summary: "✏️ Update Course Announcement - Edit existing course announcement content",
+>>>>>>> Course/Enrollment
         responses: {
             201: successSchema,
             404: errorSchema,
@@ -59,7 +71,11 @@ export const announcementContract = c.router({
         method: "DELETE",
         path: "/course/:announcementId",
         pathParams: deleteCourseAnnouncementSchema,
+<<<<<<< HEAD
         summary: "Delete course announcement",
+=======
+        summary: "🗑️ Delete Course Announcement - Remove an announcement from the course",
+>>>>>>> Course/Enrollment
         responses: {
             200: successSchema,
             404: errorSchema,
