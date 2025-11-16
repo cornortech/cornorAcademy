@@ -83,104 +83,160 @@ const registerStudent: AppRouteMutationImplementation<
     }
 };
 
+type UserRole = "student" | "teacher" | "admin";
+
+function getRedirectUrl(role: UserRole): string {
+    switch (role) {
+        case "admin":
+            return "/admin/dashboard";
+        case "teacher":
+            return "/teacher/dashboard";
+        case "student":
+            return "/student/dashboard";
+        default:
+            return "/";
+    }
+}
+
 const login: AppRouteMutationImplementation<
     typeof authContract.login
 > = async ({ req }) => {
     try {
+        const { email, password } = req.body;
 
-        const {
-            email,
-            password,
-        } = req.body;
+        // Determine role early
+        const role = req.user?.role;
 
-        const student = await prisma.student.findUnique({
-            where: {
-                email,
-            },
-        });
+        // Fetch users
+        let user: any = null;
 
-        const teacher = await prisma.teacher.findUnique({
-            where: {
-                email,
-            },
-        });
+        if (role === "student") {
+            user = await prisma.student.findUnique({
+                where:
+                {
+                    email,
+                }
+            });
+        }
+        else if (role === "teacher") {
+            user = await prisma.teacher.findUnique({
+                where:
+                {
+                    email
+                }
+            });
+        }
+        else if (role === "admin") {
+            user = await prisma.admin.findUnique({
+                where:
+                {
+                    email
+                }
+            });
+        }
 
-        const admin = await prisma.student.findUnique({
-            where: {
-                email,
-            },
-        });
-
-        const users = student || teacher || admin;
-
-        let role: "student" | "teacher" | "admin";
-        if (student) role = "student";
-        else if (teacher) role = "teacher";
-        else role = "admin";
-
-        if (!users) {
+        if (!user) {
             return {
                 status: 404,
                 body: {
                     success: false,
-                    error: "Email doesnot exists try again later",
+                    error: "Email does not exist, try again later",
                 },
             };
-        };
+        }
 
-        if (role === "student" || role === "teacher") {
-            const status = users.status;
-            switch (status) {
+        if (role === "student") {
+            switch (user.status) {
                 case "registered":
                     return {
                         status: 403,
                         body: {
                             success: false,
-                            error: "Account is registered but not activated yet."
+                            error: "Student Account is not activated yet.",
                         },
                     };
-
                 case "portalActivated":
-                    break;
-
+                    break; // allowed
                 case "portalDeactivated":
                     return {
                         status: 403,
                         body: {
                             success: false,
-                            error: "Platform access is deactivated."
+                            error: "Student Platform access is deactivated",
                         },
                     };
-
                 case "rejected":
                     return {
                         status: 403,
                         body: {
                             success: false,
-                            error: "Registration rejected."
+                            error: "Student Registration rejected",
                         },
                     };
-
                 default:
                     return {
                         status: 500,
                         body: {
                             success: false,
-                            error: "Unknown status."
+                            error: "Unknown status",
                         },
                     };
             }
-        };
+        }
+
+        if (role === "teacher") {
+            switch (user.status) {
+                case "registered":
+                    return {
+                        status: 403,
+                        body: {
+                            success: false,
+                            error: "Teacher Account is not activated yet.",
+                        },
+                    };
+                case "portalActivated":
+                    break; // allowed
+                case "portalDeactivated":
+                    return {
+                        status: 403,
+                        body: {
+                            success: false,
+                            error: "Teacher Platform access is deactivated",
+                        },
+                    };
+                case "rejected":
+                    return {
+                        status: 403,
+                        body: {
+                            success: false,
+                            error: "Teacher Registration rejected",
+                        },
+                    };
+                default:
+                    return {
+                        status: 500,
+                        body: {
+                            success: false,
+                            error: "Unknown status",
+                        },
+                    };
+            }
+        }
+
+        if (role === "admin") {
+            
+        }
 
         return {
             status: 200,
             body: {
-                uid: users.uid || "",
-                id: users.id,
-                name: users.name,
-                email: users.email,
-                role,
-                status: (role === "student" || role === "teacher") ? users.status : undefined,
+                uid: req.user?.uid!,
+                id: user.id,
+                name: (user as any).name || "",
+                email: user.email,
+                role: role || "admin",
+                redirectionUrl: role ? getRedirectUrl(role) : "/",
+                status: role === "admin" ? undefined : user.status,
             },
         };
 
@@ -190,7 +246,7 @@ const login: AppRouteMutationImplementation<
             status: 500,
             body: {
                 success: false,
-                error: "Internal server error" || error,
+                error: "Internal server error",
             },
         };
     }

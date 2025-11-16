@@ -78,8 +78,8 @@ model Student {
   email              String            @unique
   phoneNumber        String            @unique
   gender             gender
-  image              String            @unique
-  dob                DateTime
+  image              String
+  dob                String
   address            String
   city               String
   district           String
@@ -104,7 +104,7 @@ model Teacher {
   bio                 String
   noOfYearsExperience Int
   expertise           String
-  dob                 DateTime
+  dob                 String
   gender              gender
   status              UserStatus @default(registered)
   course              course[]
