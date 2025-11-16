@@ -24,7 +24,7 @@ export interface SignupFormData {
   role: UserRole | "";
   phoneNumber: string;
   gender: Gender | "";
-  image?: File;
+  image: File | null;
   dob: string;
   address: string;
   city: string;

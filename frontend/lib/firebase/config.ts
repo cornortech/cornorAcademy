@@ -1,13 +1,17 @@
 import { initializeApp, getApps, FirebaseApp } from "firebase/app";
 import { getAuth, Auth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
+
+const firebaseApiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "";
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: firebaseApiKey,
+  authDomain: "doclock-bef33.firebaseapp.com",
+  projectId: "doclock-bef33",
+  storageBucket: "doclock-bef33.firebasestorage.app",
+  messagingSenderId: "46808600541",
+  appId: "1:46808600541:web:5d8141681f3a24d52db034",
 };
 
 let app: FirebaseApp;
@@ -19,5 +23,6 @@ if (getApps().length === 0) {
   app = getApps()[0];
 }
 auth = getAuth(app);
-
-export { app, auth };
+const db = getFirestore(app);
+const storage = getStorage(app);
+export { app, auth, db, storage };

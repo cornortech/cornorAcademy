@@ -1,7 +1,7 @@
-import type { Metadata } from "next";
+"use client";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { APP_NAME } from "@/lib/config";
+import { AuthProvider } from "@/contexts/AuthContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -13,12 +13,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: `${APP_NAME} - Professional Online Learning Platform`,
-  description:
-    "Transform your learning journey with Cornor Academy. Expert-led courses, interactive dashboards, and comprehensive educational tools.",
-};
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -29,7 +23,7 @@ export default function RootLayout({
       <body
         className={`min-h-screen bg-background  ${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
