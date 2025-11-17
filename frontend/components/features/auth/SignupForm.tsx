@@ -158,8 +158,8 @@ export function SignupForm() {
       const cred = await signup(
         formData.email,
         formData.password,
-        formData.name,
-        formData.role as UserRole
+        formData.name
+        // formData.role as UserRole
       );
 
       if (!cred) {
@@ -193,7 +193,7 @@ export function SignupForm() {
         email: formData.email.toLowerCase(),
         phoneNumber: formData.phoneNumber,
         gender: formData.gender as "male" | "female" | "other",
-        image: uploadedImageUrl || undefined,
+        image: uploadedImageUrl || "",
         dob: new Date(formData.dob).toISOString(),
         address: formData.address,
         city: formData.city,

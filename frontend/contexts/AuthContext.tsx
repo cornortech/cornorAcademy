@@ -13,7 +13,6 @@ import {
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import {} from "firebase/database";
-import { doc, getDoc, setDoc } from "firebase/firestore";
 import { authService, UserProfile } from "@/lib/api/auth.service";
 
 interface AuthContextType {
@@ -24,8 +23,8 @@ interface AuthContextType {
   signup: (
     email: string,
     password: string,
-    displayName: string,
-    role: UserRole
+    displayName: string
+    // role: string
   ) => Promise<
     | {
         uid: string;
@@ -33,7 +32,7 @@ interface AuthContextType {
     | undefined
   >;
 
-  login: (email: string, password: string) => Promise<void>;
+  // login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   resendVerificationEmail: () => Promise<void>;
@@ -101,7 +100,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           return;
         }
 
-        const profile = await fetchUserProfile();
+        if (firebaseUser.emailVerified) {
+          await fetchUserProfile();
+        }
+
+        // const profile = await fetchUserProfile();
 
         // if (!profile) {
         //   const role = await fetchUserRole(firebaseUser.uid);
@@ -133,7 +136,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
       if (userCredentials.user) {
         await updateProfile(userCredentials.user, { displayName });
-        // await sendEmailVerification(userCredentials.user);
+        await sendEmailVerification(userCredentials.user);
 
         return {
           uid: userCredentials.user.uid,
@@ -145,37 +148,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const login = async (email: string, password: string) => {
-    try {
-      const userCredentials = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-      await userCredentials.user.reload();
-
-      // if (!userCredentials.user.emailVerified) {
-      //   await signOut(auth);
-      //   throw new Error(
-      //     "Please verify your email before logging in. Check you inbox."
-      //   );
-      // }
-
-      // const profile = await fetchUserProfile();
-      // if (!profile) {
-      //   const role = await fetchUserRole(userCredentials.user.uid);
-      //   setUserRole(role);
-      //   router.push(`/${role}`);
-      // } else {
-      //   router.push(`/${profile.role}`);
-      // }
-      router.push("/");
-    } catch (error: any) {
-      console.error("Login error:", error);
-      throw new Error(error.message);
-    }
-  };
+  // const login = async (email: string, password: string) => {
+  //   try {
+  //     const userCredentials = await signInWithEmailAndPassword(
+  //       auth,
+  //       email,
+  //       password
+  //     );
+  //     await userCredentials.user.reload();
+  //     // if (!userCredentials.user.emailVerified) {
+  //     //   await signOut(auth);
+  //     //   throw new Error(
+  //     //     "Please verify your email before logging in. Check you inbox."
+  //     //   );
+  //     // }
+  //     // const profile = await fetchUserProfile();
+  //     // if (!profile) {
+  //     //   const role = await fetchUserRole(userCredentials.user.uid);
+  //     //   setUserRole(role);
+  //     //   router.push(`/${role}`);
+  //     // } else {
+  //     //   router.push(`/${profile.role}`);
+  //     // }
+  //     router.push("/");
+  //   } catch (error: any) {
+  //     console.error("Login error:", error);
+  //     throw new Error(error.message);
+  //   }
+  // };
 
   const logout = async () => {
     try {
@@ -219,7 +219,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     loading,
     userRole,
     signup,
-    login,
+    // login,
     logout,
     resetPassword,
     resendVerificationEmail,

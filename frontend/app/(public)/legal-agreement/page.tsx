@@ -16,8 +16,24 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Canvas } from "@/components/signature-canvas";
 import AgreementContent from "@/components/features/legal/agreement-content";
+import { useAuth } from "@/contexts/AuthContext";
+import { useUploadImage } from "@/hooks/use-media";
+
+const dataURLtoFile = (dataURL: string, filename: string): File => {
+  const arr = dataURL.split(",");
+  const mime = arr[0].match(/:(.*?);/)?.[1] || "image/png";
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) u8arr[n] = bstr.charCodeAt(n);
+  return new File([u8arr], filename, { type: mime });
+};
 
 export default function LegalAgreementPage() {
+  const { user } = useAuth();
+  const { uploadImage } = useUploadImage();
+
+  const [signatureURL, setSignatureURL] = useState<string | null>(null);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToPolicy, setAgreedToPolicy] = useState(false);
   const [agreedToRefund, setAgreedToRefund] = useState(false);
@@ -44,7 +60,7 @@ export default function LegalAgreementPage() {
     }
   };
 
-  const handleCompleteAgreement = () => {
+  const handleCompleteAgreement = async () => {
     if (
       agreedToTerms &&
       agreedToPolicy &&
@@ -53,7 +69,22 @@ export default function LegalAgreementPage() {
       studentName &&
       studentEmail
     ) {
-      setIsAgreementSigned(true);
+      if (!signaturePad) return;
+
+      const dataUrl = signaturePad.toDataUrl();
+      const file = dataURLtoFile(dataUrl, `signature_${Date.now()}.png`);
+
+      const uploadResult = await uploadImage(file);
+
+      if (uploadResult.url) {
+        setSignatureURL(uploadResult.url);
+        // TODO: Send to backend with user info
+        // await axiosinstance.post("/api/legal-agreement", {
+        //   name: studentName,
+        //   aggreementURL: uploadResult.url,
+        // });
+        setIsAgreementSigned(true);
+      }
     }
   };
 
@@ -82,8 +113,7 @@ export default function LegalAgreementPage() {
               Agreement Signed Successfully!
             </h1>
             <p className="text-muted-foreground mb-6">
-              Your legal agreement has been signed and recorded. A confirmation
-              email has been sent to {studentEmail}.
+              Your legal agreement has been signed and recorded.
             </p>
             <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6 text-sm">
               <p className="text-green-800 dark:text-green-200">
@@ -94,7 +124,7 @@ export default function LegalAgreementPage() {
             </div>
             <div className="space-y-3">
               <Button asChild className="w-full">
-                <Link href="/enroll/1">Proceed to Enrollment</Link>
+                <Link href="/enroll/1">Proceed to Dashboard</Link>
               </Button>
               <Button
                 variant="outline"
@@ -145,7 +175,7 @@ export default function LegalAgreementPage() {
 
           <div className="grid gap-8">
             {/* Legal Agreement Content */}
-            <Card className="border-border/50 bg-card/50 backdrop-blur">
+            <Card className="border-border/50 bg-card/50 backdrop-blur overflow-auto">
               <CardHeader>
                 <CardTitle>Terms & Conditions</CardTitle>
                 <CardDescription>
@@ -170,8 +200,9 @@ export default function LegalAgreementPage() {
                     <Input
                       id="name"
                       placeholder="Enter your full name"
-                      value={studentName}
+                      value={user?.displayName || ""}
                       onChange={(e) => setStudentName(e.target.value)}
+                      disabled
                     />
                   </div>
                   <div className="space-y-2">
@@ -180,8 +211,9 @@ export default function LegalAgreementPage() {
                       id="email"
                       type="email"
                       placeholder="Enter your email"
-                      value={studentEmail}
+                      value={user?.email || ""}
                       onChange={(e) => setStudentEmail(e.target.value)}
+                      disabled
                     />
                   </div>
                 </div>

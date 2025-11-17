@@ -54,7 +54,7 @@ export const signupSchema = z
         "Password must contain uppercase, lowercase, and number"
       ),
     confirmPassword: z.string(),
-    phoneNumber: z.string().min(10, "Invalid phone number"),
+    phoneNumber: z.string().min(8, "Invalid phone number"),
     gender: z.enum(["male", "female", "other"]),
     image: z.any().optional(),
     dob: z.string(),

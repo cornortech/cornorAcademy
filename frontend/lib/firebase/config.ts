@@ -7,11 +7,11 @@ const firebaseApiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "";
 
 const firebaseConfig = {
   apiKey: firebaseApiKey,
-  authDomain: "doclock-bef33.firebaseapp.com",
-  projectId: "doclock-bef33",
-  storageBucket: "doclock-bef33.firebasestorage.app",
-  messagingSenderId: "46808600541",
-  appId: "1:46808600541:web:5d8141681f3a24d52db034",
+  authDomain: "academy-4aab3.firebaseapp.com",
+  projectId: "academy-4aab3",
+  storageBucket: "academy-4aab3.firebasestorage.app",
+  messagingSenderId: "284741878928",
+  appId: "1:284741878928:web:16b917c4ada3a746f48415",
 };
 
 let app: FirebaseApp;
