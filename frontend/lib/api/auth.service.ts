@@ -19,7 +19,8 @@ export interface RegisterStudentPayload {
 }
 
 export interface UserProfile {
-  userId: string;
+  id: string; //DB ID
+  userId: string; //Firebase UID
   uid: string;
   email: string;
   role: "student" | "teacher" | "admin";

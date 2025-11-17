@@ -20,6 +20,7 @@ interface AuthContextType {
   userProfile: UserProfile | null;
   loading: boolean;
   userRole: UserRole | null;
+  getStudentId: () => string | null;
   signup: (
     email: string,
     password: string,
@@ -213,6 +214,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     await fetchUserProfile();
   };
 
+  const getStudentId = () => userProfile?.id ?? null;
+
   const value = {
     user,
     userProfile,
@@ -226,6 +229,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     refreshUser,
     refreshUserProfile,
     setIsRegistering,
+    getStudentId,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

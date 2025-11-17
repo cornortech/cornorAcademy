@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -18,6 +18,8 @@ import { Canvas } from "@/components/signature-canvas";
 import AgreementContent from "@/components/features/legal/agreement-content";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUploadImage } from "@/hooks/use-media";
+import axiosInstance from "@/lib/api/axios";
+import { useRouter } from "next/navigation";
 
 const dataURLtoFile = (dataURL: string, filename: string): File => {
   const arr = dataURL.split(",");
@@ -32,6 +34,7 @@ const dataURLtoFile = (dataURL: string, filename: string): File => {
 export default function LegalAgreementPage() {
   const { user } = useAuth();
   const { uploadImage } = useUploadImage();
+  const router = useRouter();
 
   const [signatureURL, setSignatureURL] = useState<string | null>(null);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -42,6 +45,13 @@ export default function LegalAgreementPage() {
   const [signaturePad, setSignaturePad] = useState<any>(null);
   const [isSigned, setIsSigned] = useState(false);
   const [isAgreementSigned, setIsAgreementSigned] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setStudentName(user.displayName || "");
+      setStudentEmail(user.email || "");
+    }
+  }, [user]);
 
   const handleSignature = useCallback((canvas: any) => {
     setSignaturePad(canvas);
@@ -71,18 +81,23 @@ export default function LegalAgreementPage() {
     ) {
       if (!signaturePad) return;
 
-      const dataUrl = signaturePad.toDataUrl();
+      const dataUrl = signaturePad.toDataURL();
       const file = dataURLtoFile(dataUrl, `signature_${Date.now()}.png`);
 
       const uploadResult = await uploadImage(file);
 
       if (uploadResult.url) {
         setSignatureURL(uploadResult.url);
-        // TODO: Send to backend with user info
-        // await axiosinstance.post("/api/legal-agreement", {
-        //   name: studentName,
-        //   aggreementURL: uploadResult.url,
-        // });
+
+        const res = await axiosInstance.post("/legal-agreement", {
+          studentId: user?.uid,
+          agreementURL: uploadResult.url,
+        });
+
+        if (res.data.success) {
+          router.push("/");
+        }
+
         setIsAgreementSigned(true);
       }
     }
@@ -200,8 +215,7 @@ export default function LegalAgreementPage() {
                     <Input
                       id="name"
                       placeholder="Enter your full name"
-                      value={user?.displayName || ""}
-                      onChange={(e) => setStudentName(e.target.value)}
+                      defaultValue={user?.displayName || ""}
                       disabled
                     />
                   </div>
@@ -211,8 +225,7 @@ export default function LegalAgreementPage() {
                       id="email"
                       type="email"
                       placeholder="Enter your email"
-                      value={user?.email || ""}
-                      onChange={(e) => setStudentEmail(e.target.value)}
+                      defaultValue={user?.email || ""}
                       disabled
                     />
                   </div>
@@ -323,9 +336,7 @@ export default function LegalAgreementPage() {
                 {(!agreedToTerms ||
                   !agreedToPolicy ||
                   !agreedToRefund ||
-                  !isSigned ||
-                  !studentName ||
-                  !studentEmail) && (
+                  !isSigned) && (
                   <div className="flex items-start space-x-2 p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg">
                     <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5 shrink-0" />
                     <span className="text-sm text-yellow-700 dark:text-yellow-200">

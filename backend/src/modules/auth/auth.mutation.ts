@@ -98,7 +98,7 @@ function getRedirectUrl(role: UserRole): string {
 }
 
 const login: AppRouteMutationImplementation<
-  typeof authContract.login
+typeof authContract.login
 > = async ({ req }) => {
   try {
     const { email, password } = req.body;
@@ -242,84 +242,6 @@ const login: AppRouteMutationImplementation<
 
         }
 
-        return {
-            status: 200,
-            body: {
-              success: false,
-              error: "Student Account is not activated yet.",
-            },
-          };
-        case "portalActivated":
-          break; // allowed
-        case "portalDeactivated":
-          return {
-            status: 403,
-            body: {
-              success: false,
-              error: "Student Platform access is deactivated",
-            },
-          };
-        case "rejected":
-          return {
-            status: 403,
-            body: {
-              success: false,
-              error: "Student Registration rejected",
-            },
-          };
-        default:
-          return {
-            status: 500,
-            body: {
-              success: false,
-              error: "Unknown status",
-            },
-          };
-      }
-    }
-
-    if (role === "teacher") {
-      switch (user.status) {
-        case "registered":
-          return {
-            status: 403,
-            body: {
-              success: false,
-              error: "Teacher Account is not activated yet.",
-            },
-          };
-        case "portalActivated":
-          break; // allowed
-        case "portalDeactivated":
-          return {
-            status: 403,
-            body: {
-              success: false,
-              error: "Teacher Platform access is deactivated",
-            },
-          };
-        case "rejected":
-          return {
-            status: 403,
-            body: {
-              success: false,
-              error: "Teacher Registration rejected",
-            },
-          };
-        default:
-          return {
-            status: 500,
-            body: {
-              success: false,
-              error: "Unknown status",
-            },
-          };
-      }
-    }
-
-    if (role === "admin") {
-    }
-
     return {
       status: 200,
       body: {
@@ -378,7 +300,7 @@ const uploadLegalAgreement: AppRouteMutationImplementation<
             },
         });
 
-        await prisma.student.updateMany({
+        await prisma.student.update({
             where: {
                 id: studentId,
             },
