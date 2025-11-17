@@ -96,7 +96,7 @@ export default function LegalAgreementPage() {
           });
           if (res.data.success) {
             toast.success(res.data.message);
-            router.push("/");
+            router.push("/student");
             setIsAgreementSigned(true);
           }
         } catch (err) {
