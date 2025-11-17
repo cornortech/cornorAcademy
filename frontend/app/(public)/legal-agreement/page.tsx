@@ -20,6 +20,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useUploadImage } from "@/hooks/use-media";
 import axiosInstance from "@/lib/api/axios";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const dataURLtoFile = (dataURL: string, filename: string): File => {
   const arr = dataURL.split(",");
@@ -89,13 +90,17 @@ export default function LegalAgreementPage() {
       if (uploadResult.url) {
         setSignatureURL(uploadResult.url);
 
-        const res = await axiosInstance.post("/legal-agreement", {
-          studentId: user?.uid,
-          agreementURL: uploadResult.url,
-        });
-
-        if (res.data.success) {
-          router.push("/");
+        try {
+          const res = await axiosInstance.post("/legal-agreement", {
+            agreementURL: uploadResult.url,
+          });
+          if (res.data.success) {
+            toast.success(res.data.message);
+            router.push("/");
+            setIsAgreementSigned(true);
+          }
+        } catch (err) {
+          console.error("Error submitting agreement:", err);
         }
 
         setIsAgreementSigned(true);
@@ -139,7 +144,7 @@ export default function LegalAgreementPage() {
             </div>
             <div className="space-y-3">
               <Button asChild className="w-full">
-                <Link href="/enroll/1">Proceed to Dashboard</Link>
+                <Link href="/student">Proceed to Dashboard</Link>
               </Button>
               <Button
                 variant="outline"

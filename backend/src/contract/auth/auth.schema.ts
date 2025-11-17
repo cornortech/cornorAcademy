@@ -61,6 +61,5 @@ export const updateStudentDetailsSchema = z.object({
 });
 
 export const uploadLegalAgreementSchema = z.object({
-    studentId: z.string(),
     agreementURL: z.string(),
 });

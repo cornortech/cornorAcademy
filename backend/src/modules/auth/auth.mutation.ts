@@ -272,11 +272,21 @@ const uploadLegalAgreement: AppRouteMutationImplementation<
 
     try {
 
-        const studentId = req.user?.id || req.body.studentId;
+        const studentId = req.user?.id;
 
         const {
             agreementURL,
         } = req.body;
+
+        if (!studentId) {
+            return {
+                status: 401,
+                body: {
+                    success: false,
+                    error: "Unauthorized",
+                },
+            };
+        }
 
         const agreementExists = await prisma.courseAgreement.findFirst({
             where: {
@@ -296,8 +306,10 @@ const uploadLegalAgreement: AppRouteMutationImplementation<
 
         const agreement = await prisma.courseAgreement.create({
             data: {
-                studentId,
                 agreementURL,
+                student: {
+                    connect: { id: studentId! },
+                },
             },
         });
 
