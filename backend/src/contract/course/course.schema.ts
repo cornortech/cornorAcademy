@@ -131,4 +131,31 @@ export const updateCourseSchema = z.object({
 
 export const deleteCourseSchema = z.object({
     id: z.string().uuid(),
+<<<<<<< HEAD
+=======
+});
+
+export const getCoursesByCategorySchema = z.object({
+    category: z.enum(['WebDevelopment', 'ui', 'DataScience', 'DigitalMarketing']),
+});
+
+export const getCoursesByTeacherSchema = z.object({
+    teacherId: z.string().uuid(),
+});
+
+export const getCoursesByStatusSchema = z.object({
+    status: z.enum(['upcoming', 'active', 'completed']),
+});
+
+export const updateCourseStatusParamsSchema = z.object({
+    id: z.string().uuid(),
+});
+
+export const updateCourseStatusSchema = z.object({
+    status: z.enum(['upcoming', 'active', 'completed']),
+});
+
+export const searchCoursesSchema = z.object({
+    query: z.string().min(1, "Search query is required"),
+>>>>>>> Course/Enrollment
 });

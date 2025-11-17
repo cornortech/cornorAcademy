@@ -100,7 +100,51 @@ export interface CourseModule {
   duration: string;
 }
 
+export type CourseCategory =
+  | "WebDevelopment"
+  | "ui"
+  | "DataScience"
+  | "DigitalMarketing";
+export type CourseLanguage = "nepali" | "english";
+
+export interface CourseCurriculumItem {
+  id: string;
+  title: string;
+  noOfLesson: number;
+  duration: number; // in hours
+  content: string[];
+}
+
+export interface TeacherInfo {
+  id: string;
+  name: string;
+}
+
 export interface Course {
+  id: string;
+  title: string;
+  description: string;
+  requirements: string[];
+  includes: string[];
+  whatYouWillLearn: string[];
+  meetingUrl?: string;
+  meetingTime?: Date;
+  language: CourseLanguage;
+  level: CourseLevel;
+  thumbnail: string;
+  category: CourseCategory;
+  startDate: Date;
+  duration: number; // in weeks
+  price: number;
+  curriculum: CourseCurriculumItem[];
+  teacher: TeacherInfo | null;
+  enrolledStudentsCount?: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+// Legacy interface for backward compatibility
+export interface LegacyCourse {
   id: string | number;
   title: string;
   description: string;
@@ -274,4 +318,90 @@ export interface Certificate {
   status: "valid" | "invalid";
   skills: string[];
   validUntil?: string;
+}
+
+// Enrolled Course Types
+export interface EnrolledCourseItem {
+  id: string;
+  course: {
+    id: string;
+    title: string;
+    description: string;
+    teacher: {
+      id: string;
+      name: string;
+    } | null;
+    student: {
+      id: string;
+      name: string;
+    };
+    createdAt: Date;
+  };
+}
+
+export interface CreateEnrolledCourseInput {
+  studentId: string;
+  courseId: string;
+}
+
+// Course Media Types
+export interface CourseMediaItem {
+  id: string;
+  courseId: string;
+  title: string;
+  description: string;
+  duration: number | null;
+  pathURL: string;
+  type: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateCourseMediaInput {
+  courseId: string;
+  title: string;
+  description: string;
+  duration?: number;
+  pathURL: string;
+  type:
+    | "pdf"
+    | "video"
+    | "img"
+    | "code"
+    | "docx"
+    | "xlsx"
+    | "txt"
+    | "jpg"
+    | "png"
+    | "mp3"
+    | "mp4"
+    | "zip"
+    | "exe"
+    | "other";
+}
+
+export interface UpdateCourseMediaInput {
+  title?: string;
+  description?: string;
+  pathURL?: string;
+}
+
+// Announcement Types
+export interface CourseAnnouncementItem {
+  id: string;
+  courseId: string;
+  title: string;
+  message: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface CreateCourseAnnouncementInput {
+  title: string;
+  message: string;
+}
+
+export interface UpdateCourseAnnouncementInput {
+  title?: string;
+  message?: string;
 }
