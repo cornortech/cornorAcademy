@@ -293,7 +293,7 @@ const uploadLegalAgreement: AppRouteMutationImplementation<
             },
         });
 
-        await prisma.student.update({
+        await prisma.student.updateMany({
             where: {
                 id: studentId,
             },

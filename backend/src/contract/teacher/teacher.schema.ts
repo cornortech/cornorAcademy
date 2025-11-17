@@ -8,7 +8,7 @@ export const createTeacherSchema = z.object({
     bio: z.string().min(10, "Bio or about is required"),
     noOfYearsExperience: z.number().min(0, "Number of experience is required"),
     expertise: z.string().min(2, "Expertise is required"),
-    dob: z.date(),
+    dob: z.string(),
     gender: z.enum(['male', 'female', 'other']),
 });
 
@@ -22,7 +22,7 @@ export const getAllTeachersResponseSchema = z.array(
         bio: z.string(),
         noOfYearsExperience: z.number(),
         expertise: z.string(),
-        dob: z.date(),
+        dob: z.string(),
         gender: z.enum(['male', 'female', 'other']),
         status: z.enum(['registered', 'portalActivated', 'portalDeactivated', 'rejected']),
         createdAt: z.date(),
@@ -43,7 +43,7 @@ export const getTeacherByIdResponseSchema = z.object({
     bio: z.string(),
     noOfYearsExperience: z.number(),
     expertise: z.string(),
-    dob: z.date(),
+    dob: z.string(),
     gender: z.enum(['male', 'female', 'other']),
     status: z.enum(['registered', 'portalActivated', 'portalDeactivated', 'rejected']),
     createdAt: z.date(),
@@ -61,7 +61,7 @@ export const updateTeacherSchema = z.object({
     bio: z.string().optional(),
     noOfYearsExperience: z.number().optional(),
     expertise: z.string().optional(),
-    dob: z.date().optional(),
+    dob: z.string().optional(),
     gender: z.enum(['male', 'female', 'other']),
     status: z.enum(['registered', 'portalActivated', 'portalDeactivated', 'rejected']).optional(),
 });
