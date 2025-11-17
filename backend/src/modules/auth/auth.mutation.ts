@@ -272,7 +272,7 @@ const uploadLegalAgreement: AppRouteMutationImplementation<
 
     try {
 
-        const studentId = req.user?.id;
+        const studentId = req.user!.id;
 
         const {
             agreementURL,

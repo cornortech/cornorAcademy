@@ -12,7 +12,10 @@ export const authRouter = s.router(authContract, {
 
     login: authMutationHandlers.login,
 
-    uploadLegalAgreement: authMutationHandlers.uploadLegalAgreement,
+    uploadLegalAgreement: {
+        middleware: [authenticate],
+        handler: authMutationHandlers.uploadLegalAgreement,
+    },
 
     getProfile: {
         middleware: [authenticate],
