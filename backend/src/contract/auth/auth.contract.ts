@@ -6,6 +6,7 @@ import {
   loginSchema,
   registerSchema,
   updateStudentDetailsSchema,
+  uploadLegalAgreementSchema,
 } from "./auth.schema";
 
 import { errorSchema, successSchema } from "../common.schema";
@@ -63,6 +64,18 @@ export const authContract = c.router({
       400: errorSchema,
       401: errorSchema,
       404: errorSchema,
+      500: errorSchema,
+    },
+  },
+
+  uploadLegalAgreement: {
+    method: "POST",
+    path: "/legal-agreement",
+    body: uploadLegalAgreementSchema,
+    summary: "Create student legal agreement",
+    responses: {
+      201: successSchema,
+      400: errorSchema,
       500: errorSchema,
     },
   },

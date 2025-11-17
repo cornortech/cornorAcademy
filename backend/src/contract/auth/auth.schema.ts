@@ -58,3 +58,8 @@ export const updateStudentDetailsSchema = z.object({
     educationInstitute: z.string().optional(),
     qualification: z.string().optional(),
 });
+
+export const uploadLegalAgreementSchema = z.object({
+    studentId: z.string(),
+    agreementURL: z.string(),
+});
