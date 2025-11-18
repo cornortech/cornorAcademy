@@ -44,13 +44,16 @@ export const authenticate = async (
         });
 
         if (studentExist) {
+            if (typeof studentExist.dob !== "string") {
+                studentExist.dob = new Date(studentExist.dob).toISOString().split("T")[0];
+              }
             req.user = {
                 email: user.email,
                 id: studentExist.id,
                 role: "student",
                 uid: user.uid
             },
-            next();
+                next();
         };
 
         const teacherExist = await prisma.teacher.findFirst({
@@ -66,7 +69,7 @@ export const authenticate = async (
                 role: "teacher",
                 uid: user.uid
             },
-            next();
+                next();
         };
 
         const adminExist = await prisma.admin.findFirst({
@@ -82,7 +85,7 @@ export const authenticate = async (
                 role: "admin",
                 uid: user.uid
             },
-            next();
+                next();
         };
 
     } catch (error) {

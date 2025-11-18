@@ -21,7 +21,6 @@ export const authContract = c.router({
     summary: "Get user profile",
     responses: {
       200: getProfileSchema,
-      400: errorSchema,
       404: errorSchema,
       500: errorSchema,
     },
@@ -37,19 +36,6 @@ export const authContract = c.router({
         studentId: z.string(),
       }),
       400: errorSchema,
-      500: errorSchema,
-    },
-  },
-
-  updateStudentDetails: {
-    method: 'PUT',
-    path: '/update',
-    body: updateStudentDetailsSchema,
-    summary: "Update student details (self)",
-    responses: {
-      200: successSchema,
-      400: errorSchema,
-      404: errorSchema,
       500: errorSchema,
     },
   },
@@ -76,6 +62,19 @@ export const authContract = c.router({
     responses: {
       201: successSchema,
       400: errorSchema,
+      500: errorSchema,
+    },
+  },
+
+  updateStudentDetails: {
+    method: 'PUT',
+    path: '/update',
+    body: updateStudentDetailsSchema,
+    summary: "Update student details (self)",
+    responses: {
+      200: successSchema,
+      400: errorSchema,
+      404: errorSchema,
       500: errorSchema,
     },
   },

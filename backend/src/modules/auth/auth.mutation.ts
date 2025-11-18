@@ -1,7 +1,6 @@
 import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { authContract } from "../../contract/auth/auth.contract";
 import prisma from "../../libs/db";
-import { error } from "console";
 
 const registerStudent: AppRouteMutationImplementation<
     typeof authContract.registerStudent
@@ -89,11 +88,11 @@ type UserRole = "student" | "teacher" | "admin";
 function getRedirectUrl(role: UserRole): string {
     switch (role) {
         case "admin":
-            return "/admin/dashboard";
+            return "/admin";
         case "teacher":
-            return "/teacher/dashboard";
+            return "/teacher";
         case "student":
-            return "/student/dashboard";
+            return "/student";
         default:
             return "/";
     }

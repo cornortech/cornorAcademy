@@ -38,7 +38,9 @@ export const getProfileSchema = z.object({
     userId: z.string(),
     uid: z.string(),
     email: z.string().email(),
-    role: z.enum(["student", "teacher", "admin"]).optional()
+    image: z.string().nullable(),
+    status: z.enum(['registered', 'portalActivated', 'portalDeactivated', 'rejected']).nullable(),
+    role: z.enum(["student", "teacher", "admin"]),
 });
 
 export const updateStudentDetailsSchema = z.object({
