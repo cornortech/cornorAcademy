@@ -87,11 +87,11 @@ type UserRole = "student" | "teacher" | "admin";
 function getRedirectUrl(role: UserRole): string {
   switch (role) {
     case "admin":
-      return "/admin/dashboard";
+      return "/admin";
     case "teacher":
-      return "/teacher/dashboard";
+      return "/teacher";
     case "student":
-      return "/student/dashboard";
+      return "/student";
     default:
       return "/";
   }

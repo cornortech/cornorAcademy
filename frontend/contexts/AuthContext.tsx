@@ -1,5 +1,5 @@
 import { auth, db } from "@/lib/firebase/config";
-import { UserRole } from "@/types";
+import { LoginResponse, UserRole, UserStatus } from "@/types";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -14,18 +14,18 @@ import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import {} from "firebase/database";
 import { authService, UserProfile } from "@/lib/api/auth.service";
+import axiosInstance from "@/lib/api/axios";
 
 interface AuthContextType {
   user: User | null;
-  userProfile: UserProfile | null;
   loading: boolean;
   userRole: UserRole | null;
-  getStudentId: () => string | null;
+  userStatus: UserStatus | null;
+  userData: LoginResponse | null;
   signup: (
     email: string,
     password: string,
     displayName: string
-    // role: string
   ) => Promise<
     | {
         uid: string;
@@ -33,13 +33,12 @@ interface AuthContextType {
     | undefined
   >;
 
-  // login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<LoginResponse>;
   logout: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   resendVerificationEmail: () => Promise<void>;
   refreshUser: () => Promise<void>;
-  refreshUserProfile: () => Promise<void>;
-  setIsRegistering: (value: boolean) => void;
+  updateUserStatus: (status: UserStatus) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -56,34 +55,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [userStatus, setUserStatus] = useState<UserStatus | null>(null);
   const [userRole, setUserRole] = useState<UserRole | null>(null);
+  const [userData, setUserData] = useState<LoginResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isRegistering, setIsRegistering] = useState(false);
   const router = useRouter();
-
-  // const fetchUserRole = async (uid: string): Promise<UserRole> => {
-  //   try {
-  //     const ref = doc(db, "users", uid);
-  //     const snapshot = await getDoc(ref);
-
-  //     if (snapshot.exists()) {
-  //       return snapshot.data().role as UserRole;
-  //     }
-
-  //     return "student";
-  //   } catch (error) {
-  //     console.error("Error fetching user role:", error);
-  //     return "student";
-  //   }
-  // };
 
   const fetchUserProfile = async () => {
     try {
       const profile = await authService.getUserProfile();
-      setUserProfile(profile);
+      const details = await authService.getUserDetails(profile.role);
+
+      const fullUserData: LoginResponse = {
+        uid: profile.uid,
+        id: profile.userId,
+        email: profile.email,
+        role: profile.role,
+        name: details?.name || "",
+        status: details?.status,
+      };
+
+      setUserData(fullUserData);
       setUserRole(profile.role);
-      return profile;
+      setUserStatus(details?.status || null);
+
+      return fullUserData;
     } catch (error) {
       console.error("Error fetching user profile:", error);
       return null;
@@ -92,101 +88,86 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const hasUnsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) {
+        setUser(null);
+        setUserData(null);
+        setUserRole(null);
+        setUserStatus(null);
+        delete axiosInstance.defaults.headers.common["Authorization"];
+        setLoading(false);
+        return;
+      }
+
       setUser(firebaseUser);
 
-      if (firebaseUser) {
-        if (isRegistering) {
-          console.log("🚧 Registration in progress, skipping profile fetch");
-          setLoading(false);
-          return;
-        }
+      const token = await firebaseUser.getIdToken();
+      axiosInstance.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${token}`;
 
-        if (firebaseUser.emailVerified) {
-          await fetchUserProfile();
-        }
-
-        // const profile = await fetchUserProfile();
-
-        // if (!profile) {
-        //   const role = await fetchUserRole(firebaseUser.uid);
-        //   setUserRole(role);
-        // }
-      } else {
-        setUserRole(null);
-        setUserProfile(null);
+      if (firebaseUser.emailVerified) {
+        await fetchUserProfile();
       }
       setLoading(false);
     });
 
     return hasUnsubscribe;
-  }, [isRegistering]);
+  }, []);
 
   const signup = async (
     email: string,
     password: string,
     displayName: string
-    // role: UserRole
   ): Promise<{ uid: string } | undefined> => {
-    try {
-      setIsRegistering(true);
-      const userCredentials = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+    const userCredentials = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
 
-      if (userCredentials.user) {
-        await updateProfile(userCredentials.user, { displayName });
-        await sendEmailVerification(userCredentials.user);
-
-        return {
-          uid: userCredentials.user.uid,
-        };
-      }
-    } catch (error: any) {
-      setIsRegistering(false);
-      throw new Error(error.message);
+    if (userCredentials.user) {
+      await updateProfile(userCredentials.user, { displayName });
+      await sendEmailVerification(userCredentials.user);
+      return { uid: userCredentials.user.uid };
     }
   };
 
-  // const login = async (email: string, password: string) => {
-  //   try {
-  //     const userCredentials = await signInWithEmailAndPassword(
-  //       auth,
-  //       email,
-  //       password
-  //     );
-  //     await userCredentials.user.reload();
-  //     // if (!userCredentials.user.emailVerified) {
-  //     //   await signOut(auth);
-  //     //   throw new Error(
-  //     //     "Please verify your email before logging in. Check you inbox."
-  //     //   );
-  //     // }
-  //     // const profile = await fetchUserProfile();
-  //     // if (!profile) {
-  //     //   const role = await fetchUserRole(userCredentials.user.uid);
-  //     //   setUserRole(role);
-  //     //   router.push(`/${role}`);
-  //     // } else {
-  //     //   router.push(`/${profile.role}`);
-  //     // }
-  //     router.push("/");
-  //   } catch (error: any) {
-  //     console.error("Login error:", error);
-  //     throw new Error(error.message);
-  //   }
-  // };
+  const login = async (email: string, password: string) => {
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    if (!userCredential.user.emailVerified) {
+      await signOut(auth);
+      throw new Error("Please verify your email before logging in");
+    }
+
+    const token = await userCredential.user.getIdToken();
+    axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+    const response = await authService.login(email, password);
+
+    setUserData(response);
+    setUserRole(response.role);
+    setUserStatus(response.status || null);
+
+    return response;
+  };
 
   const logout = async () => {
-    try {
-      await signOut(auth);
-      setUserRole(null);
-      setUserProfile(null);
-      router.push("/login");
-    } catch (error: any) {
-      throw new Error(error.message);
-    }
+    await signOut(auth);
+
+    setUser(null);
+    setUserRole(null);
+    setUserStatus(null);
+    setUserData(null);
+
+    delete axiosInstance.defaults.headers.common["Authorization"];
+
+    router.replace("/login");
+    router.refresh();
   };
 
   const resetPassword = async (email: string) => {
@@ -210,26 +191,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
-  const refreshUserProfile = async () => {
-    await fetchUserProfile();
+  const refreshUserData = async () => {
+    if (user?.emailVerified) {
+      await fetchUserProfile();
+    }
   };
 
-  const getStudentId = () => userProfile?.id ?? null;
+  const updateUserStatus = (status: UserStatus) => {
+    setUserStatus(status);
+    if (userData) {
+      setUserData((prev) => (prev ? { ...prev, status } : prev));
+    }
+  };
 
   const value = {
     user,
-    userProfile,
-    loading,
     userRole,
+    userStatus,
+    userData,
+    loading,
+    login,
     signup,
-    // login,
     logout,
     resetPassword,
     resendVerificationEmail,
     refreshUser,
-    refreshUserProfile,
-    setIsRegistering,
-    getStudentId,
+    refreshUserData,
+    updateUserStatus,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

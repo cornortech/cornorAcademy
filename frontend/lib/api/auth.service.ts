@@ -1,5 +1,12 @@
 import axiosInstance from "./axios";
-import { SignupFormData } from "@/types";
+import {
+  Admin,
+  LoginResponse,
+  Student,
+  Teacher,
+  UserRole,
+  UserStatus,
+} from "@/types";
 
 export interface RegisterStudentPayload {
   name: string;
@@ -18,10 +25,14 @@ export interface RegisterStudentPayload {
   qualification: string;
 }
 
+export interface LoginPayload {
+  email: string;
+  password: string;
+}
+
 export interface UserProfile {
-  id: string; //DB ID
-  userId: string; //Firebase UID
-  uid: string;
+  userId: string; //DB ID
+  uid: string; //Firebase UID
   email: string;
   role: "student" | "teacher" | "admin";
 }
@@ -54,6 +65,18 @@ class AuthService {
     }
   }
 
+  async login(email: string, password: string): Promise<LoginResponse> {
+    try {
+      const response = await axiosInstance.post<LoginResponse>("/auth/login", {
+        email,
+        password,
+      });
+      return response.data;
+    } catch (error: any) {
+      throw error;
+    }
+  }
+
   async getUserProfile(): Promise<UserProfile> {
     try {
       const response = await axiosInstance.get<UserProfile>("/auth/me");
@@ -64,16 +87,43 @@ class AuthService {
     }
   }
 
-  async updateStudentProfile(
-    payload: UpdateStudentPayload
-  ): Promise<{ success: boolean; message: string }> {
+  async getUserDetails(
+    role: string
+  ): Promise<Student | Teacher | Admin | null> {
     try {
-      const response = await axiosInstance.put("/update", payload);
+      let endpoint = "";
+      switch (role) {
+        case "student":
+          endpoint = "/auth/me";
+          break;
+        case "teacher":
+          endpoint = "/auth/me";
+          break;
+        case "admin":
+          endpoint = "/auth/me";
+          break;
+        default:
+          return null;
+      }
+
+      const response = await axiosInstance.get(endpoint);
       return response.data;
-    } catch (error: any) {
-      console.error("Update profile error:", error.response?.data || error);
-      throw error;
+    } catch (error) {
+      console.error(`Error fetching ${role} details:`, error);
+      return null;
     }
+  }
+
+  async uploadLegalAgreement(agreementURL: string) {
+    const response = await axiosInstance.post("/legal-agreement", {
+      agreementURL,
+    });
+    return response.data;
+  }
+
+  async updateStudentProfile(data: Partial<Student>) {
+    const response = await axiosInstance.put("/update", data);
+    return response.data;
   }
 }
 

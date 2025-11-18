@@ -21,6 +21,8 @@ import { useUploadImage } from "@/hooks/use-media";
 import axiosInstance from "@/lib/api/axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { authService } from "@/lib/api/auth.service";
+import { UserRole } from "@/types";
 
 const dataURLtoFile = (dataURL: string, filename: string): File => {
   const arr = dataURL.split(",");
@@ -33,7 +35,14 @@ const dataURLtoFile = (dataURL: string, filename: string): File => {
 };
 
 export default function LegalAgreementPage() {
-  const { user } = useAuth();
+  const {
+    user,
+    userData,
+    userRole,
+    userStatus,
+    updateUserStatus,
+    refreshUser,
+  } = useAuth();
   const { uploadImage } = useUploadImage();
   const router = useRouter();
 
@@ -48,11 +57,34 @@ export default function LegalAgreementPage() {
   const [isAgreementSigned, setIsAgreementSigned] = useState(false);
 
   useEffect(() => {
-    if (user) {
-      setStudentName(user.displayName || "");
-      setStudentEmail(user.email || "");
+    if (!user) {
+      router.push("/login");
+      return;
     }
-  }, [user]);
+
+    setStudentName(user.displayName || "");
+    setStudentEmail(user.email || "");
+
+    if (userStatus === "portalActivated") {
+      redirectToDashboard();
+    }
+  }, [user, userStatus]);
+
+  const redirectToDashboard = () => {
+    if (!userRole) return;
+
+    switch (userRole) {
+      case "student":
+        router.push("/student");
+        break;
+      case "teacher":
+        router.push("/teacher");
+        break;
+      case "admin":
+        router.push("/admin");
+        break;
+    }
+  };
 
   const handleSignature = useCallback((canvas: any) => {
     setSignaturePad(canvas);
@@ -91,12 +123,14 @@ export default function LegalAgreementPage() {
         setSignatureURL(uploadResult.url);
 
         try {
-          const res = await axiosInstance.post("/legal-agreement", {
-            agreementURL: uploadResult.url,
-          });
+          const res = await authService.uploadLegalAgreement(uploadResult.url);
+          const profileRes = await authService.getUserProfile();
+          profileRes.role;
           if (res.data.success) {
+            updateUserStatus("portalActivated");
+            await refreshUser();
             toast.success(res.data.message);
-            router.push("/student");
+            // router.push(`/${role}`);
             setIsAgreementSigned(true);
           }
         } catch (err) {
@@ -144,7 +178,7 @@ export default function LegalAgreementPage() {
             </div>
             <div className="space-y-3">
               <Button asChild className="w-full">
-                <Link href="/student">Proceed to Dashboard</Link>
+                <Link href={`/${userRole}`}>Proceed to Dashboard</Link>
               </Button>
               <Button
                 variant="outline"

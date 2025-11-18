@@ -15,15 +15,15 @@ import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
 import { sendEmailVerification } from "firebase/auth";
 import { auth } from "@/lib/firebase/config";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function VerifyEmailPage() {
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email") || "youremail";
   const router = useRouter();
+  const { user } = useAuth();
 
   const [emailSent, setEmailSent] = useState(false);
-  const [error, setError] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [error, setError] = useState("");
 
   const handleResendEmail = async () => {
     setError("");
@@ -58,7 +58,7 @@ export default function VerifyEmailPage() {
           </div>
           <h1 className="text-2xl font-bold mb-2">Verify Your Email</h1>
           <p className="text-muted-foreground">
-            We've sent a verification link to <strong>{email}</strong>
+            We've sent a verification link to you {user?.email}.
           </p>
         </div>
 

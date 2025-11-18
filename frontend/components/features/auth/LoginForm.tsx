@@ -128,21 +128,17 @@ export function LoginForm() {
       if (status === "registered") {
         setVerificationState("account-pending");
         setAccountStatus("Your account is pending admin approval.");
-        // await auth.signOut();
-        // return;
+        return;
       }
 
       if (status === "portalDeactivated") {
         toast.error("Your account has been deactivated. Contact admin.");
-        // await auth.signOut();
         router.push("/legal-agreement");
       }
 
       if (status === "rejected") {
         toast.error("Your registration was rejected. Contact admin.");
         router.push("/legal-agreement");
-        // await auth.signOut();
-        // return;
       }
 
       // Step 5: Successful login - Use backend's redirectionUrl
@@ -173,8 +169,7 @@ export function LoginForm() {
           setVerificationState("account-pending");
           setAccountStatus(backendError);
           router.push("/legal-agreement");
-          // await auth.signOut();
-          // return;
+          return;
         }
         errorMessage = backendError;
       } else if (error.response?.data?.error) {

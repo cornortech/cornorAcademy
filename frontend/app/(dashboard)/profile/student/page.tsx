@@ -14,7 +14,7 @@ import { authService } from "@/lib/api/auth.service";
 import { Loader2 } from "lucide-react";
 
 export default function StudentProfile() {
-  const { user, refreshUserProfile } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -67,7 +67,7 @@ export default function StudentProfile() {
       setSuccessMessage("Profile updated successfully!");
       setIsEditing(false);
       setTimeout(() => setSuccessMessage(""), 3000);
-      await refreshUserProfile();
+      await refreshUser();
     } catch (error) {
       alert("Failed to update profile");
     } finally {
