@@ -77,7 +77,7 @@ export const updateStudentSchema = z.object({
     email: z.string().optional(),
     phoneNumber: z.string().optional(),
     gender: z.enum(['male', 'female', 'other']).optional(),
-    image: z.string().nullable().optional(),
+    image: z.string().optional(),
     dob: z.string().optional(),
     address: z.string().optional(),
     city: z.string().optional(),
