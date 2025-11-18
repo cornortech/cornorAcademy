@@ -1,6 +1,6 @@
 import { initContract } from "@ts-rest/core";
 import { errorSchema, successSchema } from "../common.schema";
-import {  createEnrollementRequestForStudentSchema, getAllEnrollementRequestResponseSchema, getEnrollementRequestByStatusSchema, updateEnrollementRequestForAdminSchema } from "./enrollement.schema";
+import {  createEnrollementRequestForStudentSchema, getAllEnrollementRequestForStudentByIdParamsSchema, getAllEnrollementRequestForStudentByIdResponseSchema, getAllEnrollementRequestResponseSchema, getEnrollementRequestByStatusSchema, updateEnrollementRequestForAdminSchema } from "./enrollement.schema";
 
 const c = initContract();
 
@@ -14,6 +14,17 @@ export const enrollementRequestContract = c.router({
         responses: {
             200: getAllEnrollementRequestResponseSchema,
             404: errorSchema,
+            500: errorSchema,
+        },
+    },
+
+    getAllEnrollementRequestForStduentById: {
+        method: 'GET',
+        path: "/enrollement/:courseId/:studentId",
+        pathParams: getAllEnrollementRequestForStudentByIdParamsSchema,
+        summary: "Get all enrollement request of single student by id",
+        responses: {
+            200: getAllEnrollementRequestForStudentByIdResponseSchema,
             500: errorSchema,
         },
     },

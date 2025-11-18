@@ -41,3 +41,17 @@ export const getAllEnrollementRequestResponseSchema = z.array(
 export const getEnrollementRequestByStatusSchema = z.object({
     status: z.enum(['requested', 'approved', 'rejected']),
 });
+
+export const getAllEnrollementRequestForStudentByIdParamsSchema = z.object({
+    studentId: z.string(),
+    courseId: z.string(),
+});
+
+export const getAllEnrollementRequestForStudentByIdResponseSchema = z.object({
+    id: z.string(),
+    studentId: z.string(),
+    courseId: z.string(),
+    paymentURL: z.string(),
+    status: z.enum(['requested', 'approved', 'rejected']),
+    rejectionReason: z.string().nullable(),
+});
