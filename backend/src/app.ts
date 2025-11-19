@@ -26,7 +26,39 @@ app.use(
   })
 );
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
+// Swagger UI Configuration
+const swaggerOptions = {
+  customCss: `
+    .swagger-ui .topbar { display: none }
+    .swagger-ui .info { margin: 50px 0 }
+    .swagger-ui .info .title { color: #1f2937; font-size: 2.5rem; }
+  `,
+  customSiteTitle: "Cornor Academy API Docs",
+  customfavIcon: "/favicon.ico",
+  swaggerOptions: {
+    persistAuthorization: true,
+    displayRequestDuration: true,
+    filter: true,
+    tryItOutEnabled: true,
+  }
+};
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument, swaggerOptions));
+
+// Root endpoint with API information
+app.get("/", (req, res) => {
+  res.json({
+    message: "🎓 Cornor Academy Course Management API",
+    version: "1.0.0",
+    documentation: `${req.protocol}://${req.get('host')}/api-docs`,
+    endpoints: {
+      courses: "/course",
+      media: "/course-media", 
+      announcements: "/course/{courseId}/announcement"
+    },
+    status: "🟢 Online"
+  });
+});
 
 // // your ts-rest routers
 createExpressEndpoints(contract, router, app);

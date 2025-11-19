@@ -5,12 +5,23 @@ import { createCourseMediaSchema, deleteCourseMediaParamsSchema, deleteCourseMed
 const c = initContract();
 
 export const courseMediaContract = c.router({
+    createCourseMedia: {
+        method: "POST",
+        path: "/course-media",
+        body: createCourseMediaSchema,
+        summary: "📎 Upload Course Media - Upload videos, PDFs, images, and other course materials",
+        responses: {
+            201: successSchema,
+            400: errorSchema,
+            500: errorSchema,
+        },
+    },
 
     getAllCourseMediaByCourseId: {
         method: "GET",
         path: "/course-media/:courseId",
         pathParams: getAllCourseMediaByCourseIdSchema,
-        summary: "Get all course media by course ID",
+        summary: "📁 Get All Course Media - Retrieve all media files for a specific course",
         responses: {
             200: getAllCourseMediaByCourseIdResponseSchema,
             400: errorSchema,
@@ -22,23 +33,11 @@ export const courseMediaContract = c.router({
         method: "GET",
         path: "/course-media/:mediaId",
         pathParams: getCourseMediaByIdSchema,
-        summary: "Get course media by media ID",
+        summary: "📄 Get Specific Media - Get detailed information about a specific media file",
         responses: {
             200: getCourseMediaByIdResponseSchema,
             400: errorSchema,
             404: errorSchema,
-            500: errorSchema,
-        },
-    },
-
-    createCourseMedia: {
-        method: "POST",
-        path: "/course-media",
-        body: createCourseMediaSchema,
-        summary: "Create new course media upload for teacher",
-        responses: {
-            201: successSchema,
-            400: errorSchema,
             500: errorSchema,
         },
     },
@@ -48,7 +47,7 @@ export const courseMediaContract = c.router({
         path: "/course-media/:mediaId",
         pathParams: updateCourseMediaParamsSchema,
         body: updateCourseMediaSchema,
-        summary: "Update course media",
+        summary: "✏️ Update Course Media - Update media file title, description, or URL",
         responses: {
             200: successSchema,
             404: errorSchema,
@@ -61,7 +60,7 @@ export const courseMediaContract = c.router({
         path: "/course-media/:mediaId",
         pathParams: deleteCourseMediaParamsSchema,
         body: deleteCourseMediaSchema,
-        summary: "Delete course media by ID",
+        summary: "🗑️ Delete Course Media - Permanently remove a media file from course",
         responses: {
             200: successSchema,
             404: errorSchema,
