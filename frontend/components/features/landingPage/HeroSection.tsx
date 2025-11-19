@@ -1,9 +1,12 @@
+"use client";
 import { ArrowRight, Play, Zap } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/contexts/AuthContext";
 
 const HeroSection = () => {
+  const { user, logout } = useAuth();
   return (
     <section className="relative py-20 lg:py-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

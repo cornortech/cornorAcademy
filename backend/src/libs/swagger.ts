@@ -1,32 +1,9 @@
-<<<<<<< HEAD
-// openapi.ts
-=======
 // swagger.ts - Complete API Documentation
->>>>>>> Course/Enrollment
 import { generateOpenApi } from "@ts-rest/open-api";
 import { contract } from "../contract";
 
 export const openApiDocument = generateOpenApi(contract, {
   info: {
-<<<<<<< HEAD
-    title: "Your API Title",
-    version: "1.0.0",
-  },
-  baseUrl: "http://localhost:4000", // Your API base URL
-  // components: {
-  //   securitySchemes: {
-  //     bearerAuth: {
-  //       type: "http",
-  //       scheme: "bearer",
-  //     },
-  //   },
-  // },
-  // security: [
-  //   {
-  //     bearerAuth: [],
-  //   },
-  // ],
-=======
     title: "Cornor Academy - Course Management API",
     version: "1.0.0",
     description: `
@@ -368,5 +345,4 @@ All responses follow a consistent format:
       bearerAuth: []
     }
   ]
->>>>>>> Course/Enrollment
 });

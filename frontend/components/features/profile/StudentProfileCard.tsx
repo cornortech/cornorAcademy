@@ -34,11 +34,15 @@ export function StudentProfileCard({
         <div className="pt-4 space-y-2 border-t border-border/50">
           <div className="flex justify-between">
             <span className="text-muted-foreground">Courses Enrolled:</span>
-            <span className="font-medium">{user.enrolledCourses.length}</span>
+            <span className="font-medium">
+              {user.enrolledCourses?.length ?? 0}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Completed:</span>
-            <span className="font-medium">{user.completedCourses.length}</span>
+            <span className="font-medium">
+              {user.completedCourses?.length ?? 0}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-muted-foreground">Learning Hours:</span>

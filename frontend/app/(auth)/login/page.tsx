@@ -1,9 +1,6 @@
-"use client";
-
 import { BookOpen, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { LoginForm } from "@/components/features/auth/LoginForm";
-import DemoCredentials from "@/components/features/auth/DemoCredentials";
 import { APP_NAME } from "@/lib/config";
 
 export default function LoginPage() {
@@ -35,9 +32,6 @@ export default function LoginPage() {
 
         {/* Login Form */}
         <LoginForm />
-
-        {/* Demo Credentials */}
-        <DemoCredentials />
       </div>
     </div>
   );

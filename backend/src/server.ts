@@ -4,16 +4,6 @@ import { connectToDatabase } from "./libs/db";
 const PORT = process.env.PORT || 4000;
 
 async function startServer() {
-<<<<<<< HEAD
-    try {
-        await connectToDatabase();
-        app.listen(PORT, () => {
-            console.log(`🚀 Server running on http://localhost:${PORT}`);
-        });
-    } catch (err) {
-        console.error("Failed to connect to database:", err);
-        process.exit(1);
-=======
     // Start server first for Swagger documentation access
     app.listen(PORT, () => {
         console.log(`🚀 Server running on http://localhost:${PORT}`);
@@ -29,7 +19,6 @@ async function startServer() {
         console.error("⚠️ Database connection failed:", err);
         console.log("📝 Note: Server is still running for API documentation and testing");
         console.log("🔧 APIs will return database errors until DB is connected");
->>>>>>> Course/Enrollment
     }
 }
 

@@ -7,16 +7,6 @@ const s = initServer();
 
 export const courseRouter = s.router(courseContract, {
     createCourse: courseMutationHandlers.createCourse,
-<<<<<<< HEAD
-
-    updateCourse: courseMutationHandlers.updateCourse,
-
-    getAllCourses: courseQueryHandlers.getAllCourses,
-
-    getCourseById: courseQueryHandlers.getCourseById,
-
-    deleteCourse: courseQueryHandlers.deleteCourse,
-=======
     updateCourse: courseMutationHandlers.updateCourse,
     updateCourseStatus: courseMutationHandlers.updateCourseStatus,
     deleteCourse: courseMutationHandlers.deleteCourse,
@@ -26,5 +16,5 @@ export const courseRouter = s.router(courseContract, {
     getCoursesByTeacher: courseQueryHandlers.getCoursesByTeacher,
     getCoursesByStatus: courseQueryHandlers.getCoursesByStatus,
     searchCourses: courseQueryHandlers.searchCourses,
->>>>>>> Course/Enrollment
+    createCourseAgreement: courseMutationHandlers.createCourseAgreement,
 });

@@ -1,22 +1,11 @@
 import { initContract } from "@ts-rest/core";
 import { errorSchema, successSchema } from "../common.schema";
-import { createTeacherSchema, deleteTeacherSchema, getAllTeachersResponseSchema, getTeacherByIdResponseSchema, getTeacherByIdSchema, updateTeacherParamsSchema, updateTeacherSchema } from "./teacher.schema";
+import { createTeacherSchema, deleteTeacherParamsSchema, deleteTeacherSchema, getAllTeachersResponseSchema, getTeacherByIdResponseSchema, getTeacherByIdSchema, updateTeacherParamsSchema, updateTeacherSchema } from "./teacher.schema";
 import { updateStudentParamsSchema, updateStudentSchema } from "../student/student.schema";
 
 const c = initContract();
 
 export const teacherContract = c.router({
-    createTeacher: {
-        method: "POST",
-        path: "/teacher",
-        body: createTeacherSchema,
-        summary: "Create new teacher profile",
-        responses: {
-            201: successSchema,
-            400: errorSchema,
-            500: errorSchema,
-        },
-    },
 
     getAllTeachers: {
         method: "GET",
@@ -30,7 +19,7 @@ export const teacherContract = c.router({
 
     getTeacherById: {
         method: "GET",
-        path: "/teacher/:id",
+        path: "/teacher/:teacherId",
         pathParams: getTeacherByIdSchema,
         summary: "Get teacher profile taken from id",
         responses: {
@@ -40,9 +29,21 @@ export const teacherContract = c.router({
         },
     },
 
+    createTeacher: {
+        method: "POST",
+        path: "/teacher",
+        body: createTeacherSchema,
+        summary: "Create new teacher profile",
+        responses: {
+            201: successSchema,
+            400: errorSchema,
+            500: errorSchema,
+        },
+    },
+
     updateTeacher: {
         method: "PUT",
-        path: "/teacher/update/:id",
+        path: "/teacher/:teacherId",
         pathParams: updateTeacherParamsSchema,
         body: updateTeacherSchema,
         summary: "Update teacher profile by id",
@@ -55,13 +56,14 @@ export const teacherContract = c.router({
 
     deleteTeacher: {
         method: "DELETE",
-        path: "/teacher/:id",
-        pathParams: deleteTeacherSchema,
+        path: "/teacher/:teacherId",
+        pathParams: deleteTeacherParamsSchema,
+        body: deleteTeacherSchema,
         summary: "Delete teacher profile by id",
         responses: {
-           200: successSchema,
-           404: errorSchema,
-           500: errorSchema, 
+            200: successSchema,
+            404: errorSchema,
+            500: errorSchema,
         },
     },
 });

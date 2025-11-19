@@ -1,7 +1,6 @@
 import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { courseContract } from "../../contract/course/course.contract";
 import prisma from "../../libs/db";
-import { title } from "process";
 
 const createCourse: AppRouteMutationImplementation<
     typeof courseContract.createCourse
@@ -87,7 +86,7 @@ const updateCourse: AppRouteMutationImplementation<
 > = async ({ req }) => {
     try {
 
-        const { id } = req.params;
+        const { courseId } = req.params;
 
         const
             {
@@ -109,7 +108,7 @@ const updateCourse: AppRouteMutationImplementation<
             } = req.body;
 
         const courseExists = await prisma.course.findUnique({
-            where: { id },
+            where: { id: courseId },
         });
 
         if (!courseExists) {
@@ -124,7 +123,7 @@ const updateCourse: AppRouteMutationImplementation<
 
         const courseUpdated = await prisma.course.update({
             where: {
-                id
+                id: courseId,
             },
             data: {
                 title,
@@ -167,11 +166,46 @@ const updateCourse: AppRouteMutationImplementation<
     }
 };
 
-<<<<<<< HEAD
-export const courseMutationHandlers = {
-    createCourse,
-    updateCourse,
-=======
+const createCourseAgreement:AppRouteMutationImplementation<
+typeof courseContract.createCourseAgreement
+> = async({ req }) => {
+    try {
+        const { studentId } = req.params;
+
+        const {
+            agreementURL,
+        } = req.body;
+
+        await prisma.courseAgreement.create({
+            data: {
+                studentId,
+                agreementURL,
+            },
+            include: {
+                student: true,
+            }
+        });
+
+        return {
+            status: 201,
+            body: {
+                success: true,
+                message: "Agreement for course created successfully",
+            },
+        };
+
+    } catch (error) {
+        console.error("Failed to create agreement", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Internal server error" || error,
+            },
+        }
+    }
+};
+
 const updateCourseStatus: AppRouteMutationImplementation<
     typeof courseContract.updateCourseStatus
 > = async ({ req }) => {
@@ -222,11 +256,11 @@ const deleteCourse: AppRouteMutationImplementation<
 > = async ({ req }) => {
     try {
 
-        const { id } = req.params;
+        const { courseId } = req.params;
 
         const courseExists = await prisma.course.findUnique({
             where: {
-                id
+                id: courseId,
             }
         });
 
@@ -242,7 +276,7 @@ const deleteCourse: AppRouteMutationImplementation<
 
         await prisma.course.delete({
             where: {
-                id
+                id: courseId,
             },
         });
 
@@ -272,5 +306,5 @@ export const courseMutationHandlers = {
     updateCourse,
     updateCourseStatus,
     deleteCourse,
->>>>>>> Course/Enrollment
+    createCourseAgreement
 }

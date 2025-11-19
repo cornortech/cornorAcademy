@@ -13,6 +13,7 @@ const getAllStudents: AppRouteQueryImplementation<
             status: 200,
             body: allStudent.map(student => ({
                 id: student.id,
+                uid: student.uid,
                 name: student.name,
                 email: student.email,
                 phoneNumber: student.phoneNumber,
@@ -73,6 +74,7 @@ const getStudentById: AppRouteQueryImplementation<
             status: 200,
             body: {
                 id: studentById.id,
+                uid: studentById.uid,
                 name: studentById.name,
                 email: studentById.email,
                 phoneNumber: studentById.phoneNumber,
@@ -106,53 +108,7 @@ const getStudentById: AppRouteQueryImplementation<
     }
 };
 
-const deleteStudent: AppRouteQueryImplementation<
-    typeof studentContract.deleteStudent
-> = async ({ req }) => {
-    try {
-
-        const { id } = req.params;
-
-        const studentExists = await prisma.student.findUnique({
-            where: { id },
-        });
-
-        if (!studentExists) {
-            return {
-                status: 404,
-                body: {
-                    success: false,
-                    error: "Student not found",
-                },
-            };
-        }
-
-        const deletedStudentById = await prisma.student.delete({
-            where: { id },
-        });
-
-        return {
-            status: 200,
-            body: {
-                success: true,
-                message: "Student Profile Deleted Successfully",
-            },
-        };
-
-    } catch (error) {
-        console.error("Error deleting student:", error);
-        return {
-            status: 500,
-            body: {
-                success: false,
-                error: "Internal Server Error",
-            },
-        };
-    }
-};
-
 export const studentQueryHandlers = {
     getAllStudents,
     getStudentById,
-    deleteStudent,
 }

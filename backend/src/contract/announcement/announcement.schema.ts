@@ -34,6 +34,8 @@ export const updateCourseAnnouncementSchema = z.object({
     message: z.string().optional(),
 });
 
-export const deleteCourseAnnouncementSchema = z.object({
+export const deleteCourseAnnouncementParamsSchema = z.object({
     announcementId: z.string().uuid(),
 });
+
+export const deleteCourseAnnouncementSchema = z.object({ });

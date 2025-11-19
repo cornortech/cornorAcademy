@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -16,8 +16,37 @@ import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Canvas } from "@/components/signature-canvas";
 import AgreementContent from "@/components/features/legal/agreement-content";
+import { useAuth } from "@/contexts/AuthContext";
+import { useUploadImage } from "@/hooks/use-media";
+import axiosInstance from "@/lib/api/axios";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { authService } from "@/lib/api/auth.service";
+import { UserRole } from "@/types";
+
+const dataURLtoFile = (dataURL: string, filename: string): File => {
+  const arr = dataURL.split(",");
+  const mime = arr[0].match(/:(.*?);/)?.[1] || "image/png";
+  const bstr = atob(arr[1]);
+  let n = bstr.length;
+  const u8arr = new Uint8Array(n);
+  while (n--) u8arr[n] = bstr.charCodeAt(n);
+  return new File([u8arr], filename, { type: mime });
+};
 
 export default function LegalAgreementPage() {
+  const {
+    user,
+    userData,
+    userRole,
+    userStatus,
+    updateUserStatus,
+    refreshUser,
+  } = useAuth();
+  const { uploadImage } = useUploadImage();
+  const router = useRouter();
+
+  const [signatureURL, setSignatureURL] = useState<string | null>(null);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToPolicy, setAgreedToPolicy] = useState(false);
   const [agreedToRefund, setAgreedToRefund] = useState(false);
@@ -26,6 +55,36 @@ export default function LegalAgreementPage() {
   const [signaturePad, setSignaturePad] = useState<any>(null);
   const [isSigned, setIsSigned] = useState(false);
   const [isAgreementSigned, setIsAgreementSigned] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      router.push("/login");
+      return;
+    }
+
+    setStudentName(user.displayName || "");
+    setStudentEmail(user.email || "");
+
+    if (userStatus === "portalActivated") {
+      redirectToDashboard();
+    }
+  }, [user, userStatus]);
+
+  const redirectToDashboard = () => {
+    if (!userRole) return;
+
+    switch (userRole) {
+      case "student":
+        router.push("/student");
+        break;
+      case "teacher":
+        router.push("/teacher");
+        break;
+      case "admin":
+        router.push("/admin");
+        break;
+    }
+  };
 
   const handleSignature = useCallback((canvas: any) => {
     setSignaturePad(canvas);
@@ -44,7 +103,7 @@ export default function LegalAgreementPage() {
     }
   };
 
-  const handleCompleteAgreement = () => {
+  const handleCompleteAgreement = async () => {
     if (
       agreedToTerms &&
       agreedToPolicy &&
@@ -53,7 +112,33 @@ export default function LegalAgreementPage() {
       studentName &&
       studentEmail
     ) {
-      setIsAgreementSigned(true);
+      if (!signaturePad) return;
+
+      const dataUrl = signaturePad.toDataURL();
+      const file = dataURLtoFile(dataUrl, `signature_${Date.now()}.png`);
+
+      const uploadResult = await uploadImage(file);
+
+      if (uploadResult.url) {
+        setSignatureURL(uploadResult.url);
+
+        try {
+          const res = await authService.uploadLegalAgreement(uploadResult.url);
+          const profileRes = await authService.getUserProfile();
+          profileRes.role;
+          if (res.data.success) {
+            updateUserStatus("portalActivated");
+            await refreshUser();
+            toast.success(res.data.message);
+            // router.push(`/${role}`);
+            setIsAgreementSigned(true);
+          }
+        } catch (err) {
+          console.error("Error submitting agreement:", err);
+        }
+
+        setIsAgreementSigned(true);
+      }
     }
   };
 
@@ -82,8 +167,7 @@ export default function LegalAgreementPage() {
               Agreement Signed Successfully!
             </h1>
             <p className="text-muted-foreground mb-6">
-              Your legal agreement has been signed and recorded. A confirmation
-              email has been sent to {studentEmail}.
+              Your legal agreement has been signed and recorded.
             </p>
             <div className="bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800 rounded-lg p-4 mb-6 text-sm">
               <p className="text-green-800 dark:text-green-200">
@@ -94,7 +178,7 @@ export default function LegalAgreementPage() {
             </div>
             <div className="space-y-3">
               <Button asChild className="w-full">
-                <Link href="/enroll/1">Proceed to Enrollment</Link>
+                <Link href={`/${userRole}`}>Proceed to Dashboard</Link>
               </Button>
               <Button
                 variant="outline"
@@ -145,7 +229,7 @@ export default function LegalAgreementPage() {
 
           <div className="grid gap-8">
             {/* Legal Agreement Content */}
-            <Card className="border-border/50 bg-card/50 backdrop-blur">
+            <Card className="border-border/50 bg-card/50 backdrop-blur overflow-auto">
               <CardHeader>
                 <CardTitle>Terms & Conditions</CardTitle>
                 <CardDescription>
@@ -170,8 +254,8 @@ export default function LegalAgreementPage() {
                     <Input
                       id="name"
                       placeholder="Enter your full name"
-                      value={studentName}
-                      onChange={(e) => setStudentName(e.target.value)}
+                      defaultValue={user?.displayName || ""}
+                      disabled
                     />
                   </div>
                   <div className="space-y-2">
@@ -180,8 +264,8 @@ export default function LegalAgreementPage() {
                       id="email"
                       type="email"
                       placeholder="Enter your email"
-                      value={studentEmail}
-                      onChange={(e) => setStudentEmail(e.target.value)}
+                      defaultValue={user?.email || ""}
+                      disabled
                     />
                   </div>
                 </div>
@@ -291,9 +375,7 @@ export default function LegalAgreementPage() {
                 {(!agreedToTerms ||
                   !agreedToPolicy ||
                   !agreedToRefund ||
-                  !isSigned ||
-                  !studentName ||
-                  !studentEmail) && (
+                  !isSigned) && (
                   <div className="flex items-start space-x-2 p-3 bg-yellow-50 dark:bg-yellow-950/20 rounded-lg">
                     <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5 shrink-0" />
                     <span className="text-sm text-yellow-700 dark:text-yellow-200">

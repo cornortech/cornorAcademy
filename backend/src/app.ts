@@ -26,9 +26,6 @@ app.use(
   })
 );
 
-<<<<<<< HEAD
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument));
-=======
 // Swagger UI Configuration
 const swaggerOptions = {
   customCss: `
@@ -62,7 +59,6 @@ app.get("/", (req, res) => {
     status: "🟢 Online"
   });
 });
->>>>>>> Course/Enrollment
 
 // // your ts-rest routers
 createExpressEndpoints(contract, router, app);

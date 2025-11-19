@@ -3,88 +3,120 @@
 import { useRef, useEffect } from "react";
 
 interface SignatureCanvasProps {
-  onCanvasReady?: (canvas: any) => void;
+  onCanvasReady?: (api: {
+    clear: () => void;
+    toDataURL: () => string;
+    isEmpty: () => boolean;
+  }) => void;
 }
 
 export function Canvas({ onCanvasReady }: SignatureCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const isDrawingRef = useRef(false);
+  const hasDrawnRef = useRef(false);
+  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const context = canvas.getContext("2d");
-    if (!context) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
-    canvas.width = canvas.offsetWidth;
-    canvas.height = 200;
+    ctxRef.current = ctx;
 
-    context.lineCap = "round";
-    context.lineJoin = "round";
-    context.lineWidth = 2;
-    context.strokeStyle = "#9334EB";
-
-    onCanvasReady?.({
-      clear: () => context.clearRect(0, 0, canvas.width, canvas.height),
-      toDataURL: () => canvas.toDataURL("image/png"),
-      isEmpty: () => false,
-    });
-
-    const getCoordinates = (e: MouseEvent | TouchEvent) => {
+    const setupCanvas = () => {
       const rect = canvas.getBoundingClientRect();
-      if ("touches" in e) {
-        return {
-          x: e.touches[0].clientX - rect.left,
-          y: e.touches[0].clientY - rect.top,
-        };
-      }
+      const scale = window.devicePixelRatio || 1;
+
+      const oldImage = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+      canvas.width = rect.width * scale;
+      canvas.height = rect.height * scale;
+
+      ctx.scale(scale, scale);
+
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#9334EB";
+
+      ctx.putImageData(oldImage, 0, 0);
+    };
+
+    // Prevent clearing drawing on resize
+    const savedImage = () =>
+      ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+    const redraw = () => {
+      // const image = savedImage();
+      setupCanvas();
+      // if (image) ctx.putImageData(image, 0, 0);
+    };
+
+    setupCanvas();
+    window.addEventListener("resize", redraw);
+
+    const getCoords = (e: MouseEvent | TouchEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      const client = "touches" in e ? e.touches[0] : e;
       return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
+        x: client.clientX - rect.left,
+        y: client.clientY - rect.top,
       };
     };
 
-    const startDrawing = (e: MouseEvent | TouchEvent) => {
+    const start = (e: MouseEvent | TouchEvent) => {
       e.preventDefault();
       isDrawingRef.current = true;
-      const { x, y } = getCoordinates(e);
-      context.beginPath();
-      context.moveTo(x, y);
+      const { x, y } = getCoords(e);
+      ctx.beginPath();
+      ctx.moveTo(x, y);
     };
 
     const draw = (e: MouseEvent | TouchEvent) => {
       if (!isDrawingRef.current) return;
       e.preventDefault();
-      const { x, y } = getCoordinates(e);
-      context.lineTo(x, y);
-      context.stroke();
+      const { x, y } = getCoords(e);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+      hasDrawnRef.current = true;
     };
 
-    const stopDrawing = () => {
+    const end = () => {
       isDrawingRef.current = false;
-      context.closePath();
+      ctx.closePath();
     };
 
-    canvas.addEventListener("mousedown", startDrawing);
+    canvas.addEventListener("mousedown", start);
     canvas.addEventListener("mousemove", draw);
-    canvas.addEventListener("mouseup", stopDrawing);
-    canvas.addEventListener("mouseleave", stopDrawing);
-
-    canvas.addEventListener("touchstart", startDrawing);
+    canvas.addEventListener("mouseup", end);
+    canvas.addEventListener("mouseleave", end);
+    canvas.addEventListener("touchstart", start);
     canvas.addEventListener("touchmove", draw);
-    canvas.addEventListener("touchend", stopDrawing);
+    canvas.addEventListener("touchend", end);
+
+    // API exposed to parent
+    onCanvasReady?.({
+      clear: () => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        hasDrawnRef.current = false;
+      },
+      toDataURL: () => canvas.toDataURL("image/png"),
+      isEmpty: () => !hasDrawnRef.current,
+    });
 
     return () => {
-      canvas.removeEventListener("mousedown", startDrawing);
+      window.removeEventListener("resize", redraw);
+      canvas.removeEventListener("mousedown", start);
       canvas.removeEventListener("mousemove", draw);
-      canvas.removeEventListener("mouseup", stopDrawing);
-      canvas.removeEventListener("mouseleave", stopDrawing);
-      canvas.removeEventListener("touchstart", startDrawing);
+      canvas.removeEventListener("mouseup", end);
+      canvas.removeEventListener("mouseleave", end);
+      canvas.removeEventListener("touchstart", start);
       canvas.removeEventListener("touchmove", draw);
-      canvas.removeEventListener("touchend", stopDrawing);
+      canvas.removeEventListener("touchend", end);
     };
-  }, []);
+  }, [onCanvasReady]);
 
   return (
     <canvas

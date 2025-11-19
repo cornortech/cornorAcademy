@@ -1,7 +1,16 @@
-import { ArrowLeft, BookOpen } from "lucide-react";
+"use client";
+import { ArrowLeft, BookOpen, LayoutDashboard, LogOut } from "lucide-react";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { APP_NAME } from "@/lib/config";
+import { useAuth } from "@/contexts/AuthContext";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@radix-ui/react-dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 
 interface PublicHeaderProps {
   showNav?: boolean;
@@ -12,6 +21,9 @@ const PublicHeader = ({
   showNav = true,
   showBackButton = false,
 }: PublicHeaderProps) => {
+  const { user, logout, userRole } = useAuth();
+
+  console.log(user?.getIdToken());
   return (
     <nav className="border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -70,14 +82,68 @@ const PublicHeader = ({
             </nav>
           )}
 
-          <div className="flex items-center space-x-4">
-            <Button variant="ghost" asChild>
-              <Link href="/login">Sign In</Link>
-            </Button>
-            <Button asChild>
-              <Link href="/signup">Get Started</Link>
-            </Button>
-          </div>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="flex items-center space-x-2  rounded-full px-2 py-1 transition"
+                >
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.photoURL || ""} />
+                    <AvatarFallback>
+                      {user.displayName?.[0] || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+
+              <DropdownMenuContent className="w-40 bg-background  rounded-xl shadow-lg py-2">
+                <DropdownMenuItem
+                  asChild
+                  className="hover:bg-primary/10 transition"
+                >
+                  <Link
+                    href={`/${userRole || "student"}`}
+                    className="flex items-center space-x-2 px-4 py-2"
+                  >
+                    <LayoutDashboard className="h-4 w-4" />
+                    <span>Dashboard</span>
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  asChild
+                  className="hover:bg-primary/10 transition"
+                >
+                  <Link
+                    href="/courses"
+                    className="flex items-center space-x-2 px-4 py-2"
+                  >
+                    <BookOpen className="h-4 w-4" />
+                    <span>Courses</span>
+                  </Link>
+                </DropdownMenuItem>
+
+                <DropdownMenuItem
+                  onSelect={logout}
+                  className="hover:bg-red-500 hover:text-white transition flex items-center space-x-2 px-4 py-2 rounded-b-xl"
+                >
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" asChild>
+                <Link href="/login">Sign In</Link>
+              </Button>
+              <Button asChild>
+                <Link href="/signup">Get Started</Link>
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </nav>

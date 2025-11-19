@@ -1,8 +1,5 @@
 export type UserRole = "student" | "teacher" | "admin";
 export type UserStatus =
-  | "active"
-  | "pending"
-  | "inactive"
   | "registered"
   | "rejected"
   | "portalActivated"
@@ -24,7 +21,7 @@ export interface SignupFormData {
   role: UserRole | "";
   phoneNumber: string;
   gender: Gender | "";
-  image?: File;
+  image: File | null;
   dob: string;
   address: string;
   city: string;
@@ -35,6 +32,16 @@ export interface SignupFormData {
   educationInstitute: string;
   qualification: string;
   agreeToTerms: boolean;
+}
+
+export interface LoginResponse {
+  uid: string;
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  status?: UserStatus;
+  redirectionUrl?: string;
 }
 
 export interface BaseUser {

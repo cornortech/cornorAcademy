@@ -14,5 +14,5 @@ export const teacherRouter = s.router(teacherContract, {
 
     updateTeacher: teacherMutationHandlers.updateTeacher,
 
-    deleteTeacher: teacherQueryHandlers.deleteTeacher,
+    deleteTeacher: teacherMutationHandlers.deleteTeacher,
 });

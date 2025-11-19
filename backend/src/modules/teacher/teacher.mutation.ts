@@ -7,7 +7,7 @@ const createTeacher: AppRouteMutationImplementation<
 > = async ({ req }) => {
     try {
 
-        const { name, email, bio, noOfYearsExperience, expertise, dob, gender } = req.body;
+        const { name, email, image, bio, noOfYearsExperience, expertise, dob, gender } = req.body;
 
         const teacherExists = await prisma.teacher.findUnique({
             where: {
@@ -29,6 +29,7 @@ const createTeacher: AppRouteMutationImplementation<
             data: {
                 name,
                 email,
+                image,
                 bio,
                 noOfYearsExperience,
                 expertise,
@@ -61,13 +62,13 @@ const updateTeacher: AppRouteMutationImplementation<
     typeof teacherContract.updateTeacher
 > = async ({ req }) => {
     try {
-        const { id } = req.params;
+        const { teacherId } = req.params;
 
-        const { name, email, bio, noOfYearsExperience, expertise, dob, gender, status } = req.body;
+        const { name, email, image, bio, noOfYearsExperience, expertise, dob, gender, status } = req.body;
 
         const teacherExists = await prisma.teacher.findUnique({
             where: {
-                id
+                id: teacherId,
             },
         });
 
@@ -83,11 +84,12 @@ const updateTeacher: AppRouteMutationImplementation<
 
         const updatedTeacher = await prisma.teacher.update({
             where: {
-                id
+                id: teacherId,
             },
             data: {
                 name,
                 email,
+                image,
                 bio, 
                 noOfYearsExperience,
                 expertise,
@@ -117,7 +119,58 @@ const updateTeacher: AppRouteMutationImplementation<
     }
 };
 
+const deleteTeacher:AppRouteMutationImplementation<
+typeof teacherContract.deleteTeacher
+> = async ({ req }) => {
+    try {
+
+        const { 
+            teacherId,
+         } = req.params;
+
+        const teacherExists = await prisma.teacher.findUnique({
+            where: {
+                id: teacherId,
+            },
+        });
+
+        if (!teacherExists) {
+            return {
+                status: 404,
+                body: {
+                    success: false,
+                    error: "Teacher profile not found",
+                },
+            };
+        }
+
+        await prisma.teacher.delete({
+            where: {
+                id: teacherId,
+            },
+        });
+
+        return {
+            status: 200,
+            body: {
+                success: true,
+                message: "Teacher Profile Deleted Successfully",
+            },
+        };
+    } catch (error) {
+        console.error("Error deleting teacher profile:", error);
+        return {
+            status: 500,
+            body: {
+                success: false,
+                error: "Internal Server Error",
+            },
+        };
+    }
+};
+
 export const teacherMutationHandlers = {
     createTeacher,
     updateTeacher,
+    deleteTeacher,
 }
