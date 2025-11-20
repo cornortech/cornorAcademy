@@ -7,14 +7,14 @@ const s = initServer();
 
 export const courseRouter = s.router(courseContract, {
     createCourse: courseMutationHandlers.createCourse,
-
     updateCourse: courseMutationHandlers.updateCourse,
-
-    getAllCourses: courseQueryHandlers.getAllCourses,
-
-    getCourseById: courseQueryHandlers.getCourseById,
-
+    updateCourseStatus: courseMutationHandlers.updateCourseStatus,
     deleteCourse: courseMutationHandlers.deleteCourse,
-
+    getAllCourses: courseQueryHandlers.getAllCourses,
+    getCourseById: courseQueryHandlers.getCourseById,
+    getCoursesByCategory: courseQueryHandlers.getCoursesByCategory,
+    getCoursesByTeacher: courseQueryHandlers.getCoursesByTeacher,
+    getCoursesByStatus: courseQueryHandlers.getCoursesByStatus,
+    searchCourses: courseQueryHandlers.searchCourses,
     createCourseAgreement: courseMutationHandlers.createCourseAgreement,
 });

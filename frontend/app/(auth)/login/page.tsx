@@ -1,5 +1,3 @@
-"use client";
-
 import { BookOpen, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { LoginForm } from "@/components/features/auth/LoginForm";

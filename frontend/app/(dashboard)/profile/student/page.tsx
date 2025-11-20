@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Student } from "@/types";
 import { mockStudentData } from "@/lib/data";
@@ -9,49 +9,45 @@ import { PersonalInfoTab } from "@/components/features/profile/PersonalInfoTab";
 import EducationTab from "@/components/features/profile/EducationTab";
 import AccountInfoTable from "@/components/features/profile/AccountInfoTable";
 import { ProfileLayout } from "@/components/features/profile/ProfileLayout";
+import { useAuth } from "@/contexts/AuthContext";
+import { authService } from "@/lib/api/auth.service";
+import { Loader2 } from "lucide-react";
 
 export default function StudentProfile() {
+  const { user, refreshUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [successMessage, setSuccessMessage] = useState("");
-  const [user, setUser] = useState<Student>(mockStudentData);
+  const [userData, setUserData] = useState<Student | null>(null);
 
-  const [formData, setFormData] = useState({
-    name: "Alex Johnson",
-    email: "alex.johnson@email.com",
-    phoneNumber: "+1 (555) 123-4567",
-    gender: "Male",
-    dob: "1995-03-15",
-    address: "123 Main Street, Apt 4B",
-    city: "New York",
-    district: "Manhattan",
-    pincode: "10001",
-    country: "United States",
-    about: "Passionate about web development and continuous learning.",
-    educationInstitute: "New York University",
-    qualification: "Bachelor's in Computer Science",
-  });
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const loadUserData = async () => {
+    try {
+      setIsLoading(true);
+      const profile = await authService.getUserProfile();
+      // TODO: Fetch full student data from  backend
+      // For now, using the profile data
+      setUserData(profile as any);
+    } catch (error) {
+      console.error("Failed to load user data:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleInputChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { id, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [id
-        .replace("std-", "")
-        .replace(/([A-Z])/g, "-$1")
-        .toLowerCase()
-        .split("-")
-        .map((word, i) =>
-          i === 0 ? word : word.charAt(0).toUpperCase() + word.slice(1)
-        )
-        .join("")]: value,
-    }));
+    setUserData((prev) => (prev ? { ...prev, [id]: value } : null));
   };
 
   const handleSave = async () => {
-    if (!formData.name || !formData.email) {
+    if (!userData?.name || !userData?.email) {
       alert("Please fill in required fields");
       return;
     }
@@ -59,10 +55,19 @@ export default function StudentProfile() {
     setIsSaving(true);
     try {
       // Simulate API call
+
+      await authService.updateStudentProfile({
+        name: userData.name,
+        email: userData.email,
+        phoneNumber: userData.phoneNumber,
+        // ... other fields
+      });
+
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setSuccessMessage("Profile updated successfully!");
       setIsEditing(false);
       setTimeout(() => setSuccessMessage(""), 3000);
+      await refreshUser();
     } catch (error) {
       alert("Failed to update profile");
     } finally {
@@ -70,11 +75,23 @@ export default function StudentProfile() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  if (!userData) {
+    return <div>Error loading profile</div>;
+  }
+
   return (
     <ProfileLayout
       sidebar={
         <StudentProfileCard
-          user={user}
+          user={userData}
           isEditing={isEditing}
           onEditToggle={() => setIsEditing((p) => !p)}
           successMessage={successMessage}
@@ -90,7 +107,7 @@ export default function StudentProfile() {
 
         <TabsContent value="personal" className="space-y-6">
           <PersonalInfoTab
-            formData={user}
+            formData={userData}
             isEditing={isEditing}
             isSaving={isSaving}
             onInputChange={handleInputChange}
@@ -100,7 +117,7 @@ export default function StudentProfile() {
 
         <TabsContent value="education" className="space-y-6">
           <EducationTab
-            formData={user}
+            formData={userData}
             isEditing={isEditing}
             isSaving={isSaving}
             onInputChange={handleInputChange}
@@ -110,7 +127,7 @@ export default function StudentProfile() {
 
         <TabsContent value="account" className="space-y-6">
           <AccountInfoTable
-            user={user}
+            user={userData}
             isEditing={isEditing}
             onInputChange={handleInputChange}
           />

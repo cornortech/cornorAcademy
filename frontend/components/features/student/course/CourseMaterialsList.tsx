@@ -77,7 +77,7 @@ export function CourseMaterialsList({
                 )}
                 <Button variant="outline" size="sm" asChild>
                   <Link
-                    href={`/dashboard/student/materials/${courseId}?material=${material.id}`}
+                    href={`/student/materials/${courseId}?material=${material.id}`}
                   >
                     {material.type === "video" ? (
                       <>

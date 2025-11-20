@@ -19,6 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  useCreateCourse,
+  useUpdateCourse,
+  CreateCourseInput,
+} from "@/api/course";
 
 interface CourseDialogProps {
   open: boolean;
@@ -89,6 +94,55 @@ export function CourseDialog({
               }
             />
           </div>
+
+          {/* Additional fields for backend API */}
+          <div className="space-y-2">
+            <Label htmlFor="requirements">Requirements (comma separated)</Label>
+            <Input
+              id="requirements"
+              placeholder="e.g., Basic computer knowledge, Internet connection"
+              value={formData.requirements || ""}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  requirements: e.target.value.split(",").map((r) => r.trim()),
+                })
+              }
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="includes">What's Included (comma separated)</Label>
+            <Input
+              id="includes"
+              placeholder="e.g., Video lectures, PDF notes, Certificate"
+              value={formData.includes || ""}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  includes: e.target.value.split(",").map((i) => i.trim()),
+                })
+              }
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="outcomes">
+              Learning Outcomes (comma separated)
+            </Label>
+            <Input
+              id="outcomes"
+              placeholder="e.g., Build websites, Understand JavaScript, Deploy projects"
+              value={formData.outcomes || ""}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  outcomes: e.target.value.split(",").map((o) => o.trim()),
+                })
+              }
+            />
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="price">Price ($)</Label>
@@ -104,20 +158,124 @@ export function CourseDialog({
             </div>
             <div className="space-y-2">
               <Label htmlFor="duration">Duration (weeks)</Label>
-              <Input id="duration" type="number" placeholder="12" />
+              <Input
+                id="duration"
+                type="number"
+                placeholder="12"
+                value={formData.duration || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, duration: e.target.value })
+                }
+              />
             </div>
           </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="startDate">Start Date</Label>
+              <Input
+                id="startDate"
+                type="date"
+                value={formData.startDate || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, startDate: e.target.value })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="meetingTime">Meeting Time</Label>
+              <Input
+                id="meetingTime"
+                type="datetime-local"
+                value={formData.meetingTime || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, meetingTime: e.target.value })
+                }
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="category">Category</Label>
+              <Select
+                value={formData.category || "WebDevelopment"}
+                onValueChange={(v) => setFormData({ ...formData, category: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="WebDevelopment">
+                    Web Development
+                  </SelectItem>
+                  <SelectItem value="ui">UI/UX Design</SelectItem>
+                  <SelectItem value="DataScience">Data Science</SelectItem>
+                  <SelectItem value="DigitalMarketing">
+                    Digital Marketing
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="level">Level</Label>
+              <Select
+                value={formData.level || "beginner"}
+                onValueChange={(v) => setFormData({ ...formData, level: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select level" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="beginner">Beginner</SelectItem>
+                  <SelectItem value="intermediate">Intermediate</SelectItem>
+                  <SelectItem value="advanced">Advanced</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="language">Language</Label>
+              <Select
+                value={formData.language || "english"}
+                onValueChange={(v) => setFormData({ ...formData, language: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select language" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="english">English</SelectItem>
+                  <SelectItem value="nepali">Nepali</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="thumbnail">Thumbnail URL</Label>
+              <Input
+                id="thumbnail"
+                placeholder="https://example.com/image.jpg"
+                value={formData.thumbnail || ""}
+                onChange={(e) =>
+                  setFormData({ ...formData, thumbnail: e.target.value })
+                }
+              />
+            </div>
+          </div>
+
           <div className="space-y-2">
-            <Label htmlFor="startTime">Course Start Time</Label>
+            <Label htmlFor="meetingUrl">Meeting URL</Label>
             <Input
-              id="startTime"
-              type="datetime-local"
-              value={formData.startTime || ""}
+              id="meetingUrl"
+              placeholder="https://meet.google.com/abc-defg-hij"
+              value={formData.meetingUrl || ""}
               onChange={(e) =>
-                setFormData({ ...formData, startTime: e.target.value })
+                setFormData({ ...formData, meetingUrl: e.target.value })
               }
             />
           </div>
+
           {mode === "create" && (
             <div className="space-y-2">
               <Label htmlFor="instructor">Assign Instructor</Label>

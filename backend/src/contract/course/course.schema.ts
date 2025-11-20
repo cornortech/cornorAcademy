@@ -53,6 +53,7 @@ export const getAllCoursesResponseSchema = z.array(
                 title: z.string(),
                 noOfLesson: z.number(),
                 content: z.array(z.string()),
+                duration:z.number(),
             }),
         ),
         teacher: z.object({
@@ -137,7 +138,6 @@ export const deleteCourseParamsSchema = z.object({
     courseId: z.string().uuid(),
 });
 
-export const deleteCourseSchema = z.object({});
 
 export const courseAgreementParamasSchema = z.object({
     studentId: z.string(),
@@ -145,4 +145,32 @@ export const courseAgreementParamasSchema = z.object({
 
 export const createcourseAgreementSchema = z.object({
     agreementURL: z.string(),
+});
+
+export const deleteCourseSchema = z.object({
+    id: z.string().uuid(),
+});
+
+export const getCoursesByCategorySchema = z.object({
+    category: z.enum(['WebDevelopment', 'ui', 'DataScience', 'DigitalMarketing']),
+});
+
+export const getCoursesByTeacherSchema = z.object({
+    teacherId: z.string().uuid(),
+});
+
+export const getCoursesByStatusSchema = z.object({
+    status: z.enum(['upcoming', 'active', 'completed']),
+});
+
+export const updateCourseStatusParamsSchema = z.object({
+    id: z.string().uuid(),
+});
+
+export const updateCourseStatusSchema = z.object({
+    status: z.enum(['upcoming', 'active', 'completed']),
+});
+
+export const searchCoursesSchema = z.object({
+    query: z.string().min(1, "Search query is required"),
 });
