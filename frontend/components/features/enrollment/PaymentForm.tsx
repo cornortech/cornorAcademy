@@ -51,7 +51,7 @@ export function PaymentForm({ course }: PaymentFormProps) {
             </p>
             <div className="space-y-3">
               <Button asChild className="w-full">
-                <Link href="/dashboard/student">Go to Dashboard</Link>
+                <Link href="/student">Go to Dashboard</Link>
               </Button>
               <Button
                 variant="outline"

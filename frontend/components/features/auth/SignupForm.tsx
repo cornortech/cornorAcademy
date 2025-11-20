@@ -58,7 +58,7 @@ const initialFormData: SignupFormData = {
 
 export function SignupForm() {
   const router = useRouter();
-  const { signup, setIsRegistering } = useAuth();
+  const { signup } = useAuth();
   const { uploadImage } = useUploadImage();
 
   const [step, setStep] = useState(1);
@@ -85,7 +85,6 @@ export function SignupForm() {
     setValidationErrors({});
 
     try {
-      setIsRegistering(true);
       if (currentStep === 1) {
         accountStepSchema.parse({
           name: formData.name,
@@ -210,13 +209,12 @@ export function SignupForm() {
       const response = await authService.registerStudent(registerPayload);
 
       console.log("✓ Backend registration successful:", response);
-      setIsRegistering(false);
+
       console.log("=== SIGNUP PROCESS COMPLETED ===");
 
       // Step 4: Redirect to email verification
       router.push(`/verify-email?email=${formData.email}`);
     } catch (error: any) {
-      setIsRegistering(false);
       console.error("❌ Signup failed:", error);
 
       let errorMessage = "Failed to create account. Please try again.";
