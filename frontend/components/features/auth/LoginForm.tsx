@@ -12,16 +12,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  AlertCircle,
-  Loader2,
-  Mail,
-  CheckCircle2,
-  XCircle,
-} from "lucide-react";
+import { AlertCircle, Loader2, Mail } from "lucide-react";
 import Link from "next/link";
 import { PasswordInput } from "./PasswordInput";
-import { useAuth } from "@/contexts/AuthContext";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFormData, loginSchema } from "@/lib/validations/auth";
@@ -128,6 +121,7 @@ export function LoginForm() {
       if (status === "registered") {
         setVerificationState("account-pending");
         setAccountStatus("Your account is pending admin approval.");
+        router.push("/legal-agreement");
         return;
       }
 

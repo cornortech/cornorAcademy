@@ -24,10 +24,9 @@ const registerStudent: AppRouteMutationImplementation<
       qualification,
     } = req.body;
 
-    const studentExists = await prisma.student.findUnique({
+    const studentExists = await prisma.student.findFirst({
       where: {
-        uid,
-        email,
+        OR: [{ uid }, { email }, { phoneNumber }],
       },
     });
 
@@ -36,7 +35,7 @@ const registerStudent: AppRouteMutationImplementation<
         status: 400,
         body: {
           success: false,
-          error: "Student with this email already exists",
+          error: "Student with same uid, email or phone number already exists",
         },
       };
     }
@@ -84,55 +83,51 @@ const registerStudent: AppRouteMutationImplementation<
 type UserRole = "student" | "teacher" | "admin";
 
 function getRedirectUrl(role: UserRole): string {
-    switch (role) {
-        case "admin":
-            return "/admin";
-        case "teacher":
-            return "/teacher";
-        case "student":
-            return "/student";
-        default:
-            return "/";
-    }
+  switch (role) {
+    case "admin":
+      return "/admin";
+    case "teacher":
+      return "/teacher";
+    case "student":
+      return "/student";
+    default:
+      return "/";
+  }
 }
 
 const login: AppRouteMutationImplementation<
-typeof authContract.login
+  typeof authContract.login
 > = async ({ req }) => {
   try {
     const { email, password } = req.body;
 
-        // Determine role early
-        let role = req.user?.role;
+    // Determine role early
+    let role = req.user?.role;
 
-        // Fetch users
-        let user: any = await prisma.student.findUnique({
-            where:
-            {
-                email
-            }
+    // Fetch users
+    let user: any = await prisma.student.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (user) role = "student";
+    else {
+      user = await prisma.teacher.findUnique({
+        where: {
+          email,
+        },
+      });
+      if (user) role = "teacher";
+      else {
+        user = await prisma.admin.findUnique({
+          where: {
+            email,
+          },
         });
-
-        if (user) role = "student";
-        else {
-            user = await prisma.teacher.findUnique({
-                where:
-                {
-                    email
-                }
-            });
-            if (user) role = "teacher";
-
-            else {
-                user = await prisma.admin.findUnique({
-                    where:
-                    {
-                        email
-                    }
-                });
-                role = "admin";
-            }
-        }
+        role = "admin";
+      }
+    }
 
     // if (role === "student") {
     //   user = await prisma.student.findUnique({
@@ -154,92 +149,91 @@ typeof authContract.login
     //   });
     // }
 
-        if (role === "student") {
-            switch (user.status) {
-                case "registered":
-                    return {
-                        status: 200,
-                        body: {
-                            uid: user.uid || "",
-                            id: user.id,
-                            name: user.name,
-                            email: user.email,
-                            role: "student",
-                            status: user.status,
-                            redirectionUrl: "/legal-agreement",
-                        },
-                    };
-                case "portalActivated":
-                    break; // allowed
-                case "portalDeactivated":
-                    return {
-                        status: 403,
-                        body: {
-                            success: false,
-                            error: "Student Platform access is deactivated",
-                        },
-                    };
-                case "rejected":
-                    return {
-                        status: 403,
-                        body: {
-                            success: false,
-                            error: "Student Registration rejected",
-                        },
-                    };
-                default:
-                    return {
-                        status: 500,
-                        body: {
-                            success: false,
-                            error: "Unknown status",
-                        },
-                    };
-            }
-        }
+    if (role === "student") {
+      switch (user.status) {
+        case "registered":
+          return {
+            status: 200,
+            body: {
+              uid: user.uid || "",
+              id: user.id,
+              name: user.name,
+              email: user.email,
+              role: "student",
+              status: user.status,
+              redirectionUrl: "/legal-agreement",
+            },
+          };
+        case "portalActivated":
+          break; // allowed
+        case "portalDeactivated":
+          return {
+            status: 403,
+            body: {
+              success: false,
+              error: "Student Platform access is deactivated",
+            },
+          };
+        case "rejected":
+          return {
+            status: 403,
+            body: {
+              success: false,
+              error: "Student Registration rejected",
+            },
+          };
+        default:
+          return {
+            status: 500,
+            body: {
+              success: false,
+              error: "Unknown status",
+            },
+          };
+      }
+    }
 
-        if (role === "teacher") {
-            switch (user.status) {
-                case "registered":
-                    return {
-                        status: 403,
-                        body: {
-                            success: false,
-                            error: "Teacher is not activated",
-                        },
-                    };
-                case "portalActivated":
-                    break; // allowed
-                case "portalDeactivated":
-                    return {
-                        status: 403,
-                        body: {
-                            success: false,
-                            error: "Teacher Platform access is deactivated",
-                        },
-                    };
-                case "rejected":
-                    return {
-                        status: 403,
-                        body: {
-                            success: false,
-                            error: "Teacher Registration rejected",
-                        },
-                    };
-                default:
-                    return {
-                        status: 500,
-                        body: {
-                            success: false,
-                            error: "Unknown status",
-                        },
-                    };
-            }
-        }
+    if (role === "teacher") {
+      switch (user.status) {
+        case "registered":
+          return {
+            status: 403,
+            body: {
+              success: false,
+              error: "Teacher is not activated",
+            },
+          };
+        case "portalActivated":
+          break; // allowed
+        case "portalDeactivated":
+          return {
+            status: 403,
+            body: {
+              success: false,
+              error: "Teacher Platform access is deactivated",
+            },
+          };
+        case "rejected":
+          return {
+            status: 403,
+            body: {
+              success: false,
+              error: "Teacher Registration rejected",
+            },
+          };
+        default:
+          return {
+            status: 500,
+            body: {
+              success: false,
+              error: "Unknown status",
+            },
+          };
+      }
+    }
 
-        if (role === "admin") {
-
-        }
+    if (role === "admin") {
+    }
 
     return {
       status: 200,
@@ -266,79 +260,74 @@ typeof authContract.login
 };
 
 const uploadLegalAgreement: AppRouteMutationImplementation<
-    typeof authContract.uploadLegalAgreement
+  typeof authContract.uploadLegalAgreement
 > = async ({ req }) => {
+  try {
+    const studentId = req.user!.id;
 
-    try {
+    const { agreementURL } = req.body;
 
-        const studentId = req.user!.id;
-
-        const {
-            agreementURL,
-        } = req.body;
-
-        if (!studentId) {
-            return {
-                status: 401,
-                body: {
-                    success: false,
-                    error: "Unauthorized",
-                },
-            };
-        }
-
-        const agreementExists = await prisma.courseAgreement.findFirst({
-            where: {
-                studentId,
-            },
-        });
-
-        if (agreementExists) {
-            return {
-                status: 400,
-                body: {
-                    success: false,
-                    error: "Agreement Already Submitted",
-                },
-            }
-        };
-
-        const agreement = await prisma.courseAgreement.create({
-            data: {
-                agreementURL,
-                student: {
-                    connect: { id: studentId! },
-                },
-            },
-        });
-
-        await prisma.student.update({
-            where: {
-                id: studentId,
-            },
-            data: {
-                status: "portalActivated",
-            },
-        });
-
-        return {
-            status: 201,
-            body: {
-                success: true,
-                message: "Agreement Uploaded Successfully",
-            },
-        };
-
-    } catch (error) {
-        console.error("Error creating agreement:", error);
-        return {
-            status: 500,
-            body: {
-                success: false,
-                error: "Internal Server Error",
-            },
-        };
+    if (!studentId) {
+      return {
+        status: 401,
+        body: {
+          success: false,
+          error: "Unauthorized",
+        },
+      };
     }
+
+    const agreementExists = await prisma.courseAgreement.findFirst({
+      where: {
+        studentId,
+      },
+    });
+
+    if (agreementExists) {
+      return {
+        status: 400,
+        body: {
+          success: false,
+          error: "Agreement Already Submitted",
+        },
+      };
+    }
+
+    const agreement = await prisma.courseAgreement.create({
+      data: {
+        agreementURL,
+        student: {
+          connect: { id: studentId! },
+        },
+      },
+    });
+
+    await prisma.student.update({
+      where: {
+        id: studentId,
+      },
+      data: {
+        status: "portalActivated",
+      },
+    });
+
+    return {
+      status: 201,
+      body: {
+        success: true,
+        message: "Agreement Uploaded Successfully",
+      },
+    };
+  } catch (error) {
+    console.error("Error creating agreement:", error);
+    return {
+      status: 500,
+      body: {
+        success: false,
+        error: "Internal Server Error",
+      },
+    };
+  }
 };
 
 const updateStudentDetails: AppRouteMutationImplementation<
@@ -424,8 +413,8 @@ const updateStudentDetails: AppRouteMutationImplementation<
 };
 
 export const authMutationHandlers = {
-    registerStudent,
-    login,
-    updateStudentDetails,
-    uploadLegalAgreement,
-}
+  registerStudent,
+  login,
+  updateStudentDetails,
+  uploadLegalAgreement,
+};

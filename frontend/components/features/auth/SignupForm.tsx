@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { SignupFormData, UserRole } from "@/types";
+import { SignupFormData } from "@/types";
 
 import {
   Card,
@@ -17,8 +17,6 @@ import { PersonalStep } from "./signup-steps/PersonalStep";
 import { ProfessionalStep } from "./signup-steps/ProfessionalStep";
 import { AuthHeader } from "./AuthHeader";
 import { useAuth } from "@/contexts/AuthContext";
-import axios from "axios";
-import axiosInstance from "@/lib/api/axios";
 import { useUploadImage } from "@/hooks/use-media";
 import { authService } from "@/lib/api/auth.service";
 import {
@@ -150,9 +148,6 @@ export function SignupForm() {
       setIsLoading(true);
       setError("");
 
-      console.log("=== SIGNUP PROCESS STARTED ===");
-      console.log("Step 1: Creating Firebase account...");
-
       // Step 1: Create Firebase user
       const cred = await signup(
         formData.email,
@@ -165,8 +160,6 @@ export function SignupForm() {
         throw new Error("Failed to create Firebase account");
       }
 
-      console.log("✓ Firebase account created with UID:", cred.uid);
-
       // Step 2: Upload image if provided
       let uploadedImageUrl = "";
       if (formData.image) {
@@ -174,17 +167,12 @@ export function SignupForm() {
         const fileUploadRes = await uploadImage(formData.image as File);
         if (fileUploadRes.isCompleted && fileUploadRes.url) {
           uploadedImageUrl = fileUploadRes.url;
-          console.log("✓ Image uploaded:", uploadedImageUrl);
         } else {
           console.warn("⚠ Image upload incomplete or failed");
         }
       } else {
         console.log("Step 2: No image to upload, skipping...");
       }
-
-      // Step 3: Register student in backend
-      console.log("Step 3: Registering student in backend...");
-      console.log("User uid", cred.uid);
 
       const registerPayload = {
         uid: cred.uid,
@@ -204,15 +192,9 @@ export function SignupForm() {
         qualification: formData.qualification,
       };
 
-      console.log("Payload being sent:", registerPayload);
-
       const response = await authService.registerStudent(registerPayload);
 
-      console.log("✓ Backend registration successful:", response);
-
-      console.log("=== SIGNUP PROCESS COMPLETED ===");
-
-      // Step 4: Redirect to email verification
+      // Step 3: Redirect to email verification
       router.push(`/verify-email?email=${formData.email}`);
     } catch (error: any) {
       console.error("❌ Signup failed:", error);

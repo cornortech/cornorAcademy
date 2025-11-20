@@ -18,11 +18,9 @@ import { Canvas } from "@/components/signature-canvas";
 import AgreementContent from "@/components/features/legal/agreement-content";
 import { useAuth } from "@/contexts/AuthContext";
 import { useUploadImage } from "@/hooks/use-media";
-import axiosInstance from "@/lib/api/axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { authService } from "@/lib/api/auth.service";
-import { UserRole } from "@/types";
 
 const dataURLtoFile = (dataURL: string, filename: string): File => {
   const arr = dataURL.split(",");
@@ -35,14 +33,8 @@ const dataURLtoFile = (dataURL: string, filename: string): File => {
 };
 
 export default function LegalAgreementPage() {
-  const {
-    user,
-    userData,
-    userRole,
-    userStatus,
-    updateUserStatus,
-    refreshUser,
-  } = useAuth();
+  const { user, userRole, userStatus, updateUserStatus, refreshUser } =
+    useAuth();
   const { uploadImage } = useUploadImage();
   const router = useRouter();
 
@@ -65,10 +57,12 @@ export default function LegalAgreementPage() {
     setStudentName(user.displayName || "");
     setStudentEmail(user.email || "");
 
+    if (!userStatus || !userRole) return;
+
     if (userStatus === "portalActivated") {
       redirectToDashboard();
     }
-  }, [user, userStatus]);
+  }, [user, userStatus, userRole]);
 
   const redirectToDashboard = () => {
     if (!userRole) return;
