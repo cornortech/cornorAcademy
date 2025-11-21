@@ -21,7 +21,7 @@ export const accountStepSchema = z
 export const personalStepSchema = z.object({
   phoneNumber: z.string().min(10, "Phone number must be at least 10 digits"),
   gender: z.enum(["male", "female", "other"], { error: "Invalid gender" }),
-  dob: z.string(),
+  dob: z.string().min(1, "Date of birth is required"),
   address: z.string().min(5, "Address must be at least 5 characters"),
   city: z.string().min(2, "City must be at least 2 characters"),
   district: z.string().min(2, "District must be at least 2 characters"),
@@ -30,6 +30,9 @@ export const personalStepSchema = z.object({
 });
 
 export const professionalStepSchema = z.object({
+  image: z
+    .any()
+    .refine((file) => file instanceof File, "Profile image is required"),
   educationInstitute: z
     .string()
     .min(2, "Education institute must be at least 2 characters"),
@@ -54,19 +57,23 @@ export const signupSchema = z
         "Password must contain uppercase, lowercase, and number"
       ),
     confirmPassword: z.string(),
-    phoneNumber: z.string().min(8, "Invalid phone number"),
-    gender: z.enum(["male", "female", "other"]),
+    phoneNumber: z.string().min(8, "Phone number must be at least 10 digits"),
+    gender: z.enum(["male", "female", "other"], {
+      error: "Please select a gender",
+    }),
     image: z.any().optional(),
-    dob: z.string(),
-    address: z.string().min(5),
-    city: z.string().min(2),
-    district: z.string().min(2),
-    pincode: z.string().min(4),
-    country: z.string().min(2),
+    dob: z.string().min(1, "Date of birth is required"),
+    address: z.string().min(5, "Address is required"),
+    city: z.string().min(2, "City is required"),
+    district: z.string().min(2, "District is required"),
+    pincode: z.string().min(4, "Pincode is required"),
+    country: z.string().min(2, "Country is required"),
     about: z.string().optional(),
-    educationInstitute: z.string().min(2),
-    qualification: z.string().min(2),
-    agreeToTerms: z.boolean(),
+    educationInstitute: z.string().min(2, "Institute name is required"),
+    qualification: z.string().min(2, "Qualification is required"),
+    agreeToTerms: z
+      .boolean()
+      .refine((val) => val === true, { message: "You must agree to the ters" }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

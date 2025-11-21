@@ -79,6 +79,7 @@ export function SignupForm() {
   };
 
   const validateStep = (currentStep: number): boolean => {
+    console.log(`validation step starts, current step: ${currentStep}`);
     setError("");
     setValidationErrors({});
 
@@ -111,10 +112,12 @@ export function SignupForm() {
       }
       return true;
     } catch (err: any) {
+      console.log("Error in step validation", err);
       if (err.errors) {
         const errors: Record<string, string> = {};
         err.errors.forEach((error: any) => {
-          errors[error.path[0]] = error.message;
+          const field = error.path.join(".");
+          errors[field] = error.message;
         });
         setValidationErrors(errors);
         setError(err.errors[0]?.message || "Please fix the errors below");

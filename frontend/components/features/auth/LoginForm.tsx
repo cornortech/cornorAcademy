@@ -220,12 +220,13 @@ export function LoginForm() {
           <Alert className="mb-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
             <AlertCircle className="h-4 w-4 text-yellow-600" />
             <AlertDescription className="text-sm">
-              <p className="font-semibold mb-2">Account Pending Approval</p>
+              <p className="font-semibold mb-2">Account not activated, yet.</p>
               <p className="text-muted-foreground mb-2">
                 {accountStatus || "Your account is awaiting admin approval."}
               </p>
               <p className="text-xs text-muted-foreground">
-                You'll receive an email once your account is activated.
+                You'll be redirected to agreement signing page to activate your
+                portal.
               </p>
             </AlertDescription>
           </Alert>
