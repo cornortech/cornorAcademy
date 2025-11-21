@@ -60,7 +60,10 @@ export function LoginForm() {
         getValues("password")
       );
 
-      await sendEmailVerification(tempUser.user);
+      await sendEmailVerification(tempUser.user, {
+        url: `${window.location.origin}/login`,
+      });
+
       await auth.signOut();
 
       toast.success("Verification email sent! Check your inbox.");

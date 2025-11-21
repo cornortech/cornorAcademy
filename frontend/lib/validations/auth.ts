@@ -85,8 +85,13 @@ export const loginSchema = z.object({
   password: z.string().min(1, "Password is required"),
 });
 
+export const forgotPasswordSchema = z.object({
+  email: z.string().email("Please enter a valid email address"),
+});
+
 export type SignupFormData = z.infer<typeof signupSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;
 export type AccountStepData = z.infer<typeof accountStepSchema>;
 export type PersonalStepData = z.infer<typeof personalStepSchema>;
 export type ProfessionalStepData = z.infer<typeof professionalStepSchema>;
+export type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;

@@ -13,27 +13,6 @@ export type CourseStatus =
   | "upcoming";
 export type CourseLevel = "beginner" | "intermediate" | "advanced";
 
-export interface SignupFormData {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  role: UserRole | "";
-  phoneNumber: string;
-  gender: Gender | "";
-  image: File | null;
-  dob: string;
-  address: string;
-  city: string;
-  district: string;
-  pincode: string;
-  country: string;
-  about: string;
-  educationInstitute: string;
-  qualification: string;
-  agreeToTerms: boolean;
-}
-
 export interface LoginResponse {
   uid: string;
   id: string;

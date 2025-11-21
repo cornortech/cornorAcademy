@@ -1,4 +1,4 @@
-import { auth, db } from "@/lib/firebase/config";
+import { auth } from "@/lib/firebase/config";
 import { LoginResponse, UserRole, UserStatus } from "@/types";
 import {
   createUserWithEmailAndPassword,
@@ -13,7 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import {} from "firebase/database";
-import { authService, UserProfile } from "@/lib/api/auth.service";
+import { authService } from "@/lib/api/auth.service";
 import axiosInstance from "@/lib/api/axios";
 
 interface AuthContextType {
@@ -128,6 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     if (userCredentials.user) {
       await updateProfile(userCredentials.user, { displayName });
       await sendEmailVerification(userCredentials.user);
+
       return { uid: userCredentials.user.uid };
     }
   };
