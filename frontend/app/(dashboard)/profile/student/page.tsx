@@ -80,7 +80,6 @@ export default function StudentProfile() {
       toast.success("Profile updated successfully!");
       setSuccessMessage("Profile updated successfully!");
       setIsEditing(false);
-      // setTimeout(() => setSuccessMessage(""), 3000);
       await refreshUser();
     } catch (error) {
       console.error(error);
