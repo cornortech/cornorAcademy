@@ -12,9 +12,11 @@ import { ProfileLayout } from "@/components/features/profile/ProfileLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { authService } from "@/lib/api/auth.service";
 import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import ProfileLoader from "./loading";
 
 export default function StudentProfile() {
-  const { user, refreshUser } = useAuth();
+  const { refreshUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -28,59 +30,68 @@ export default function StudentProfile() {
   const loadUserData = async () => {
     try {
       setIsLoading(true);
-      const profile = await authService.getUserProfile();
-      // TODO: Fetch full student data from  backend
-      // For now, using the profile data
-      setUserData(profile as any);
+      const data = await authService.getUserDetails("student");
+      if (data) {
+        setUserData(data as Student);
+      }
     } catch (error) {
       console.error("Failed to load user data:", error);
+      toast.error("Failed to load profile data");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { id, value } = e.target;
     setUserData((prev) => (prev ? { ...prev, [id]: value } : null));
   };
 
+  const handleSelectChange = (field: string, value: string) => {
+    setUserData((prev) => (prev ? { ...prev, [field]: value } : null));
+  };
+
   const handleSave = async () => {
     if (!userData?.name || !userData?.email) {
-      alert("Please fill in required fields");
+      toast.error("Please fill in required fields");
       return;
     }
 
     setIsSaving(true);
     try {
-      // Simulate API call
-
       await authService.updateStudentProfile({
         name: userData.name,
         email: userData.email,
         phoneNumber: userData.phoneNumber,
-        // ... other fields
+        gender: userData.gender,
+        dob: userData.dob,
+        address: userData.address,
+        city: userData.city,
+        district: userData.district,
+        pincode: userData.pincode,
+        country: userData.country,
+        about: userData.about,
+        educationInstitute: userData.educationInstitute,
+        qualification: userData.qualification,
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      toast.success("Profile updated successfully!");
       setSuccessMessage("Profile updated successfully!");
       setIsEditing(false);
-      setTimeout(() => setSuccessMessage(""), 3000);
+      // setTimeout(() => setSuccessMessage(""), 3000);
       await refreshUser();
     } catch (error) {
-      alert("Failed to update profile");
+      console.error(error);
+      toast.error("Failed to update profile");
     } finally {
       setIsSaving(false);
     }
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <ProfileLoader />;
   }
 
   if (!userData) {

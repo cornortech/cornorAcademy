@@ -73,7 +73,7 @@ export const signupSchema = z
     qualification: z.string().min(2, "Qualification is required"),
     agreeToTerms: z
       .boolean()
-      .refine((val) => val === true, { message: "You must agree to the ters" }),
+      .refine((val) => val === true, { message: "You must agree to the terms and conditions." }),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",

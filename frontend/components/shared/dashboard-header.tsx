@@ -17,7 +17,7 @@ import {
 } from "../ui/dropdown-menu";
 
 interface DashboardHeaderProps {
-  userRole: UserRole;
+  userRole: UserRole | null;
   userName: string;
   userEmail: string;
   userAvatar?: string;
@@ -26,7 +26,6 @@ interface DashboardHeaderProps {
 export function DashboardHeader({
   userRole,
   userName,
-  userEmail,
   userAvatar,
 }: DashboardHeaderProps) {
   const { logout } = useAuth();

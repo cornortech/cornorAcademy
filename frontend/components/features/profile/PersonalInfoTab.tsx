@@ -47,10 +47,10 @@ export function PersonalInfoTab({
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
+            <Label htmlFor="phoneNumber">Phone Number</Label>
             <Input
-              id="phone"
-              value={formData.phoneNumber}
+              id="phoneNumber"
+              value={formData.phoneNumber || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -59,7 +59,7 @@ export function PersonalInfoTab({
             <Label htmlFor="gender">Gender</Label>
             <Input
               id="gender"
-              value={formData.gender}
+              value={formData.gender || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -69,7 +69,11 @@ export function PersonalInfoTab({
             <Input
               id="dob"
               type="date"
-              value={formData.dob}
+              value={
+                formData.dob
+                  ? new Date(formData.dob).toISOString().split("T")[0]
+                  : ""
+              }
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -78,7 +82,7 @@ export function PersonalInfoTab({
             <Label htmlFor="country">Country</Label>
             <Input
               id="country"
-              value={formData.country}
+              value={formData.country || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -87,7 +91,7 @@ export function PersonalInfoTab({
             <Label htmlFor="address">Address</Label>
             <Input
               id="address"
-              value={formData.address}
+              value={formData.address || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -96,7 +100,7 @@ export function PersonalInfoTab({
             <Label htmlFor="city">City</Label>
             <Input
               id="city"
-              value={formData.city}
+              value={formData.city || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -105,7 +109,7 @@ export function PersonalInfoTab({
             <Label htmlFor="district">District</Label>
             <Input
               id="district"
-              value={formData.district}
+              value={formData.district || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -114,7 +118,7 @@ export function PersonalInfoTab({
             <Label htmlFor="pincode">Pincode</Label>
             <Input
               id="pincode"
-              value={formData.pincode}
+              value={formData.pincode || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -126,7 +130,7 @@ export function PersonalInfoTab({
             id="about"
             className="w-full p-2 border border-border rounded-md text-sm disabled:opacity-50"
             rows={4}
-            value={formData.about}
+            value={formData.about || ""}
             onChange={onInputChange}
             disabled={!isEditing}
           />

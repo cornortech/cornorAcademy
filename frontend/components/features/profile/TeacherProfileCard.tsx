@@ -23,7 +23,7 @@ export function TeacherProfileCard({
     <Card className="border-border/50 bg-card/50 backdrop-blur">
       <CardContent className="p-6 text-center space-y-4">
         <Avatar className="h-24 w-24 mx-auto">
-          <AvatarImage src={user.avatar} alt={user.name} />
+          <AvatarImage src={user.image} alt={user.name} />
           <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
         </Avatar>
         <div>

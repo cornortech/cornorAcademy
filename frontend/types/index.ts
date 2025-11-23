@@ -28,7 +28,7 @@ export interface BaseUser {
   uid: string;
   name: string;
   email: string;
-  avatar?: string;
+  image?: string;
   status: UserStatus;
   createdAt: string;
   updatedAt: string;
@@ -215,7 +215,7 @@ export interface StudentPayment {
   paymentMethod: string;
   date: string;
   transactionId: string;
-  avatar: string;
+  image: string;
 }
 
 export interface AdminManagedCourse {
@@ -242,7 +242,7 @@ export interface StudentProgressRecord {
   lastActive: string;
   attendance: number;
   assignments: string;
-  avatar: string;
+  image: string;
 }
 
 export interface UploadedResource {

@@ -11,7 +11,7 @@ export default function StudentDashboardLayout({
   children: ReactNode;
 }) {
   const pathname = usePathname();
-  const { user, userRole } = useAuth();
+  const { user, userRole, userData } = useAuth();
 
   const hideHeader =
     pathname.includes("/course/") || pathname.includes("/materials/");
@@ -24,9 +24,9 @@ export default function StudentDashboardLayout({
         <div className="min-h-screen bg-background">
           <DashboardHeader
             userRole={userRole}
-            userName={user?.displayName || "Student"}
-            userEmail={user?.email || ""}
-            userAvatar={user?.photoURL || ""}
+            userName={userData?.name || user?.displayName || "Student"}
+            userEmail={userData?.email || user?.email || ""}
+            userAvatar={(userData as any)?.image || user?.photoURL || ""}
           />
           <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {children}

@@ -33,8 +33,14 @@ const dataURLtoFile = (dataURL: string, filename: string): File => {
 };
 
 export default function LegalAgreementPage() {
-  const { user, userRole, userStatus, updateUserStatus, refreshUser } =
-    useAuth();
+  const {
+    user,
+    userRole,
+    userStatus,
+    updateUserStatus,
+    refreshUser,
+    refreshUserData,
+  } = useAuth();
   const { uploadImage } = useUploadImage();
   const router = useRouter();
 
@@ -120,15 +126,17 @@ export default function LegalAgreementPage() {
           const res = await authService.uploadLegalAgreement(uploadResult.url);
           const profileRes = await authService.getUserProfile();
           profileRes.role;
-          if (res.data.success) {
+          if (res.success) {
             updateUserStatus("portalActivated");
-            await refreshUser();
-            toast.success(res.data.message);
-            // router.push(`/${role}`);
+            await refreshUserData();
+            toast.success(res.message || "Agreement signed successfully");
             setIsAgreementSigned(true);
+          } else {
+            toast.error(res.message || "Failed to sign agreement");
           }
         } catch (err) {
           console.error("Error submitting agreement:", err);
+          toast.error("An error occurred. Please try again.");
         }
 
         setIsAgreementSigned(true);
