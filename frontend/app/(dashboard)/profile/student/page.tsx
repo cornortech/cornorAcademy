@@ -3,7 +3,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Student } from "@/types";
-import { mockStudentData } from "@/lib/data";
 import { StudentProfileCard } from "@/components/features/profile/StudentProfileCard";
 import { PersonalInfoTab } from "@/components/features/profile/PersonalInfoTab";
 import EducationTab from "@/components/features/profile/EducationTab";
@@ -11,7 +10,6 @@ import AccountInfoTable from "@/components/features/profile/AccountInfoTable";
 import { ProfileLayout } from "@/components/features/profile/ProfileLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { authService } from "@/lib/api/auth.service";
-import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import ProfileLoader from "./loading";
 
@@ -20,7 +18,6 @@ export default function StudentProfile() {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [successMessage, setSuccessMessage] = useState("");
   const [userData, setUserData] = useState<Student | null>(null);
 
   useEffect(() => {
@@ -78,7 +75,6 @@ export default function StudentProfile() {
       });
 
       toast.success("Profile updated successfully!");
-      setSuccessMessage("Profile updated successfully!");
       setIsEditing(false);
       await refreshUser();
     } catch (error) {
@@ -104,7 +100,6 @@ export default function StudentProfile() {
           user={userData}
           isEditing={isEditing}
           onEditToggle={() => setIsEditing((p) => !p)}
-          successMessage={successMessage}
         />
       }
     >
@@ -121,6 +116,7 @@ export default function StudentProfile() {
             isEditing={isEditing}
             isSaving={isSaving}
             onInputChange={handleInputChange}
+            onSelectChange={handleSelectChange}
             onSave={handleSave}
           />
         </TabsContent>

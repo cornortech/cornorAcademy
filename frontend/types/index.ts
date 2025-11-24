@@ -21,6 +21,7 @@ export interface LoginResponse {
   role: UserRole;
   status?: UserStatus;
   redirectionUrl?: string;
+  image?: string;
 }
 
 export interface BaseUser {

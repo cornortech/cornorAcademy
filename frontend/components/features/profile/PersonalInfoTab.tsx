@@ -4,12 +4,20 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import { Student } from "@/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface PersonalInfoTabProps {
   formData: Partial<Student>;
   isEditing: boolean;
   isSaving: boolean;
   onInputChange: (e: React.ChangeEvent<any>) => void;
+  onSelectChange: (field: string, value: string) => void;
   onSave: () => void;
 }
 
@@ -18,6 +26,7 @@ export function PersonalInfoTab({
   isEditing,
   isSaving,
   onInputChange,
+  onSelectChange,
   onSave,
 }: PersonalInfoTabProps) {
   return (
@@ -43,7 +52,7 @@ export function PersonalInfoTab({
               type="email"
               value={formData.email || ""}
               onChange={onInputChange}
-              disabled={!isEditing}
+              disabled={true}
             />
           </div>
           <div className="space-y-2">
@@ -57,12 +66,20 @@ export function PersonalInfoTab({
           </div>
           <div className="space-y-2">
             <Label htmlFor="gender">Gender</Label>
-            <Input
-              id="gender"
-              value={formData.gender || ""}
-              onChange={onInputChange}
+            <Select
               disabled={!isEditing}
-            />
+              value={formData.gender}
+              onValueChange={(value) => onSelectChange("gender", value)}
+            >
+              <SelectTrigger id="gender">
+                <SelectValue placeholder="Select gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="dob">Date of Birth</Label>

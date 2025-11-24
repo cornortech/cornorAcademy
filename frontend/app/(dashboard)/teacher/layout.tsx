@@ -4,6 +4,7 @@ import { DashboardHeader } from "@/components/shared/dashboard-header";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import TeacherDashboardLoading from "./loading";
 
 export default function TeacherDashboardLayout({
   children,
@@ -11,12 +12,15 @@ export default function TeacherDashboardLayout({
   children: ReactNode;
 }) {
   const pathname = usePathname();
-  const { user, userData } = useAuth();
+  const { user, userRole, userData } = useAuth();
 
   const hideHeader = pathname.includes("/course/");
 
   return (
-    <ProtectedRoute>
+    <ProtectedRoute
+      allowedRoles={["teacher"]}
+      fallback={<TeacherDashboardLoading />}
+    >
       {hideHeader ? (
         <>{children}</>
       ) : (

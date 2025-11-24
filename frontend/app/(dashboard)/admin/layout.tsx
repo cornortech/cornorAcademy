@@ -12,12 +12,12 @@ export default function AdminDashboardLayout({
   children: ReactNode;
 }) {
   const pathname = usePathname();
-  const { user, userData } = useAuth();
+  const { user, userData, userRole } = useAuth();
 
   const hideHeader = pathname.includes("/courses");
 
   return (
-    <ProtectedRoute>
+    <ProtectedRoute allowedRoles={["admin"]}>
       {hideHeader ? (
         <>{children}</>
       ) : (

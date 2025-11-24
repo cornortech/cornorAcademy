@@ -73,7 +73,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         role: profile.role,
         name: details?.name || "",
         status: details?.status,
-      };
+        image: (details as any)?.image || (details as any)?.avatar,
+      } as any;
 
       setUserData(fullUserData);
       setUserRole(profile.role);

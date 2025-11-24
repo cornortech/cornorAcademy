@@ -10,14 +10,12 @@ interface StudentProfileCardProps {
   user: Student;
   isEditing: boolean;
   onEditToggle: () => void;
-  successMessage?: string;
 }
 
 export function StudentProfileCard({
   user,
   isEditing,
   onEditToggle,
-  successMessage,
 }: StudentProfileCardProps) {
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur">
@@ -53,12 +51,6 @@ export function StudentProfileCard({
           <Edit className="h-4 w-4 mr-2" />
           {isEditing ? "Cancel" : "Edit Profile"}
         </Button>
-        {successMessage && (
-          <div className="flex items-center space-x-2 text-sm text-green-600 bg-green-50 p-2 rounded">
-            <Check className="h-4 w-4" />
-            <span>{successMessage}</span>
-          </div>
-        )}
       </CardContent>
     </Card>
   );
