@@ -1,6 +1,6 @@
 import { initContract } from "@ts-rest/core";
 import { errorSchema, successSchema } from "../common.schema";
-import {  createEnrollementRequestForStudentSchema, getAllEnrollementRequestForStudentByIdParamsSchema, getAllEnrollementRequestForStudentByIdResponseSchema, getAllEnrollementRequestResponseSchema, getEnrollementRequestByStatusSchema, updateEnrollementRequestForAdminSchema } from "./enrollement.schema";
+import {  createEnrollementRequestForStudentSchema, getAllEnrollementRequestForStudentByStatusSchema, getAllEnrollementRequestForStudentParamsSchema, getAllEnrollementRequestForStudentResponseSchema, getAllEnrollementRequestResponseSchema, getAllEnrollementRequestByStatusSchema, searchEnrollementForStudentSchema, updateEnrollementRequestForAdminSchema } from "./enrollement.schema";
 
 const c = initContract();
 
@@ -9,7 +9,7 @@ export const enrollementRequestContract = c.router({
     getAllEnrollementRequest: {
         method: "GET",
         path: "/enrollement/",
-        query: getEnrollementRequestByStatusSchema,
+        query: getAllEnrollementRequestByStatusSchema,
         summary: "Get all enrollement request of course applied by student",
         responses: {
             200: getAllEnrollementRequestResponseSchema,
@@ -18,13 +18,14 @@ export const enrollementRequestContract = c.router({
         },
     },
 
-    getAllEnrollementRequestForStduentById: {
+    getAllEnrollementRequestForStudent: {
         method: 'GET',
-        path: "/enrollement/:courseId/:studentId",
-        pathParams: getAllEnrollementRequestForStudentByIdParamsSchema,
+        path: "/enrollement/:studentId",
+        pathParams: getAllEnrollementRequestForStudentParamsSchema,
+        query: getAllEnrollementRequestForStudentByStatusSchema,
         summary: "Get all enrollement request of single student by id",
         responses: {
-            200: getAllEnrollementRequestForStudentByIdResponseSchema,
+            200: getAllEnrollementRequestForStudentResponseSchema,
             500: errorSchema,
         },
     },
@@ -49,6 +50,17 @@ export const enrollementRequestContract = c.router({
         responses: {
             201: successSchema,
             404: errorSchema,
+            500: errorSchema,
+        },
+    },
+
+    searchEnrollementForStudent: {
+        method: 'GET',
+        path: "/enrollement/:studentId/search",
+        query: searchEnrollementForStudentSchema,
+        summary: "Get searched course enrollement for student",
+        responses: {
+            200: getAllEnrollementRequestForStudentResponseSchema,
             500: errorSchema,
         },
     },

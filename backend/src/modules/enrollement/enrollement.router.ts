@@ -11,4 +11,8 @@ export const enrollementRequestRouter = s.router(enrollementRequestContract,{
     updateEnrollementRequestForAdmin: enrolledCourseMutationHandlers.updateEnrollementRequestForAdmin,
 
     getAllEnrollementRequest: enrolledCourseQueryHandlers.getAllEnrollementRequest,
+
+    getAllEnrollementRequestForStudent: enrolledCourseQueryHandlers.getAllEnrollementRequestForStudent,
+
+    searchEnrollementForStudent: enrolledCourseQueryHandlers.searchEnrollementForStudent,
 });
