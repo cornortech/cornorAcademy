@@ -41,7 +41,6 @@ const PublicHeader = ({
     "Contact",
   ];
 
-  console.log(user?.getIdToken());
   return (
     <nav className="border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

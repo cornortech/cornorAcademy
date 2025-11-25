@@ -1,11 +1,16 @@
+"use client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Student } from "@/types";
 import { getInitials } from "@/lib/utils";
-import { Edit, Check, Camera } from "lucide-react";
-import { ChangeEvent } from "react";
+import { Edit, Check, Camera, Loader2 } from "lucide-react";
+import { ChangeEvent, useRef, useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useUploadImage } from "@/hooks/use-media";
+import { toast } from "sonner";
+import { authService } from "@/lib/api/auth.service";
 
 interface StudentProfileCardProps {
   user: Student;
@@ -20,11 +25,26 @@ export function StudentProfileCard({
   onEditToggle,
   onImageChange,
 }: StudentProfileCardProps) {
-  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      onImageChange(file);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageClick = () => {
+    if (isEditing) {
+      fileInputRef.current?.click();
     }
+  };
+
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
+    onImageChange(file);
+
+    e.target.value = "";
   };
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur">
@@ -39,22 +59,22 @@ export function StudentProfileCard({
             <AvatarFallback>{getInitials(user.name)}</AvatarFallback>
           </Avatar>
           {isEditing && (
-            <div className="absolute bottom-0 right-0">
-              <label
-                htmlFor="avatar-upload"
-                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm transition-colors"
-              >
-                <Camera className="h-4 w-4" />
-                <input
-                  id="avatar-upload"
-                  type="file"
-                  accept="image/*"
-                  className="hidden"
-                  onChange={handleFileChange}
-                />
-              </label>
+            <div
+              className="absolute bottom-0 right-0 bg-primary text-primary-foreground rounded-full p-1.5 cursor-pointer hover:bg-primary/90 shadow-sm z-10"
+              onClick={handleImageClick}
+            >
+              <Camera className="h-4 w-4" />
             </div>
           )}
+
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleFileChange}
+            disabled={!isEditing}
+          />
         </div>
         <div>
           <h2 className="text-2xl font-bold">{user.name}</h2>

@@ -12,13 +12,17 @@ import { useAuth } from "@/contexts/AuthContext";
 import { authService } from "@/lib/api/auth.service";
 import { toast } from "sonner";
 import ProfileLoader from "./loading";
+import { useUploadImage } from "@/hooks/use-media";
 
 export default function StudentProfile() {
   const { refreshUser } = useAuth();
+  const { uploadImage } = useUploadImage();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [userData, setUserData] = useState<Student | null>(null);
+
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     loadUserData();
@@ -50,14 +54,12 @@ export default function StudentProfile() {
     setUserData((prev) => (prev ? { ...prev, [field]: value } : null));
   };
 
-  const handleImageChange = (file: File) => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64String = reader.result as string;
-      setUserData((prev) => (prev ? { ...prev, image: base64String } : null));
-    };
-    reader.readAsDataURL(file);
+  const handleImageSelect = (file: File) => {
+    setSelectedImageFile(file);
+    const previewUrl = URL.createObjectURL(file);
+    setUserData((prev) => (prev ? { ...prev, image: previewUrl } : null));
   };
+
   const handleSave = async () => {
     if (!userData?.name || !userData?.email) {
       toast.error("Please fill in required fields");
@@ -66,12 +68,22 @@ export default function StudentProfile() {
 
     setIsSaving(true);
     try {
+      let imageUrl = userData.image;
+
+      if (selectedImageFile) {
+        const uploadRes = await uploadImage(selectedImageFile);
+        if (!uploadRes.isCompleted || !uploadRes.url) {
+          throw new Error("Image upload failed");
+        }
+        imageUrl = uploadRes.url;
+      }
+
       await authService.updateStudentProfile({
         name: userData.name,
         email: userData.email,
         phoneNumber: userData.phoneNumber,
         gender: userData.gender,
-        image: userData.image,
+        image: imageUrl,
         dob: userData.dob,
         address: userData.address,
         city: userData.city,
@@ -85,6 +97,7 @@ export default function StudentProfile() {
 
       toast.success("Profile updated successfully!");
       setIsEditing(false);
+      setSelectedImageFile(null);
       await refreshUser();
     } catch (error) {
       console.error(error);
@@ -109,7 +122,7 @@ export default function StudentProfile() {
           user={userData}
           isEditing={isEditing}
           onEditToggle={() => setIsEditing((p) => !p)}
-          onImageChange={handleImageChange}
+          onImageChange={handleImageSelect}
         />
       }
     >
