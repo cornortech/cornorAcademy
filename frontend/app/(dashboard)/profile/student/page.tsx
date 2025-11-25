@@ -50,6 +50,14 @@ export default function StudentProfile() {
     setUserData((prev) => (prev ? { ...prev, [field]: value } : null));
   };
 
+  const handleImageChange = (file: File) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const base64String = reader.result as string;
+      setUserData((prev) => (prev ? { ...prev, image: base64String } : null));
+    };
+    reader.readAsDataURL(file);
+  };
   const handleSave = async () => {
     if (!userData?.name || !userData?.email) {
       toast.error("Please fill in required fields");
@@ -63,6 +71,7 @@ export default function StudentProfile() {
         email: userData.email,
         phoneNumber: userData.phoneNumber,
         gender: userData.gender,
+        image: userData.image,
         dob: userData.dob,
         address: userData.address,
         city: userData.city,
@@ -100,6 +109,7 @@ export default function StudentProfile() {
           user={userData}
           isEditing={isEditing}
           onEditToggle={() => setIsEditing((p) => !p)}
+          onImageChange={handleImageChange}
         />
       }
     >
