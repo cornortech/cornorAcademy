@@ -67,10 +67,10 @@ export const authContract = c.router({
   },
 
   updateStudentDetails: {
-    method: 'PUT',
-    path: '/update',
+    method: "PUT",
+    path: "/update",
     body: updateStudentDetailsSchema,
-    summary: "Update student details (self)",
+    summary: "Update student profile details (self)",
     responses: {
       200: successSchema,
       400: errorSchema,

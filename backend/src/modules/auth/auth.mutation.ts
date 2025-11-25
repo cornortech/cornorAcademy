@@ -1,6 +1,7 @@
 import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { authContract } from "../../contract/auth/auth.contract";
 import prisma from "../../libs/db";
+import { getStorage } from "firebase-admin/storage";
 
 const registerStudent: AppRouteMutationImplementation<
   typeof authContract.registerStudent
@@ -330,8 +331,16 @@ const uploadLegalAgreement: AppRouteMutationImplementation<
   }
 };
 
+const storageBucket = getStorage().bucket();
+
+function extractFirebasePath(url: string) {
+  const base = url.split("/o/")[1];
+  const path = base.split("?")[0];
+  return decodeURIComponent(path);
+}
+
 const updateStudentDetails: AppRouteMutationImplementation<
-  typeof authContract.updateStudentDetails
+typeof authContract.updateStudentDetails
 > = async ({ req }) => {
   try {
     const studentId = req.user!.id;
@@ -386,12 +395,28 @@ const updateStudentDetails: AppRouteMutationImplementation<
     if (educationInstitute) updateData.educationInstitute = educationInstitute;
     if (qualification) updateData.qualification = qualification;
 
+    let oldImage: string | undefined = undefined;
+
+    if (image && image !== student.image) {
+      oldImage = student.image;
+      updateData.image = image;
+    }
+
     await prisma.student.update({
       where: {
         id: studentId,
       },
       data: updateData,
     });
+
+    if (oldImage) {
+      try {
+        const oldPath = extractFirebasePath(oldImage);
+        await storageBucket.file(oldPath).delete();
+      } catch (error) {
+        console.error("Failed to delete old firebase image:", error);
+      }
+    }
 
     return {
       status: 200,
