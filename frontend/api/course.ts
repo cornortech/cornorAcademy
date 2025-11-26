@@ -27,14 +27,14 @@ const createCourseSchema = z.object({
   startDate: z.date(),
   duration: z.number(),
   price: z.number().min(1, "Price is required"),
-  curriculum: z.array(
-    z.object({
-      title: z.string().min(2, "curriculum is required "),
-      noOfLesson: z.number(),
-      duration: z.number(),
-      content: z.array(z.string()),
-    })
-  ),
+  // curriculum: z.array(
+  //   z.object({
+  //     title: z.string().min(2, "curriculum is required "),
+  //     noOfLesson: z.number(),
+  //     duration: z.number(),
+  //     content: z.array(z.string()),
+  //   })
+  // ),
   teacherId: z.string().uuid(),
 });
 
@@ -154,7 +154,7 @@ export interface Course {
   updatedAt: Date;
 }
 
-const API_BASE_URL = "http://localhost:3001";
+const API_BASE_URL = "http://localhost:4000";
 
 // Generic API request function
 async function apiRequest<T>(

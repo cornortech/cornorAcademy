@@ -3,6 +3,7 @@ import {
   Teacher,
   Admin,
   Course,
+  LegacyCourse,
   Certificate,
   StudentPayment,
   EnrolledCourse,
@@ -36,7 +37,7 @@ export const mockStudentData: Student = {
   role: "student",
   name: "Alex Johnson",
   email: "alex.johnson@email.com",
-  status: "active",
+  status: "portalActivated",
   enrolledCourses: ["1", "2", "4"],
   completedCourses: ["3"],
   totalLearningHours: 156,
@@ -57,7 +58,7 @@ export const mockTeacherData: Teacher = {
   title: "Senior Full-Stack Developer",
   email: "sarah.johnson@Cornoracademy.com",
   bio: "Experienced full-stack developer and passionate educator with 12+ years in the tech industry.",
-  status: "active",
+  status: "portalActivated",
   avatar: "/teacher-avatar.png",
   gender: "female",
   dob: "1985-07-22",
@@ -65,18 +66,16 @@ export const mockTeacherData: Teacher = {
   updatedAt: "2024-01-20",
 };
 
-export const mockCourses: Course[] = [
+export const mockCourses: LegacyCourse[] = [
   {
     id: "1",
     title: "Web Development Fundamentals",
     description:
       "Master the fundamentals of web development with HTML, CSS, JavaScript, and modern frameworks.",
-    longDescription:
-      "This comprehensive course covers everything you need to know to become a proficient web developer. Starting with the basics of HTML and CSS, you'll progress through JavaScript fundamentals, responsive design principles, and modern development tools. By the end of this course, you'll have built multiple projects and have the skills to create professional websites and web applications.",
-    instructor: mockTeacherData,
+    teacher: { id: mockTeacherData.id, name: mockTeacherData.name },
     price: 299,
     originalPrice: 399,
-    duration: "12 weeks",
+    duration: 12,
     level: "beginner",
     language: "english",
     students: 2840,
@@ -367,7 +366,7 @@ export const mockAdminManagedCourses: AdminManagedCourse[] = [
     instructorId: 1,
     students: 67,
     price: 299,
-    status: "active",
+    status: "portalActivated",
     created: "2023-12-01",
     completion: 85,
     rating: 4.8,
