@@ -19,7 +19,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useCreateCourse, useUpdateCourse, CreateCourseInput } from "@/api/course";
+import {
+  useCreateCourse,
+  useUpdateCourse,
+  CreateCourseInput,
+} from "@/api/course";
 
 interface CourseDialogProps {
   open: boolean;
@@ -55,7 +59,7 @@ export function CourseDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       {trigger && <DialogTrigger asChild>{trigger}</DialogTrigger>}
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="max-w-lg w-full overflow-y-auto max-h-[95vh] no-scrollbar">
         <DialogHeader>
           <DialogTitle>
             {mode === "create" ? "Create New Course" : "Edit Course"}
@@ -99,7 +103,10 @@ export function CourseDialog({
               placeholder="e.g., Basic computer knowledge, Internet connection"
               value={formData.requirements || ""}
               onChange={(e) =>
-                setFormData({ ...formData, requirements: e.target.value.split(',').map(r => r.trim()) })
+                setFormData({
+                  ...formData,
+                  requirements: e.target.value.split(",").map((r) => r.trim()),
+                })
               }
             />
           </div>
@@ -111,19 +118,27 @@ export function CourseDialog({
               placeholder="e.g., Video lectures, PDF notes, Certificate"
               value={formData.includes || ""}
               onChange={(e) =>
-                setFormData({ ...formData, includes: e.target.value.split(',').map(i => i.trim()) })
+                setFormData({
+                  ...formData,
+                  includes: e.target.value.split(",").map((i) => i.trim()),
+                })
               }
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="outcomes">Learning Outcomes (comma separated)</Label>
+            <Label htmlFor="outcomes">
+              Learning Outcomes (comma separated)
+            </Label>
             <Input
               id="outcomes"
               placeholder="e.g., Build websites, Understand JavaScript, Deploy projects"
               value={formData.outcomes || ""}
               onChange={(e) =>
-                setFormData({ ...formData, outcomes: e.target.value.split(',').map(o => o.trim()) })
+                setFormData({
+                  ...formData,
+                  outcomes: e.target.value.split(",").map((o) => o.trim()),
+                })
               }
             />
           </div>
@@ -184,18 +199,20 @@ export function CourseDialog({
               <Label htmlFor="category">Category</Label>
               <Select
                 value={formData.category || "WebDevelopment"}
-                onValueChange={(v) =>
-                  setFormData({ ...formData, category: v })
-                }
+                onValueChange={(v) => setFormData({ ...formData, category: v })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="WebDevelopment">Web Development</SelectItem>
+                  <SelectItem value="WebDevelopment">
+                    Web Development
+                  </SelectItem>
                   <SelectItem value="ui">UI/UX Design</SelectItem>
                   <SelectItem value="DataScience">Data Science</SelectItem>
-                  <SelectItem value="DigitalMarketing">Digital Marketing</SelectItem>
+                  <SelectItem value="DigitalMarketing">
+                    Digital Marketing
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -203,9 +220,7 @@ export function CourseDialog({
               <Label htmlFor="level">Level</Label>
               <Select
                 value={formData.level || "beginner"}
-                onValueChange={(v) =>
-                  setFormData({ ...formData, level: v })
-                }
+                onValueChange={(v) => setFormData({ ...formData, level: v })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select level" />
@@ -224,9 +239,7 @@ export function CourseDialog({
               <Label htmlFor="language">Language</Label>
               <Select
                 value={formData.language || "english"}
-                onValueChange={(v) =>
-                  setFormData({ ...formData, language: v })
-                }
+                onValueChange={(v) => setFormData({ ...formData, language: v })}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select language" />

@@ -27,7 +27,7 @@ const createCourse: AppRouteMutationImplementation<
                 teacherId
             } = req.body;
 
-        const adminId = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+        const adminId = "0774eddd-6a0c-4eed-9f7a-0b1611220f46";
 
         const courseData = await prisma.course.create({
             data: {

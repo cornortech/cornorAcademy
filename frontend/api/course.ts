@@ -19,22 +19,22 @@ const createCourseSchema = z.object({
   includes: z.array(z.string()).min(2, "Course include is required"),
   whatYouWillLearn: z.array(z.string()),
   meetingUrl: z.string(),
-  meetingTime: z.date(),
+  meetingTime: z.string(),
   language: z.enum(["nepali", "english"]),
   level: z.enum(["beginner", "intermediate", "advanced"]),
   thumbnail: z.string(),
   category: z.enum(["WebDevelopment", "ui", "DataScience", "DigitalMarketing"]),
-  startDate: z.date(),
+  startDate: z.string(),
   duration: z.number(),
   price: z.number().min(1, "Price is required"),
-  // curriculum: z.array(
-  //   z.object({
-  //     title: z.string().min(2, "curriculum is required "),
-  //     noOfLesson: z.number(),
-  //     duration: z.number(),
-  //     content: z.array(z.string()),
-  //   })
-  // ),
+  curriculum: z.array(
+    z.object({
+      title: z.string().min(2, "curriculum is required "),
+      noOfLesson: z.number(),
+      duration: z.number(),
+      content: z.array(z.string()),
+    })
+  ),
   teacherId: z.string().uuid(),
 });
 
@@ -45,14 +45,14 @@ const updateCourseSchema = z.object({
   includes: z.array(z.string()).optional(),
   whatYouWillLearn: z.array(z.string()).optional(),
   meetingUrl: z.string().optional(),
-  meetingTime: z.date().optional(),
+  meetingTime: z.string().optional(),
   language: z.enum(["nepali", "english"]).optional(),
   level: z.enum(["beginner", "intermediate", "advanced"]).optional(),
   thumbnail: z.string().optional(),
   category: z
     .enum(["WebDevelopment", "ui", "DataScience", "DigitalMarketing"])
     .optional(),
-  startDate: z.date().optional(),
+  startDate: z.string().optional(),
   duration: z.number().optional(),
   price: z.number().optional(),
   curriculum: z.array(

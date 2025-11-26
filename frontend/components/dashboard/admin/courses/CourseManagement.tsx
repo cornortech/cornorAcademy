@@ -73,15 +73,15 @@ export function CourseManagement() {
         whatYouWillLearn: formData.outcomes || [],
         meetingUrl: formData.meetingUrl || "",
         meetingTime: formData.startTime
-          ? new Date(formData.startTime)
-          : new Date(),
+          ? new Date(formData.startTime).toISOString()
+          : new Date().toISOString(),
         language: "english", // Default value
         level: formData.level || "beginner",
         thumbnail: formData.thumbnail || "",
         category: formData.category || ("WebDevelopment" as CourseCategory),
         startDate: formData.startDate
-          ? new Date(formData.startDate)
-          : new Date(),
+          ? new Date(formData.startDate).toISOString()
+          : new Date().toISOString(),
         duration: parseInt(formData.duration) || 12,
         price: parseInt(formData.price) || 299,
         curriculum: [], // You can add curriculum creation logic here
@@ -104,7 +104,7 @@ export function CourseManagement() {
         description: formData.description,
         price: parseInt(formData.price),
         startDate: formData.startDate
-          ? new Date(formData.startDate)
+          ? new Date(formData.startDate).toISOString()
           : undefined,
         duration: parseInt(formData.duration),
         level: formData.level,
