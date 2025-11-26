@@ -142,6 +142,7 @@ export function CourseDialog({
               }
             />
           </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="price">Price ($)</Label>
@@ -274,6 +275,7 @@ export function CourseDialog({
               }
             />
           </div>
+
           {mode === "create" && (
             <div className="space-y-2">
               <Label htmlFor="instructor">Assign Instructor</Label>

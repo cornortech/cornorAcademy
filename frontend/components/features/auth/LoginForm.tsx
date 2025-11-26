@@ -12,16 +12,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import {
-  AlertCircle,
-  Loader2,
-  Mail,
-  CheckCircle2,
-  XCircle,
-} from "lucide-react";
+import { AlertCircle, Loader2, Mail } from "lucide-react";
 import Link from "next/link";
 import { PasswordInput } from "./PasswordInput";
-import { useAuth } from "@/contexts/AuthContext";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFormData, loginSchema } from "@/lib/validations/auth";
@@ -67,7 +60,10 @@ export function LoginForm() {
         getValues("password")
       );
 
-      await sendEmailVerification(tempUser.user);
+      await sendEmailVerification(tempUser.user, {
+        url: `${window.location.origin}/login`,
+      });
+
       await auth.signOut();
 
       toast.success("Verification email sent! Check your inbox.");
@@ -128,6 +124,7 @@ export function LoginForm() {
       if (status === "registered") {
         setVerificationState("account-pending");
         setAccountStatus("Your account is pending admin approval.");
+        router.push("/legal-agreement");
         return;
       }
 
@@ -226,18 +223,19 @@ export function LoginForm() {
           <Alert className="mb-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
             <AlertCircle className="h-4 w-4 text-yellow-600" />
             <AlertDescription className="text-sm">
-              <p className="font-semibold mb-2">Account Pending Approval</p>
+              <p className="font-semibold mb-2">Account not activated, yet.</p>
               <p className="text-muted-foreground mb-2">
                 {accountStatus || "Your account is awaiting admin approval."}
               </p>
               <p className="text-xs text-muted-foreground">
-                You'll receive an email once your account is activated.
+                You'll be redirected to agreement signing page to activate your
+                portal.
               </p>
             </AlertDescription>
           </Alert>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input

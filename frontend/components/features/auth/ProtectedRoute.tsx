@@ -1,31 +1,70 @@
 "use client";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { UserRole } from "@/types";
 import { Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 
-export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  allowedRoles?: UserRole[];
+  fallback?: React.ReactNode;
+}
+
+export function ProtectedRoute({
+  children,
+  allowedRoles,
+  fallback,
+}: ProtectedRouteProps) {
+  const { user, userRole, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login");
+    if (loading) return;
+
+    if (!user) {
+      router.push(`/login?redirect=${encodeURIComponent(pathname)}`);
+      return;
     }
-  }, [user, loading, router]);
+
+    if (allowedRoles && userRole) {
+      if (!allowedRoles.includes(userRole)) {
+        switch (userRole) {
+          case "student":
+            router.push("/student");
+            break;
+          case "teacher":
+            router.push("/teacher");
+            break;
+          case "admin":
+            router.push("/admin");
+            break;
+          default:
+            router.push("/");
+        }
+      }
+    }
+  }, [user, loading, router, userRole, allowedRoles, pathname]);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
+      <>
+        {fallback || (
+          <div className="min-h-screen flex items-center justify-center">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        )}
+      </>
     );
   }
 
   if (!user) {
     return null;
   }
+
+  if (allowedRoles && userRole && !allowedRoles.includes(userRole)) return null;
 
   return <>{children}</>;
 }

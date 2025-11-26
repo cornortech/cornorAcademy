@@ -91,13 +91,19 @@ class AuthService {
     role: string
   ): Promise<Student | Teacher | Admin | null> {
     try {
+      const profile = await this.getUserProfile();
+
+      if (!profile || !profile.userId) {
+        throw new Error("Could not fetch user profile ID");
+      }
+
       let endpoint = "";
       switch (role) {
         case "student":
-          endpoint = "/auth/me";
+          endpoint = `/student/${profile.userId}`;
           break;
         case "teacher":
-          endpoint = "/auth/me";
+          endpoint = `/teacher/${profile.userId}`;
           break;
         case "admin":
           endpoint = "/auth/me";

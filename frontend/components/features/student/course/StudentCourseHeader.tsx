@@ -94,7 +94,7 @@ export function StudentCourseHeader({
               </div>
             </div>
             <Button asChild>
-              <Link href={`/dashboard/student/materials/${courseId}`}>
+              <Link href={`/student/materials/${courseId}`}>
                 <PlayCircle className="h-4 w-4 mr-1" />
                 Continue Learning
               </Link>

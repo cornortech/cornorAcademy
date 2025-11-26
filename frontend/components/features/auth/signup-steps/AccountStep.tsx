@@ -1,30 +1,27 @@
 "use client";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { SignupFormData, UserRole } from "@/types";
+
 import { PasswordInput } from "../PasswordInput";
 import { useEffect, useState } from "react";
-import { CheckCircle2, Info, XCircle } from "lucide-react";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { CheckCircle2, XCircle } from "lucide-react";
+import { Control, useWatch } from "react-hook-form";
+import { SignupFormData } from "@/lib/validations/auth";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 
 interface StepProps {
-  formData: SignupFormData;
-  updateFormData: (data: Partial<SignupFormData>) => void;
-  errors?: Record<string, string>;
+  control: Control<SignupFormData>;
 }
 
-export const AccountStep = ({
-  formData,
-  updateFormData,
-  errors,
-}: StepProps) => {
+export const AccountStep = ({ control }: StepProps) => {
+  const password = useWatch({ control, name: "password" });
+  const confirmPassword = useWatch({ control, name: "confirmPassword" });
+
   const [passwordStrength, setPasswordStrength] = useState({
     minLength: false,
     hasUppercase: false,
@@ -33,111 +30,114 @@ export const AccountStep = ({
   });
 
   useEffect(() => {
-    const password = formData.password;
+    const pass = password || "";
     setPasswordStrength({
-      minLength: password.length >= 8,
-      hasUppercase: /[A-Z]/.test(password),
-      hasLowercase: /[a-z]/.test(password),
-      hasNumber: /\d/.test(password),
+      minLength: pass.length >= 8,
+      hasUppercase: /[A-Z]/.test(pass),
+      hasLowercase: /[a-z]/.test(pass),
+      hasNumber: /\d/.test(pass),
     });
-  }, [formData.password]);
+  }, [password]);
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="name">
-          Full Name <span className="text-destructive">*</span>
-        </Label>{" "}
-        <Input
-          id="name"
-          placeholder="John Doe"
-          value={formData.name}
-          onChange={(e) => updateFormData({ name: e.target.value })}
-          className={errors?.name ? "border-destructive" : ""}
-        />
-        {errors?.name && (
-          <p className="text-sm text-destructive">{errors.name}</p>
+      <FormField
+        control={control}
+        name="name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>
+              Full Name <span className="text-destructive">*</span>
+            </FormLabel>
+            <FormControl>
+              <Input placeholder="Enter your full name" {...field} />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
         )}
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="email">
-          Email <span className="text-destructive">*</span>
-        </Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="john.doe@example.com"
-          value={formData.email}
-          onChange={(e) => updateFormData({ email: e.target.value })}
-          className={errors?.email ? "border-destructive" : ""}
-        />
-        {errors?.email && (
-          <p className="text-sm text-destructive">{errors.email}</p>
-        )}
-      </div>
+      />
 
-      <div className="space-y-2">
-        <Label htmlFor="password">
-          Password <span className="text-destructive">*</span>
-        </Label>
-        <PasswordInput
-          id="password"
-          placeholder="Create a strong password"
-          value={formData.password}
-          onChange={(e) => updateFormData({ password: e.target.value })}
-          className={errors?.password ? "border-destructive" : ""}
-        />
-
-        {/* Password Requirements */}
-        <div className="mt-3 space-y-2">
-          <p className="text-sm font-medium text-muted-foreground">
-            Password must contain:
-          </p>
-          <div className="space-y-1">
-            <PasswordRequirement
-              met={passwordStrength.minLength}
-              text="At least 8 characters"
-            />
-            <PasswordRequirement
-              met={passwordStrength.hasUppercase}
-              text="One uppercase letter"
-            />
-            <PasswordRequirement
-              met={passwordStrength.hasLowercase}
-              text="One lowercase letter"
-            />
-            <PasswordRequirement
-              met={passwordStrength.hasNumber}
-              text="One number"
-            />
-          </div>
-        </div>
-
-        {errors?.password && (
-          <p className="text-sm text-destructive mt-2">{errors.password}</p>
+      <FormField
+        control={control}
+        name="email"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>
+              Email <span className="text-destructive">*</span>
+            </FormLabel>
+            <FormControl>
+              <Input
+                type="email"
+                placeholder="Enter your email address"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
         )}
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="confirmPassword">
-          Confirm Password <span className="text-destructive">*</span>
-        </Label>
-        <PasswordInput
-          id="confirmPassword"
-          placeholder="Confirm your password"
-          value={formData.confirmPassword}
-          onChange={(e) => updateFormData({ confirmPassword: e.target.value })}
-          className={errors?.confirmPassword ? "border-destructive" : ""}
-        />
-        {errors?.confirmPassword && (
-          <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+      />
+
+      <FormField
+        control={control}
+        name="password"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>
+              Password <span className="text-destructive">*</span>
+            </FormLabel>
+            <FormControl>
+              <PasswordInput
+                placeholder="Create a strong password"
+                {...field}
+              />
+            </FormControl>
+            <div className="mt-3 space-y-2">
+              <p className="text-sm font-medium text-muted-foreground">
+                Password must contain:
+              </p>
+              <div className="space-y-1">
+                <PasswordRequirement
+                  met={passwordStrength.minLength}
+                  text="At least 8 characters"
+                />
+                <PasswordRequirement
+                  met={passwordStrength.hasUppercase}
+                  text="One uppercase letter"
+                />
+                <PasswordRequirement
+                  met={passwordStrength.hasLowercase}
+                  text="One lowercase letter"
+                />
+                <PasswordRequirement
+                  met={passwordStrength.hasNumber}
+                  text="One number"
+                />
+              </div>
+            </div>
+          </FormItem>
         )}
-        {formData.confirmPassword &&
-          formData.password === formData.confirmPassword && (
-            <p className="text-sm text-green-600 flex items-center gap-1">
-              <CheckCircle2 className="h-3 w-3" />
-              Passwords match
-            </p>
-          )}
-      </div>
+      />
+
+      <FormField
+        control={control}
+        name="confirmPassword"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>
+              Confirm Password <span className="text-destructive">*</span>
+            </FormLabel>
+            <FormControl>
+              <PasswordInput placeholder="Confirm your password" {...field} />
+            </FormControl>
+            {confirmPassword && password === confirmPassword && (
+              <p className="text-sm text-green-600 flex items-center gap-1 mt-1">
+                <CheckCircle2 className="h-3 w-3" />
+                Passwords match
+              </p>
+            )}
+            <FormMessage />
+          </FormItem>
+        )}
+      />
     </div>
   );
 };

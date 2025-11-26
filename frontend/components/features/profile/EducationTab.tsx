@@ -29,19 +29,19 @@ const EducationTab = ({
       <CardContent className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
-            <Label htmlFor="std-institute">Education Institute</Label>
+            <Label htmlFor="educationInstitute">Education Institute</Label>
             <Input
-              id="std-institute"
-              value={formData.educationInstitute}
+              id="educationInstitute"
+              value={formData.educationInstitute || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="std-qualification">Qualification</Label>
+            <Label htmlFor="qualification">Qualification</Label>
             <Input
-              id="std-qualification"
-              value={formData.qualification}
+              id="qualification"
+              value={formData.qualification || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />

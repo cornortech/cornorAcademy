@@ -1,10 +1,14 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { auth } from "@/lib/firebase/config";
 import { Student } from "@/types";
+import { updatePassword } from "firebase/auth";
 import { Save } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
+import { toast } from "sonner";
 
 interface AccountInfoTableProps {
   user: Student;
@@ -13,6 +17,34 @@ interface AccountInfoTableProps {
 }
 
 const AccountInfoTable = ({ user, isEditing }: AccountInfoTableProps) => {
+  const [newPassword, setNewPassword] = useState("");
+  const [isUpdatingPw, setIsUpdatingPw] = useState(false);
+
+  const handlePasswordUpdate = async () => {
+    if (newPassword.length < 6) {
+      toast.error(
+        "Password must be at least 6 characters including one uppercase, one lowercase, a number and a special character"
+      );
+      return;
+    }
+    if (!auth.currentUser) return;
+
+    setIsUpdatingPw(true);
+    try {
+      await updatePassword(auth.currentUser, newPassword);
+      toast.success("Password updated successfully!");
+      setNewPassword("");
+    } catch (error: any) {
+      if (error.code === "auth/requires-recent-login") {
+        toast.error("Please logout and login again to change password");
+      } else {
+        toast.error("Failed to update password");
+      }
+    } finally {
+      setIsUpdatingPw(false);
+    }
+  };
+
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur">
       <CardHeader>
@@ -39,12 +71,18 @@ const AccountInfoTable = ({ user, isEditing }: AccountInfoTableProps) => {
             type="password"
             id="password"
             placeholder="New password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
             disabled={!isEditing}
           />
           {isEditing && (
-            <Button className="w-full">
+            <Button
+              className="w-full"
+              onClick={handlePasswordUpdate}
+              disabled={isUpdatingPw || !newPassword}
+            >
               <Save className="h-4 w-4 mr-2" />
-              Update Password
+              {isUpdatingPw ? "Updating..." : "Update Password"}
             </Button>
           )}
         </div>

@@ -156,7 +156,7 @@ const MyTeachingCourses = () => {
                     </Dialog>
                   )}
                   <Button variant="default" size="sm" asChild>
-                    <Link href={`/dashboard/teacher/course/${course.id}`}>
+                    <Link href={`/teacher/course/${course.id}`}>
                       <Eye className="h-4 w-4 mr-1" />
                       Manage Course
                     </Link>

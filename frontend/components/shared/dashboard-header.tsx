@@ -17,7 +17,7 @@ import {
 } from "../ui/dropdown-menu";
 
 interface DashboardHeaderProps {
-  userRole: UserRole;
+  userRole: UserRole | null;
   userName: string;
   userEmail: string;
   userAvatar?: string;
@@ -26,10 +26,17 @@ interface DashboardHeaderProps {
 export function DashboardHeader({
   userRole,
   userName,
-  userEmail,
   userAvatar,
 }: DashboardHeaderProps) {
-  const { logout } = useAuth();
+  const { logout, userData, user } = useAuth();
+
+  const avatarSrc =
+    (userData as any)?.image ||
+    (userData as any)?.avatar ||
+    user?.photoURL ||
+    "";
+  const displayName = userData?.name || userName || "User";
+  const email = userData?.email || user?.email || "";
 
   const getRoleBadge = () => {
     switch (userRole) {
@@ -78,11 +85,11 @@ export function DashboardHeader({
                   className="flex items-center space-x-2 hover:bg-muted hover:text-foreground focus:outline-none rounded-full px-2 py-1 transition"
                 >
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={userAvatar} alt={userName} />
-                    <AvatarFallback>{getInitials(userName)}</AvatarFallback>
+                    <AvatarImage src={avatarSrc} alt={displayName} />
+                    <AvatarFallback>{getInitials(displayName)}</AvatarFallback>
                   </Avatar>
                   <div className="hidden md:flex flex-col text-left">
-                    <span className="text-sm font-medium">{userName}</span>
+                    <span className="text-sm font-medium">{displayName}</span>
                     <span className="text-xs text-muted-foreground capitalize">
                       {userRole}
                     </span>
@@ -122,7 +129,7 @@ export function DashboardHeader({
 
                 <DropdownMenuItem
                   onSelect={logout}
-                  className="hover:bg-red-500 hover:text-white transition flex items-center space-x-2 px-4 py-2 rounded-b-xl"
+                  className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/30 group transition flex items-center space-x-2 px-4 py-2 rounded-md"
                 >
                   <LogOut className="h-4 w-4" />
                   <span>Logout</span>

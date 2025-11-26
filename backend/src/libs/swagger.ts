@@ -56,12 +56,12 @@ All responses follow a consistent format:
   },
   servers: [
     {
-      url: "https://xenogenetic-casimira-squarishly.ngrok-free.dev",
-      description: "Public Development Server (Ngrok Tunnel)"
-    },
-    {
       url: "http://localhost:4000",
       description: "Local Development Server"
+    },
+    {
+      url: "https://xenogenetic-casimira-squarishly.ngrok-free.dev",
+      description: "Public Development Server (Ngrok Tunnel)"
     },
     {
       url: "https://api.cornoracademy.com",

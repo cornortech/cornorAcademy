@@ -3,7 +3,6 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Student } from "@/types";
-import { mockStudentData } from "@/lib/data";
 import { StudentProfileCard } from "@/components/features/profile/StudentProfileCard";
 import { PersonalInfoTab } from "@/components/features/profile/PersonalInfoTab";
 import EducationTab from "@/components/features/profile/EducationTab";
@@ -11,15 +10,19 @@ import AccountInfoTable from "@/components/features/profile/AccountInfoTable";
 import { ProfileLayout } from "@/components/features/profile/ProfileLayout";
 import { useAuth } from "@/contexts/AuthContext";
 import { authService } from "@/lib/api/auth.service";
-import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+import ProfileLoader from "./loading";
+import { useUploadImage } from "@/hooks/use-media";
 
 export default function StudentProfile() {
-  const { user, refreshUser } = useAuth();
+  const { refreshUser } = useAuth();
+  const { uploadImage } = useUploadImage();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [successMessage, setSuccessMessage] = useState("");
   const [userData, setUserData] = useState<Student | null>(null);
+
+  const [selectedImageFile, setSelectedImageFile] = useState<File | null>(null);
 
   useEffect(() => {
     loadUserData();
@@ -28,59 +31,84 @@ export default function StudentProfile() {
   const loadUserData = async () => {
     try {
       setIsLoading(true);
-      const profile = await authService.getUserProfile();
-      // TODO: Fetch full student data from  backend
-      // For now, using the profile data
-      setUserData(profile as any);
+      const data = await authService.getUserDetails("student");
+      if (data) {
+        setUserData(data as Student);
+      }
     } catch (error) {
       console.error("Failed to load user data:", error);
+      toast.error("Failed to load profile data");
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleInputChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { id, value } = e.target;
     setUserData((prev) => (prev ? { ...prev, [id]: value } : null));
   };
 
+  const handleSelectChange = (field: string, value: string) => {
+    setUserData((prev) => (prev ? { ...prev, [field]: value } : null));
+  };
+
+  const handleImageSelect = (file: File) => {
+    setSelectedImageFile(file);
+    const previewUrl = URL.createObjectURL(file);
+    setUserData((prev) => (prev ? { ...prev, image: previewUrl } : null));
+  };
+
   const handleSave = async () => {
     if (!userData?.name || !userData?.email) {
-      alert("Please fill in required fields");
+      toast.error("Please fill in required fields");
       return;
     }
 
     setIsSaving(true);
     try {
-      // Simulate API call
+      let imageUrl = userData.image;
+
+      if (selectedImageFile) {
+        const uploadRes = await uploadImage(selectedImageFile);
+        if (!uploadRes.isCompleted || !uploadRes.url) {
+          throw new Error("Image upload failed");
+        }
+        imageUrl = uploadRes.url;
+      }
 
       await authService.updateStudentProfile({
         name: userData.name,
         email: userData.email,
         phoneNumber: userData.phoneNumber,
-        // ... other fields
+        gender: userData.gender,
+        image: imageUrl,
+        dob: userData.dob,
+        address: userData.address,
+        city: userData.city,
+        district: userData.district,
+        pincode: userData.pincode,
+        country: userData.country,
+        about: userData.about,
+        educationInstitute: userData.educationInstitute,
+        qualification: userData.qualification,
       });
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      setSuccessMessage("Profile updated successfully!");
+      toast.success("Profile updated successfully!");
       setIsEditing(false);
-      setTimeout(() => setSuccessMessage(""), 3000);
+      setSelectedImageFile(null);
       await refreshUser();
     } catch (error) {
-      alert("Failed to update profile");
+      console.error(error);
+      toast.error("Failed to update profile");
     } finally {
       setIsSaving(false);
     }
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <ProfileLoader />;
   }
 
   if (!userData) {
@@ -94,7 +122,7 @@ export default function StudentProfile() {
           user={userData}
           isEditing={isEditing}
           onEditToggle={() => setIsEditing((p) => !p)}
-          successMessage={successMessage}
+          onImageChange={handleImageSelect}
         />
       }
     >
@@ -111,6 +139,7 @@ export default function StudentProfile() {
             isEditing={isEditing}
             isSaving={isSaving}
             onInputChange={handleInputChange}
+            onSelectChange={handleSelectChange}
             onSave={handleSave}
           />
         </TabsContent>
