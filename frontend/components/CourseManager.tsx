@@ -57,7 +57,7 @@ export function CourseManager() {
     startDate: new Date(),
     duration: 12,
     price: 299,
-    curriculum: [],
+    // curriculum: [],
     teacherId: "",
   });
 
@@ -87,11 +87,11 @@ export function CourseManager() {
         startDate: new Date(),
         duration: 12,
         price: 299,
-        curriculum: [],
+        // curriculum: [],
         teacherId: "",
       });
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to create course");
+    } catch (err:any) {
+      setError( err.message);
     }
   };
 

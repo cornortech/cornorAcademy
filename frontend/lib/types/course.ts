@@ -17,7 +17,24 @@ export interface CreateCourseRequest {
   teacherId: string;
 }
 
-export interface UpdateCourseRequest extends Partial<CreateCourseRequest> {}
+export interface UpdateCourseRequest extends Partial<CreateCourseRequest> {
+  title: string;
+  description: string;
+  requirements: string[];
+  includes: string[];
+  whatYouWillLearn: string[];
+  meetingUrl: string;
+  meetingTime: Date;
+  language: "nepali" | "english";
+  level: "beginner" | "intermediate" | "advanced";
+  thumbnail: string;
+  category: CourseCategory;
+  startDate: Date;
+  duration: number;
+  price: number;
+  curriculum: Omit<CourseCurriculumItem, "id">[];
+  teacherId: string;
+}
 
 export interface UpdateCourseStatusRequest {
   status: "upcoming" | "active" | "completed";

@@ -131,14 +131,14 @@ model course {
   includes         String[]
   whatYouWillLearn String[]
   meetingUrl       String
-  meetingTime      DateTime
+  meetingTime      String
   isOngoing        Boolean            @default(false)
   language         language
   level            courseLevel
   thumbnail        String
   category         category
   status           courseStatus       @default(upcoming)
-  startDate        DateTime
+  startDate        String
   duration         Int //in weeks 
   price            Int
   teacher          Teacher?           @relation(fields: [teacherId], references: [id], onDelete: SetNull)
