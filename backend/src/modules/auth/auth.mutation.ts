@@ -2,6 +2,7 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { authContract } from "../../contract/auth/auth.contract";
 import prisma from "../../libs/db";
 import { getStorage } from "firebase-admin/storage";
+import admin from "../../libs/admin";
 
 const registerStudent: AppRouteMutationImplementation<
   typeof authContract.registerStudent
@@ -71,6 +72,7 @@ const registerStudent: AppRouteMutationImplementation<
     };
   } catch (error) {
     console.error("Error creating student:", error);
+    await admin.auth().deleteUser(req.body.uid);
     return {
       status: 500,
       body: {

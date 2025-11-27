@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 export const createTeacherSchema = z.object({
-    uid: z.string().min(1),
     name: z.string().min(2, "Name Field is required"),
     email: z.string().email("Email Field is required"),
     image: z.string(),

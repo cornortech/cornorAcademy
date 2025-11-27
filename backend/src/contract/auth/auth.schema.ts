@@ -49,9 +49,9 @@ export const getProfileSchema = z.object({
 
 export const updateStudentDetailsSchema = z.object({
   name: z.string().optional(),
-  email: z.string().email(),
+  email: z.string().email().optional(),
   phoneNumber: z.string().optional(),
-  gender: z.enum(["male", "female", "other"]),
+  gender: z.enum(["male", "female", "other"]).optional(),
   image: z.string().nullable().optional(),
   dob: z.string().optional(),
   address: z.string().optional(),
