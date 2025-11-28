@@ -225,11 +225,6 @@ const deleteTeacher: AppRouteMutationImplementation<
             };
         }
 
-        if (teacherExists.image) {
-            const imagePath = extractFirebasePath(teacherExists.image);
-            await storageBucket.file(imagePath).delete();
-        }
-
         await prisma.teacher.delete({
             where: {
                 id: teacherId,
@@ -238,6 +233,11 @@ const deleteTeacher: AppRouteMutationImplementation<
 
         //Delete teacher from firebase auth
         await admin.auth().deleteUser(teacherExists.uid);
+
+        if (teacherExists.image) {
+            const imagePath = extractFirebasePath(teacherExists.image);
+            await storageBucket.file(imagePath).delete();
+        }
 
         return {
             status: 200,
