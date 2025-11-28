@@ -4,6 +4,7 @@ import prisma from "../../libs/db";
 import crypto from "crypto";
 import EmailService from "../../services/email.service";
 import admin from "../../libs/admin";
+import { getStorage } from "firebase-admin/storage";
 
 //Generate teacher side random paswowrd for first login
 function generateTempPassword(name: string) {
@@ -99,7 +100,7 @@ const createTeacher: AppRouteMutationImplementation<
     } catch (error) {
         console.error("Error creating teacher profile:", error);
 
-        if(teacherFirebase) {
+        if (teacherFirebase) {
             await admin.auth().deleteUser(teacherFirebase.uid);
         };
 
@@ -108,7 +109,7 @@ const createTeacher: AppRouteMutationImplementation<
                 email: req.body.email,
             },
         });
-        
+
         return {
             status: 500,
             body: {
@@ -123,9 +124,20 @@ const updateTeacher: AppRouteMutationImplementation<
     typeof teacherContract.updateTeacher
 > = async ({ req }) => {
     try {
-        const { teacherId } = req.params;
+        const {
+            teacherId
+        } = req.params;
 
-        const { name, email, image, bio, noOfYearsExperience, expertise, dob, gender, status } = req.body;
+        const {
+            name,
+            email,
+            image,
+            bio,
+            noOfYearsExperience,
+            expertise,
+            dob,
+            gender,
+            status } = req.body;
 
         const teacherExists = await prisma.teacher.findUnique({
             where: {
@@ -180,6 +192,14 @@ const updateTeacher: AppRouteMutationImplementation<
     }
 };
 
+const storageBucket = getStorage().bucket();
+
+function extractFirebasePath(url: string) {
+    const base = url.split("/o/")[1];
+    const path = base.split("?")[0];
+    return decodeURIComponent(path);
+}
+
 const deleteTeacher: AppRouteMutationImplementation<
     typeof teacherContract.deleteTeacher
 > = async ({ req }) => {
@@ -205,11 +225,19 @@ const deleteTeacher: AppRouteMutationImplementation<
             };
         }
 
+        if (teacherExists.image) {
+            const imagePath = extractFirebasePath(teacherExists.image);
+            await storageBucket.file(imagePath).delete();
+        }
+
         await prisma.teacher.delete({
             where: {
                 id: teacherId,
             },
         });
+
+        //Delete teacher from firebase auth
+        await admin.auth().deleteUser(teacherExists.uid);
 
         return {
             status: 200,
@@ -218,6 +246,7 @@ const deleteTeacher: AppRouteMutationImplementation<
                 message: "Teacher Profile Deleted Successfully",
             },
         };
+
     } catch (error) {
         console.error("Error deleting teacher profile:", error);
         return {

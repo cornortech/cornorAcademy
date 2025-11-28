@@ -132,26 +132,6 @@ const login: AppRouteMutationImplementation<
       }
     }
 
-    // if (role === "student") {
-    //   user = await prisma.student.findUnique({
-    //     where: {
-    //       email,
-    //     },
-    //   });
-    // } else if (role === "teacher") {
-    //   user = await prisma.teacher.findUnique({
-    //     where: {
-    //       email,
-    //     },
-    //   });
-    // } else if (role === "admin") {
-    //   user = await prisma.admin.findUnique({
-    //     where: {
-    //       email,
-    //     },
-    //   });
-    // }
-
     if (role === "student") {
       switch (user.status) {
         case "registered":
