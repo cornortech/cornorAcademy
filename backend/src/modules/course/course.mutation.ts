@@ -27,8 +27,6 @@ const createCourse: AppRouteMutationImplementation<
                 teacherId
             } = req.body;
 
-        const adminId = "0774eddd-6a0c-4eed-9f7a-0b1611220f46";
-
         const courseData = await prisma.course.create({
             data: {
                 title,
@@ -46,7 +44,6 @@ const createCourse: AppRouteMutationImplementation<
                 duration,
                 price,
                 teacherId,
-                adminId,
                 courseCurriculum: {
                     create: curriculum.map((c) => ({
                         title: c.title,
