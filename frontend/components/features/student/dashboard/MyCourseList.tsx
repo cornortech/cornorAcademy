@@ -199,7 +199,7 @@ export function MyCoursesList() {
                             </Dialog>
                           )}
                         <Button variant="default" size="sm" asChild>
-                          <Link href={`/dashboard/student/course/${course.id}`}>
+                          <Link href={`/student/course/${course.id}`}>
                             <Video className="h-4 w-4 mr-1" />
                             {course.status === "completed"
                               ? "Review Course"

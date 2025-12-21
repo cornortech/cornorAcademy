@@ -1,4 +1,4 @@
-import { auth, db } from "@/lib/firebase/config";
+import { auth } from "@/lib/firebase/config";
 import { LoginResponse, UserRole, UserStatus } from "@/types";
 import {
   createUserWithEmailAndPassword,
@@ -12,8 +12,7 @@ import {
 } from "firebase/auth";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
-import {} from "firebase/database";
-import { authService, UserProfile } from "@/lib/api/auth.service";
+import { authService } from "@/lib/api/auth.service";
 import axiosInstance from "@/lib/api/axios";
 
 interface AuthContextType {
@@ -38,6 +37,7 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<void>;
   resendVerificationEmail: () => Promise<void>;
   refreshUser: () => Promise<void>;
+  refreshUserData: () => Promise<void>;
   updateUserStatus: (status: UserStatus) => void;
 }
 
@@ -73,7 +73,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         role: profile.role,
         name: details?.name || "",
         status: details?.status,
-      };
+        image: (details as any)?.image || (details as any)?.avatar,
+      } as any;
 
       setUserData(fullUserData);
       setUserRole(profile.role);
@@ -127,7 +128,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (userCredentials.user) {
       await updateProfile(userCredentials.user, { displayName });
-      await sendEmailVerification(userCredentials.user);
+      await sendEmailVerification(userCredentials.user, {
+        url: `${window.location.origin}/login`,
+        handleCodeInApp: true,
+      });
+
       return { uid: userCredentials.user.uid };
     }
   };
@@ -158,7 +163,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const logout = async () => {
     await signOut(auth);
-
     setUser(null);
     setUserRole(null);
     setUserStatus(null);
@@ -172,7 +176,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const resetPassword = async (email: string) => {
     try {
-      await sendPasswordResetEmail(auth, email);
+      await sendPasswordResetEmail(auth, email, {
+        url: `${window.location.origin}/login`,
+        handleCodeInApp: true,
+      });
     } catch (error: any) {
       throw new Error(error.message);
     }
@@ -180,7 +187,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const resendVerificationEmail = async () => {
     if (user && !user.emailVerified) {
-      await sendEmailVerification(user);
+      await sendEmailVerification(user, {
+        url: `${window.location.origin}/login`,
+        handleCodeInApp: true,
+      });
     }
   };
 

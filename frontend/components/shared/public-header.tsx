@@ -4,13 +4,15 @@ import Link from "next/link";
 import { Button } from "../ui/button";
 import { APP_NAME } from "@/lib/config";
 import { useAuth } from "@/contexts/AuthContext";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@radix-ui/react-dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+} from "../ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { getInitials } from "@/lib/utils";
 
 interface PublicHeaderProps {
   showNav?: boolean;
@@ -21,9 +23,24 @@ const PublicHeader = ({
   showNav = true,
   showBackButton = false,
 }: PublicHeaderProps) => {
-  const { user, logout, userRole } = useAuth();
+  const { user, logout, userRole, userData } = useAuth();
 
-  console.log(user?.getIdToken());
+  const avatarSrc =
+    (userData as any)?.image ||
+    (userData as any)?.avatar ||
+    user?.photoURL ||
+    "";
+  const displayName = userData?.name || user?.displayName || "User";
+  const email = userData?.email || user?.email || "";
+
+  const navItems = [
+    "Courses",
+    "Features",
+    "Verify Certificate",
+    "About",
+    "Contact",
+  ];
+
   return (
     <nav className="border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -49,88 +66,81 @@ const PublicHeader = ({
 
           {showNav && !showBackButton && (
             <nav className="hidden md:flex items-center space-x-8">
-              <Link
-                href="#courses"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Courses
-              </Link>
-              <Link
-                href="#features"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Features
-              </Link>
-              <Link
-                href="#verify-certificate"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Verify Certificate
-              </Link>
-              <Link
-                href="#about"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                About
-              </Link>
-              <Link
-                href="#contact"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Contact
-              </Link>
+              {navItems.map((item) => (
+                <Link
+                  key={item}
+                  href={`#${item.toLowerCase().replace(" ", "-")}`}
+                  className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-md transition-all"
+                >
+                  {item}
+                </Link>
+              ))}
             </nav>
           )}
 
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="flex items-center space-x-2  rounded-full px-2 py-1 transition"
-                >
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.photoURL || ""} />
-                    <AvatarFallback>
-                      {user.displayName?.[0] || "U"}
+                <button className="outline-none group">
+                  <Avatar className="h-9 w-9 border border-border transition-all group-hover:ring-2 group-hover:ring-primary/20 group-hover:border-primary/50">
+                    <AvatarImage
+                      src={avatarSrc}
+                      alt={displayName}
+                      className="object-cover"
+                    />
+                    <AvatarFallback className="bg-primary/5 text-primary font-medium text-xs">
+                      {getInitials(displayName)}
                     </AvatarFallback>
                   </Avatar>
-                </Button>
+                </button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="w-40 bg-background  rounded-xl shadow-lg py-2">
+              <DropdownMenuContent
+                align="end"
+                className="w-56 p-2 rounded-xl shadow-lg border bg-popover"
+              >
+                <div className="px-2 py-1.5 mb-1">
+                  <p className="text-sm font-medium leading-none">
+                    {displayName}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1 truncate">
+                    {email}
+                  </p>
+                </div>
+
+                <div className="h-px bg-border my-1" />
+
                 <DropdownMenuItem
                   asChild
-                  className="hover:bg-primary/10 transition"
+                  className="cursor-pointer rounded-md focus:bg-accent focus:text-accent-foreground"
                 >
                   <Link
                     href={`/${userRole || "student"}`}
-                    className="flex items-center space-x-2 px-4 py-2"
+                    className="flex items-center px-2 py-2"
                   >
-                    <LayoutDashboard className="h-4 w-4" />
+                    <LayoutDashboard className="h-4 w-4 mr-2 text-muted-foreground" />
                     <span>Dashboard</span>
                   </Link>
                 </DropdownMenuItem>
 
                 <DropdownMenuItem
                   asChild
-                  className="hover:bg-primary/10 transition"
+                  className="cursor-pointer rounded-md focus:bg-accent focus:text-accent-foreground"
                 >
-                  <Link
-                    href="/courses"
-                    className="flex items-center space-x-2 px-4 py-2"
-                  >
-                    <BookOpen className="h-4 w-4" />
-                    <span>Courses</span>
+                  <Link href="/courses" className="flex items-center px-2 py-2">
+                    <BookOpen className="h-4 w-4 mr-2 text-muted-foreground" />
+                    <span>My Courses</span>
                   </Link>
                 </DropdownMenuItem>
 
+                <div className="h-px bg-border my-1" />
+
                 <DropdownMenuItem
                   onSelect={logout}
-                  className="hover:bg-red-500 hover:text-white transition flex items-center space-x-2 px-4 py-2 rounded-b-xl"
+                  className="cursor-pointer rounded-md text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/30"
                 >
-                  <LogOut className="h-4 w-4" />
-                  <span>Logout</span>
+                  <LogOut className="h-4 w-4 mr-2" />
+                  <span>Sign out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

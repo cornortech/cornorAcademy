@@ -1,5 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { auth } from "../firebase/config";
+import { onAuthStateChanged } from "firebase/auth";
+
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const axiosInstance = axios.create({
@@ -9,8 +11,21 @@ const axiosInstance = axios.create({
   },
 });
 
+const waitForAuth = () => {
+  return new Promise((resolve) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      unsubscribe();
+      resolve(user);
+    });
+  });
+};
+
 axiosInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
+    if (!auth.currentUser) {
+      await waitForAuth();
+    }
+
     const user = auth.currentUser;
 
     if (user) {

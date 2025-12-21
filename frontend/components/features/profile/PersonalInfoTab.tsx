@@ -4,12 +4,20 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Save } from "lucide-react";
 import { Student } from "@/types";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface PersonalInfoTabProps {
   formData: Partial<Student>;
   isEditing: boolean;
   isSaving: boolean;
   onInputChange: (e: React.ChangeEvent<any>) => void;
+  onSelectChange: (field: string, value: string) => void;
   onSave: () => void;
 }
 
@@ -18,6 +26,7 @@ export function PersonalInfoTab({
   isEditing,
   isSaving,
   onInputChange,
+  onSelectChange,
   onSave,
 }: PersonalInfoTabProps) {
   return (
@@ -43,33 +52,45 @@ export function PersonalInfoTab({
               type="email"
               value={formData.email || ""}
               onChange={onInputChange}
-              disabled={!isEditing}
+              disabled={true}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
+            <Label htmlFor="phoneNumber">Phone Number</Label>
             <Input
-              id="phone"
-              value={formData.phoneNumber}
+              id="phoneNumber"
+              value={formData.phoneNumber || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="gender">Gender</Label>
-            <Input
-              id="gender"
-              value={formData.gender}
-              onChange={onInputChange}
+            <Select
               disabled={!isEditing}
-            />
+              value={formData.gender}
+              onValueChange={(value) => onSelectChange("gender", value)}
+            >
+              <SelectTrigger id="gender">
+                <SelectValue placeholder="Select gender" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="male">Male</SelectItem>
+                <SelectItem value="female">Female</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="dob">Date of Birth</Label>
             <Input
               id="dob"
               type="date"
-              value={formData.dob}
+              value={
+                formData.dob
+                  ? new Date(formData.dob).toISOString().split("T")[0]
+                  : ""
+              }
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -78,7 +99,7 @@ export function PersonalInfoTab({
             <Label htmlFor="country">Country</Label>
             <Input
               id="country"
-              value={formData.country}
+              value={formData.country || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -87,7 +108,7 @@ export function PersonalInfoTab({
             <Label htmlFor="address">Address</Label>
             <Input
               id="address"
-              value={formData.address}
+              value={formData.address || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -96,7 +117,7 @@ export function PersonalInfoTab({
             <Label htmlFor="city">City</Label>
             <Input
               id="city"
-              value={formData.city}
+              value={formData.city || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -105,7 +126,7 @@ export function PersonalInfoTab({
             <Label htmlFor="district">District</Label>
             <Input
               id="district"
-              value={formData.district}
+              value={formData.district || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -114,7 +135,7 @@ export function PersonalInfoTab({
             <Label htmlFor="pincode">Pincode</Label>
             <Input
               id="pincode"
-              value={formData.pincode}
+              value={formData.pincode || ""}
               onChange={onInputChange}
               disabled={!isEditing}
             />
@@ -126,7 +147,7 @@ export function PersonalInfoTab({
             id="about"
             className="w-full p-2 border border-border rounded-md text-sm disabled:opacity-50"
             rows={4}
-            value={formData.about}
+            value={formData.about || ""}
             onChange={onInputChange}
             disabled={!isEditing}
           />

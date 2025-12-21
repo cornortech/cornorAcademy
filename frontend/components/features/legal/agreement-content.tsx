@@ -1,4 +1,4 @@
-import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const AgreementContent = () => {
   return (

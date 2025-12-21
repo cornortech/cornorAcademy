@@ -13,27 +13,6 @@ export type CourseStatus =
   | "upcoming";
 export type CourseLevel = "beginner" | "intermediate" | "advanced";
 
-export interface SignupFormData {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-  role: UserRole | "";
-  phoneNumber: string;
-  gender: Gender | "";
-  image: File | null;
-  dob: string;
-  address: string;
-  city: string;
-  district: string;
-  pincode: string;
-  country: string;
-  about: string;
-  educationInstitute: string;
-  qualification: string;
-  agreeToTerms: boolean;
-}
-
 export interface LoginResponse {
   uid: string;
   id: string;
@@ -42,6 +21,7 @@ export interface LoginResponse {
   role: UserRole;
   status?: UserStatus;
   redirectionUrl?: string;
+  image?: string;
 }
 
 export interface BaseUser {
@@ -49,7 +29,7 @@ export interface BaseUser {
   uid: string;
   name: string;
   email: string;
-  avatar?: string;
+  image?: string;
   status: UserStatus;
   createdAt: string;
   updatedAt: string;
@@ -236,7 +216,7 @@ export interface StudentPayment {
   paymentMethod: string;
   date: string;
   transactionId: string;
-  avatar: string;
+  image: string;
 }
 
 export interface AdminManagedCourse {
@@ -263,7 +243,7 @@ export interface StudentProgressRecord {
   lastActive: string;
   attendance: number;
   assignments: string;
-  avatar: string;
+  image: string;
 }
 
 export interface UploadedResource {

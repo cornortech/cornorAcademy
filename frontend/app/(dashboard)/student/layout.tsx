@@ -4,6 +4,7 @@ import { DashboardHeader } from "@/components/shared/dashboard-header";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
+import StudentDashboardLoading from "./loading";
 
 export default function StudentDashboardLayout({
   children,
@@ -11,22 +12,25 @@ export default function StudentDashboardLayout({
   children: ReactNode;
 }) {
   const pathname = usePathname();
-  const { user, userRole } = useAuth();
+  const { user, userRole, userData } = useAuth();
 
   const hideHeader =
     pathname.includes("/course/") || pathname.includes("/materials/");
 
   return (
-    <ProtectedRoute>
+    <ProtectedRoute
+      allowedRoles={["student"]}
+      fallback={<StudentDashboardLoading />}
+    >
       {hideHeader ? (
         <>{children}</>
       ) : (
         <div className="min-h-screen bg-background">
           <DashboardHeader
             userRole={userRole}
-            userName={user?.displayName || "Student"}
-            userEmail={user?.email || ""}
-            userAvatar={user?.photoURL || ""}
+            userName={userData?.name || user?.displayName || "Student"}
+            userEmail={userData?.email || user?.email || ""}
+            userAvatar={(userData as any)?.image || user?.photoURL || ""}
           />
           <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {children}
