@@ -7,9 +7,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowRight, Play, Star } from "lucide-react";
+import { ArrowRight, Star } from "lucide-react";
 
 import Link from "next/link";
+import { mockCourses } from "@/lib/data";
 
 const CourseSection = () => {
   return (
@@ -25,41 +26,17 @@ const CourseSection = () => {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            {
-              title: "Web Development Fundamentals",
-              instructor: "Sarah Johnson",
-              students: 2840,
-              rating: 4.9,
-              duration: "12 weeks",
-              level: "Beginner",
-              price: "$299",
-            },
-            {
-              title: "Data Science & Analytics",
-              instructor: "Dr. Michael Chen",
-              students: 1920,
-              rating: 4.8,
-              duration: "16 weeks",
-              level: "Intermediate",
-              price: "$399",
-            },
-            {
-              title: "Digital Marketing Mastery",
-              instructor: "Emma Rodriguez",
-              students: 3150,
-              rating: 4.9,
-              duration: "10 weeks",
-              level: "Beginner",
-              price: "$249",
-            },
-          ].map((course, index) => (
+          {mockCourses.slice(0, 6).map((course, index) => (
             <Card
-              key={index}
+              key={course.id}
               className="border-border/50 bg-card/50 backdrop-blur hover:bg-card/80 transition-colors"
             >
-              <div className="aspect-video bg-muted rounded-t-lg flex items-center justify-center">
-                <Play className="h-12 w-12 text-muted-foreground" />
+              <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
+                <img
+                  src={course.thumbnail}
+                  alt={course.title}
+                  className="object-cover w-full h-full"
+                />
               </div>
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
@@ -72,19 +49,18 @@ const CourseSection = () => {
                 <CardTitle className="text-lg">{course.title}</CardTitle>
                 <CardDescription>
                   {"By "}
-                  {course.instructor} • {course.students.toLocaleString()}{" "}
-                  students
+                  {course.instructor?.name} • {course.students.toLocaleString()} students
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
                   <span>{course.duration}</span>
                   <span className="font-semibold text-foreground">
-                    {course.price}
+                    {`RS ${course.price.toLocaleString()}`}
                   </span>
                 </div>
                 <Button className="w-full" asChild>
-                  <Link href={`/courses/${index + 1}`}>{"View Details"}</Link>
+                  <Link href={`/courses/${course.id}`}>{"View Details"}</Link>
                 </Button>
               </CardContent>
             </Card>

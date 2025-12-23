@@ -17,9 +17,9 @@ export function CourseSidebar({ course }: CourseSidebarProps) {
         <CardContent className="p-6">
           <div className="text-center mb-6">
             <div className="flex items-center justify-center gap-2 mb-2">
-              <span className="text-3xl font-bold">${course.price}</span>
+              <span className="text-3xl font-bold">{`RS ${course.price.toLocaleString()}`}</span>
               <span className="text-lg text-muted-foreground line-through">
-                ${course.originalPrice}
+                {`RS ${course.originalPrice.toLocaleString()}`}
               </span>
             </div>
             <Badge variant="destructive" className="text-xs">

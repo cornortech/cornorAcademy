@@ -3,7 +3,8 @@ import Footer from "@/components/shared/footer";
 import FeatureSection from "@/components/features/landingPage/FeatureSection";
 import HeroSection from "@/components/features/landingPage/HeroSection";
 import CourseSection from "@/components/features/landingPage/CourseSection";
-import CertificateVerficationSection from "@/components/features/landingPage/CertificateVerficationSection";
+import InstructorsSection from "@/components/features/landingPage/InstructorsSection";
+// import CertificateVerficationSection from "@/components/features/landingPage/CertificateVerficationSection"; // temporarily disabled
 import CTASection from "@/components/features/landingPage/CTASection";
 
 export default function Home() {
@@ -13,8 +14,9 @@ export default function Home() {
       <main>
         <HeroSection />
         <FeatureSection />
+        <InstructorsSection />
         <CourseSection />
-        <CertificateVerficationSection />
+        {/* <CertificateVerficationSection /> */}
         <CTASection />
       </main>
       <Footer />

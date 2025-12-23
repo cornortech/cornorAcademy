@@ -19,6 +19,10 @@ export function CourseHeader({ course }: CourseHeaderProps) {
       <p className="text-xl text-muted-foreground text-balance mb-6">
         {course.description}
       </p>
+          <div className="flex items-center gap-4 mb-6">
+            <div className="text-2xl font-bold">{`RS ${course.price.toLocaleString()}`}</div>
+            <div className="text-sm text-muted-foreground line-through">{`RS ${course.originalPrice.toLocaleString()}`}</div>
+          </div>
       <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
         <div className="flex items-center gap-1">
           <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />

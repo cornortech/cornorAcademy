@@ -1,5 +1,4 @@
 import { APP_NAME } from "@/lib/config";
-import { BookOpen } from "lucide-react";
 import Link from "next/link";
 
 const Footer = () => {
@@ -8,10 +7,8 @@ const Footer = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                <BookOpen className="h-5 w-5 text-primary-foreground" />
-              </div>
+            <div className="flex items-center space-x-3 mb-4">
+              <img src="/logo.png" alt={APP_NAME} className="h-10 w-10 object-contain" />
               <span className="text-xl font-bold">{APP_NAME}</span>
             </div>
             <p className="text-muted-foreground text-sm">
