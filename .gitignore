@@ -19,7 +19,7 @@ pnpm-debug.log*
 
 # Ignore environment files
 .env
-.env.*
+# .env.*
 backend/.env
 frontend/.env
 
