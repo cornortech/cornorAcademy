@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { BookOpen, Check, AlertCircle, ArrowLeft } from "lucide-react";
+import { Check, AlertCircle, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
 import { Canvas } from "@/components/signature-canvas";
@@ -21,6 +21,8 @@ import { useUploadImage } from "@/hooks/use-media";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { authService } from "@/lib/api/auth.service";
+import Image from "next/image";
+import { APP_NAME } from "@/lib/config";
 
 const dataURLtoFile = (dataURL: string, filename: string): File => {
   const arr = dataURL.split(",");
@@ -151,8 +153,14 @@ export default function LegalAgreementPage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex h-16 items-center justify-between">
               <Link href="/" className="flex items-center space-x-2">
-                <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                  <BookOpen className="h-5 w-5 text-primary-foreground" />
+                <div className="h-8 w-8 rounded-lg flex items-center justify-center">
+                  <Image
+                    src="/logo/logo.png"
+                    alt={`${APP_NAME} Logo`}
+                    width={43}
+                    height={43}
+                    className="object-contain"
+                  />
                 </div>
                 <span className="text-xl font-bold">Cornor Academy</span>
               </Link>
@@ -202,8 +210,14 @@ export default function LegalAgreementPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                <BookOpen className="h-5 w-5 text-primary-foreground" />
+              <div className="h-8 w-8 rounded-lg flex items-center justify-center">
+                <Image
+                  src="/logo/logo.png"
+                  alt={`${APP_NAME} Logo`}
+                  width={43}
+                  height={43}
+                  className="object-contain"
+                />
               </div>
               <span className="text-xl font-bold">Cornor Academy</span>
             </Link>

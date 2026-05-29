@@ -1,6 +1,7 @@
 "use client";
 import { ArrowLeft, BookOpen, LayoutDashboard, LogOut } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "../ui/button";
 import { APP_NAME } from "@/lib/config";
 import { useAuth } from "@/contexts/AuthContext";
@@ -45,7 +46,10 @@ const PublicHeader = ({
     <nav className="border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
+
+          {/* ===== Logo and Back Button ===== */}
           <div className="flex items-center space-x-4">
+          
             {showBackButton && (
               <Button variant="ghost" size="sm" asChild>
                 <Link href="/">
@@ -54,16 +58,26 @@ const PublicHeader = ({
                 </Link>
               </Button>
             )}
+
             <Link href="/" className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-                <BookOpen className="h-5 w-5 text-primary-foreground" />
+              <div className="h-8 w-8 rounded-lg flex items-center justify-center">
+                <Image
+                  src="/logo/logo.png"
+                  alt={`${APP_NAME} Logo`}
+                  width={43}
+                  height={43}
+                  className="object-contain"
+                />
               </div>
               <span className="text-xl font-bold text-foreground">
                 {APP_NAME}
               </span>
             </Link>
-          </div>
 
+          </div>
+          {/* ===== End Logo and Back Button ===== */}
+
+          {/* ===== Navigation Items ===== */}
           {showNav && !showBackButton && (
             <nav className="hidden md:flex items-center space-x-8">
               {navItems.map((item) => (
@@ -77,7 +91,9 @@ const PublicHeader = ({
               ))}
             </nav>
           )}
+          {/* ===== End Navigation Items ===== */}
 
+          {/* ===== User Profile Dropdown ===== */}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -154,6 +170,9 @@ const PublicHeader = ({
               </Button>
             </div>
           )}
+          {/* ===== End User Profile Dropdown ===== */}
+
+
         </div>
       </div>
     </nav>

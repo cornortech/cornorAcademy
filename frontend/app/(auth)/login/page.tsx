@@ -1,5 +1,6 @@
-import { BookOpen, ArrowLeft } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Image from 'next/image';
 import { LoginForm } from "@/components/features/auth/LoginForm";
 import { APP_NAME } from "@/lib/config";
 
@@ -7,7 +8,8 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Header */}
+
+        {/* ===== Header ===== */}
         <div className="text-center mb-8">
           <Link
             href="/"
@@ -18,8 +20,14 @@ export default function LoginPage() {
           </Link>
 
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
-              <BookOpen className="h-6 w-6 text-primary-foreground" />
+            <div className="h-10 w-10 rounded-lg flex items-center justify-center">
+              <Image
+                src="/logo/logo.png"
+                alt={`${APP_NAME} Logo`}
+                width={43}
+                height={43}
+                className="object-contain"
+              />
             </div>
             <span className="text-2xl font-bold">{APP_NAME}</span>
           </div>
@@ -29,9 +37,12 @@ export default function LoginPage() {
             Sign in to your account to continue learning
           </p>
         </div>
+        {/* ===== End Header ===== */}
 
-        {/* Login Form */}
+        {/* ===== Login Form Component ===== */}
         <LoginForm />
+        {/* ===== End Login Form Component ===== */}
+
       </div>
     </div>
   );

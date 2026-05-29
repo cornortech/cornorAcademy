@@ -26,6 +26,12 @@ import { auth } from "@/lib/firebase/config";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import axiosInstance from "@/lib/api/axios";
+import {DEMO_CREDENTIALS} from "@/lib/config";
+
+const isDemoAccount = (email: string, password: string) =>
+  Object.values(DEMO_CREDENTIALS).some(
+    (demo) => demo.email === email && demo.password === password
+  );
 
 type VerificationState =
   | "none"
@@ -95,7 +101,9 @@ export function LoginForm() {
       // Step 2: Check email verification
       await userCredential.user.reload();
 
-      if (!userCredential.user.emailVerified) {
+      const demoAllowed = isDemoAccount(data.email, data.password);
+
+      if (!userCredential.user.emailVerified && !demoAllowed) {
         await auth.signOut();
         setVerificationState("not-verified");
         setVerificationEmail(data.email);

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -64,20 +65,35 @@ export function DashboardHeader({
     <header className="border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 shadow-sm">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
+
+          {/* ===== Logo ===== */}
           <div className="flex items-center space-x-4">
             <Link href={"/"} className="flex items-center space-x-2">
-              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center shadow-md">
-                <BookOpen className="h-5 w-5 text-primary-foreground" />
+              <div className="h-8 w-8 rounded-lg flex items-center justify-center shadow-md">
+                <Image
+                  src="/logo/logo.png"
+                  alt={`${APP_NAME} Logo`}
+                  width={43}
+                  height={43}
+                  className="object-contain"
+                />
               </div>
               <span className="text-xl font-bold">{APP_NAME}</span>
             </Link>
             {getRoleBadge()}
           </div>
+          {/* ===== End Logo ===== */}
+
 
           <div className="flex items-center space-x-4">
+
+            {/* ===== Notifications Button ===== */}
             <Button variant="ghost" size="sm">
               <Bell className="h-4 w-4" />
             </Button>
+            {/* ===== End Notifications Button ===== */}
+
+            {/* ===== User Menu ===== */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -136,6 +152,8 @@ export function DashboardHeader({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            {/* ===== End User Menu ===== */}
+
           </div>
         </div>
       </div>

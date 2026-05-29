@@ -14,6 +14,12 @@ import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import { authService } from "@/lib/api/auth.service";
 import axiosInstance from "@/lib/api/axios";
+import { DEMO_CREDENTIALS } from "@/lib/config";
+
+const isDemoAccount = (email: string, password: string) =>
+  Object.values(DEMO_CREDENTIALS).some(
+    (demo) => demo.email === email && demo.password === password
+  );
 
 interface AuthContextType {
   user: User | null;
@@ -144,7 +150,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       password
     );
 
-    if (!userCredential.user.emailVerified) {
+    const demoAllowed = isDemoAccount(email, password);
+
+    if (!userCredential.user.emailVerified && !demoAllowed) {
       await signOut(auth);
       throw new Error("Please verify your email before logging in");
     }

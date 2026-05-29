@@ -183,9 +183,8 @@ export function SignupForm() {
         {[1, 2, 3].map((s) => (
           <div
             key={s}
-            className={`h-2 w-8 rounded-full ${
-              step >= s ? "bg-primary" : "bg-muted"
-            }`}
+            className={`h-2 w-8 rounded-full ${step >= s ? "bg-primary" : "bg-muted"
+              }`}
           />
         ))}
       </div>
