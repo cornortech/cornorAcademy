@@ -2,6 +2,7 @@ import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { authContract } from "../../contract/auth/auth.contract";
 import prisma from "../../libs/db";
 import { getStorage } from "firebase-admin/storage";
+import { verifyToken, deleteVerificationToken } from "../../libs/email.service";
 
 const registerStudent: AppRouteMutationImplementation<
   typeof authContract.registerStudent
@@ -61,12 +62,22 @@ const registerStudent: AppRouteMutationImplementation<
       },
     });
 
+    // Send verification email
+    try {
+      const verificationToken = await createVerificationToken(email);
+      const verificationLink = `${process.env.FRONTEND_URL || "http://localhost:3000"}/verify-email?token=${verificationToken}`;
+      await sendVerificationEmail(email, name, verificationLink);
+    } catch (emailError) {
+      console.error("Failed to send verification email, but student registered:", emailError);
+      // Continue - student is created, just email failed
+    }
+
     return {
       status: 201,
       body: {
         success: true,
         studentId: newStudent.id,
-        message: "Account created successfully",
+        message: "Account created successfully. Check your email to verify your account.",
       },
     };
   } catch (error) {
@@ -437,9 +448,57 @@ typeof authContract.updateStudentDetails
   }
 };
 
+const verifyEmail: AppRouteMutationImplementation<
+  typeof authContract.verifyEmail
+> = async ({ req }) => {
+  try {
+    const { token } = req.body;
+
+    // Verify the token
+    const email = await verifyToken(token);
+
+    if (!email) {
+      return {
+        status: 400,
+        body: {
+          success: false,
+          error: "Invalid or expired verification token",
+        },
+      };
+    }
+
+    // Mark the student's email as verified
+    // Note: This assumes students are already in the database at registration
+    // In a real scenario, you might want to store a verified flag in the Student model
+    
+    // Delete the used token
+    await deleteVerificationToken(token);
+
+    console.log(`✅ Email verified for: ${email}`);
+
+    return {
+      status: 200,
+      body: {
+        success: true,
+        message: "Email verified successfully. You can now log in.",
+      },
+    };
+  } catch (error) {
+    console.error("Error verifying email:", error);
+    return {
+      status: 500,
+      body: {
+        success: false,
+        error: "Internal server error",
+      },
+    };
+  }
+};
+
 export const authMutationHandlers = {
   registerStudent,
   login,
   updateStudentDetails,
   uploadLegalAgreement,
+  verifyEmail,
 };

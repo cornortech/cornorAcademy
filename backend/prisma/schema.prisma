@@ -208,3 +208,14 @@ model courseAgreement {
 
   student Student @relation(fields: [studentId], references: [id])
 }
+
+model VerificationToken {
+  id        String   @id @default(uuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+  @@index([token])
+}

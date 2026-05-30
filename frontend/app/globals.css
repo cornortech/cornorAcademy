@@ -11,20 +11,21 @@
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.478 0.228 280.052);
-  --primary-foreground: oklch(0.985 0 0);
+  /* Primary color set to CornorTech purple (matches Cornortech-1 theme) */
+  --primary: #a855f7; /* purple-400/500 */
+  --primary-foreground: #ffffff;
   --secondary: oklch(0.97 0 0);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.478 0.228 280.052);
-  --accent-foreground: oklch(0.985 0 0);
+  --accent: #a855f7;
+  --accent-foreground: #ffffff;
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.922 0 0);
   --input: oklch(0.922 0 0);
-  --ring: oklch(0.478 0.228 280.052);
-  --chart-1: oklch(0.478 0.228 280.052);
+  --ring: #9333ea;
+  --chart-1: #a855f7;
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
   --chart-4: oklch(0.828 0.189 84.429);
@@ -32,8 +33,8 @@
   --radius: 0.625rem;
   --sidebar: oklch(0.985 0 0);
   --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.478 0.228 280.052);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-primary: #a855f7;
+  --sidebar-primary-foreground: #ffffff;
   --sidebar-accent: oklch(0.97 0 0);
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
@@ -123,5 +124,25 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Sticky ice navbar styles */
+@layer components {
+  .ice-nav {
+    position: sticky;
+    top: 0;
+    z-index: 60;
+    backdrop-filter: saturate(120%) blur(8px);
+    -webkit-backdrop-filter: saturate(120%) blur(8px);
+    background: linear-gradient(180deg, rgba(255,255,255,0.6), rgba(255,255,255,0.45));
+    border-bottom: 1px solid rgba(168,85,247,0.08); /* purple tint */
+    box-shadow: 0 6px 18px rgba(14,30,37,0.06);
+  }
+
+  .dark .ice-nav {
+    background: linear-gradient(180deg, rgba(10,20,30,0.6), rgba(10,20,30,0.45));
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 6px 18px rgba(2,6,23,0.6);
   }
 }

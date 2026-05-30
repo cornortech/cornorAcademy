@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { APP_NAME } from "@/lib/config";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePathname } from "next/navigation";
 
 import {
   DropdownMenu,
@@ -42,8 +43,14 @@ const PublicHeader = ({
     "Contact",
   ];
 
+  const pathname = usePathname();
+
+  const isLanding = pathname === "/";
+
   return (
-    <nav className="border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <nav className={`border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 ${
+      isLanding ? "ice-nav" : ""
+    }`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 

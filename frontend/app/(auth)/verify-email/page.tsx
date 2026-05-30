@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,40 +13,78 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Mail, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import { sendEmailVerification } from "firebase/auth";
-import { auth } from "@/lib/firebase/config";
-import { useAuth } from "@/contexts/AuthContext";
+import axiosInstance from "@/lib/api/axios";
 
 export default function VerifyEmailPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
+  const email = searchParams.get("email");
 
-  const [emailSent, setEmailSent] = useState(false);
-  const [isSending, setIsSending] = useState(false);
+  const [isVerifying, setIsVerifying] = useState(!!token);
+  const [isVerified, setIsVerified] = useState(false);
   const [error, setError] = useState("");
+  const [isResending, setIsResending] = useState(false);
 
-  const handleResendEmail = async () => {
-    setError("");
-    setIsSending(true);
+  // Auto-verify if token is in URL
+  useEffect(() => {
+    if (token) {
+      verifyEmail(token);
+    }
+  }, [token]);
 
+  const verifyEmail = async (verificationToken: string) => {
     try {
-      if (!auth.currentUser) {
-        setError("Cannot resend email. Please log in first.");
-        return;
-      }
+      setError("");
+      setIsVerifying(true);
 
-      await sendEmailVerification(auth.currentUser);
-      setEmailSent(true);
-      setTimeout(() => setEmailSent(false), 3000);
+      const response = await axiosInstance.post("/auth/verify-email", {
+        token: verificationToken,
+      });
+
+      if (response.data.success) {
+        setIsVerified(true);
+        // Redirect to login after 2 seconds
+        setTimeout(() => {
+          router.push("/login");
+        }, 2000);
+      }
     } catch (err: any) {
-      setError(err.message || "Failed to resend verification email.");
+      console.error("Verification error:", err);
+      setError(
+        err.response?.data?.error || "Failed to verify email. Token may have expired."
+      );
     } finally {
-      setIsSending(false);
+      setIsVerifying(false);
     }
   };
 
-  const handleGoToLogin = () => {
-    router.push("/login");
+  const handleResendEmail = async () => {
+    if (!email) {
+      setError("Email not found. Please sign up again.");
+      return;
+    }
+
+    setError("");
+    setIsResending(true);
+
+    try {
+      // Call backend to resend verification email
+      const response = await axiosInstance.post("/auth/resend-verification", {
+        email,
+      });
+
+      if (response.data.success) {
+        alert("✅ Verification email sent! Check your inbox.");
+      }
+    } catch (err: any) {
+      console.error("Resend error:", err);
+      setError(
+        err.response?.data?.error || "Failed to resend verification email."
+      );
+    } finally {
+      setIsResending(false);
+    }
   };
 
   return (
@@ -58,24 +96,39 @@ export default function VerifyEmailPage() {
           </div>
           <h1 className="text-2xl font-bold mb-2">Verify Your Email</h1>
           <p className="text-muted-foreground">
-            We've sent a verification link to you {user?.email}.
+            {email
+              ? `We've sent a verification link to ${email}.`
+              : "Verify your email to activate your account."}
           </p>
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Check Your Inbox</CardTitle>
+            <CardTitle>
+              {isVerified ? "Email Verified! ✅" : "Check Your Inbox"}
+            </CardTitle>
             <CardDescription>
-              Click the verification link in the email to activate your account.
+              {isVerified
+                ? "Your email has been verified successfully. Redirecting to login..."
+                : "Click the verification link in the email to activate your account."}
             </CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
-            {emailSent && (
+            {isVerifying && (
+              <Alert>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <AlertDescription>
+                  Verifying your email address...
+                </AlertDescription>
+              </Alert>
+            )}
+
+            {isVerified && (
               <Alert>
                 <CheckCircle2 className="h-4 w-4" />
                 <AlertDescription>
-                  Verification email sent! Check your inbox.
+                  Email verified! Redirecting to login...
                 </AlertDescription>
               </Alert>
             )}
@@ -87,45 +140,42 @@ export default function VerifyEmailPage() {
               </Alert>
             )}
 
-            <div className="space-y-3">
-              <Button onClick={handleGoToLogin} className="w-full">
-                I&apos;ve Verified My Email
-              </Button>
+            {!isVerified && !isVerifying && (
+              <div className="space-y-3">
+                <Button asChild className="w-full">
+                  <Link href="/login">Go to Login</Link>
+                </Button>
 
-              <Button
-                onClick={handleResendEmail}
-                variant="outline"
-                className="w-full"
-                disabled={isSending || emailSent}
-              >
-                {isSending ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Sending...
-                  </>
-                ) : (
-                  "Resend Verification Email"
+                {email && (
+                  <Button
+                    onClick={handleResendEmail}
+                    variant="outline"
+                    className="w-full"
+                    disabled={isResending}
+                  >
+                    {isResending ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      "Resend Verification Email"
+                    )}
+                  </Button>
                 )}
-              </Button>
 
-              <div className="text-center text-sm">
-                <Link
-                  href="/login"
-                  className="text-muted-foreground hover:text-foreground"
-                >
-                  Back to Login
-                </Link>
+                <p className="text-xs text-muted-foreground text-center">
+                  Didn't receive the email? Check your spam folder or try
+                  resending.
+                </p>
               </div>
-            </div>
+            )}
 
-            <div className="text-sm text-muted-foreground space-y-1 pt-4 border-t">
-              <p className="font-semibold">Didn't receive the email?</p>
-              <ul className="list-disc list-inside space-y-1 text-xs">
-                <li>Check your spam or junk folder</li>
-                <li>Make sure the email address is correct</li>
-                <li>Wait a few minutes and try resending</li>
-              </ul>
-            </div>
+            {isVerified && (
+              <Button asChild className="w-full">
+                <Link href="/login">Go to Login</Link>
+              </Button>
+            )}
           </CardContent>
         </Card>
       </div>

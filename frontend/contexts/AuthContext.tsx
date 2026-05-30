@@ -134,10 +134,19 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (userCredentials.user) {
       await updateProfile(userCredentials.user, { displayName });
-      await sendEmailVerification(userCredentials.user, {
-        url: `${window.location.origin}/login`,
-        handleCodeInApp: true,
-      });
+      try {
+        await sendEmailVerification(userCredentials.user, {
+          url: `${window.location.origin}/login`,
+          handleCodeInApp: false,
+        });
+        console.log("✅ Verification email sent successfully");
+      } catch (error: any) {
+        console.error("❌ Email verification send failed:");
+        console.error("Code:", error.code);
+        console.error("Message:", error.message);
+        console.error("Full error:", error);
+        // Continue signup even if email fails - user can resend
+      }
 
       return { uid: userCredentials.user.uid };
     }
@@ -195,10 +204,15 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const resendVerificationEmail = async () => {
     if (user && !user.emailVerified) {
-      await sendEmailVerification(user, {
-        url: `${window.location.origin}/login`,
-        handleCodeInApp: true,
-      });
+      try {
+        await sendEmailVerification(user, {
+          url: `${window.location.origin}/login`,
+          handleCodeInApp: false,
+        });
+      } catch (error: any) {
+        console.error("Resend verification email failed:", error.message);
+        throw new Error("Failed to send verification email. Please try again.");
+      }
     }
   };
 

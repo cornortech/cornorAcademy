@@ -26,4 +26,6 @@ export const authRouter = s.router(authContract, {
         middleware: [authenticate],
         handler: authMutationHandlers.updateStudentDetails,
     },
+
+    verifyEmail: authMutationHandlers.verifyEmail,
 });

@@ -78,4 +78,36 @@ export const authContract = c.router({
       500: errorSchema,
     },
   },
+
+  verifyEmail: {
+    method: "POST",
+    path: "/auth/verify-email",
+    body: z.object({
+      token: z.string().describe("Email verification token"),
+    }),
+    summary: "Verify email with token",
+    responses: {
+      200: successSchema.extend({
+        message: z.string(),
+      }),
+      400: errorSchema,
+      500: errorSchema,
+    },
+  },
+
+  resendVerification: {
+    method: "POST",
+    path: "/auth/resend-verification",
+    body: z.object({
+      email: z.string().email().describe("User email"),
+    }),
+    summary: "Resend verification email",
+    responses: {
+      200: successSchema.extend({
+        message: z.string(),
+      }),
+      400: errorSchema,
+      500: errorSchema,
+    },
+  },
 });
