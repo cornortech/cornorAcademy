@@ -2,7 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Course } from "@/types";
-import { Check, Clock, Star, Users } from "lucide-react";
+import { Check, Clock } from "lucide-react";
 
 interface CourseSummaryProps {
   course: Course;
@@ -15,7 +15,7 @@ export function CourseSummary({ course }: CourseSummaryProps) {
         <CardContent className="p-6">
           <div className="aspect-video rounded-lg overflow-hidden mb-4">
             <img
-              src={course.thumbnail || "/placeholder.svg"}
+              src={course.thumbnail}
               alt={course.title}
               className="w-full h-full object-cover"
             />

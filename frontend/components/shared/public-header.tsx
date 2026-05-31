@@ -36,11 +36,10 @@ const PublicHeader = ({
   const email = userData?.email || user?.email || "";
 
   const navItems = [
-    "Courses",
-    "Features",
-    "Verify Certificate",
-    "About",
-    "Contact",
+    { label: "Courses", href: "/#courses" },
+    { label: "Verify Certificate", href: "/#verify-certificate" },
+    { label: "About", href: "/#about" },
+    { label: "Contact", href: "/contact" },
   ];
 
   const pathname = usePathname();
@@ -89,11 +88,11 @@ const PublicHeader = ({
             <nav className="hidden md:flex items-center space-x-8">
               {navItems.map((item) => (
                 <Link
-                  key={item}
-                  href={`#${item.toLowerCase().replace(" ", "-")}`}
+                  key={item.label}
+                  href={item.href}
                   className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-md transition-all"
                 >
-                  {item}
+                  {item.label}
                 </Link>
               ))}
             </nav>

@@ -7,8 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowRight, Play, Star } from "lucide-react";
-
+import { mockCourses } from "@/lib/data";
+import { ArrowRight, Star } from "lucide-react";
 import Link from "next/link";
 
 const CourseSection = () => {
@@ -17,49 +17,25 @@ const CourseSection = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl lg:text-4xl font-bold text-balance mb-4">
-            {"Popular Courses"}
+            Popular Courses
           </h2>
           <p className="text-xl text-muted-foreground text-balance max-w-2xl mx-auto">
-            {"Discover our most popular courses taught by industry experts."}
+            Discover our most popular courses taught by industry experts.
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {[
-            {
-              title: "Web Development Fundamentals",
-              instructor: "Sarah Johnson",
-              students: 2840,
-              rating: 4.9,
-              duration: "12 weeks",
-              level: "Beginner",
-              price: "$299",
-            },
-            {
-              title: "Data Science & Analytics",
-              instructor: "Dr. Michael Chen",
-              students: 1920,
-              rating: 4.8,
-              duration: "16 weeks",
-              level: "Intermediate",
-              price: "$399",
-            },
-            {
-              title: "Digital Marketing Mastery",
-              instructor: "Emma Rodriguez",
-              students: 3150,
-              rating: 4.9,
-              duration: "10 weeks",
-              level: "Beginner",
-              price: "$249",
-            },
-          ].map((course, index) => (
+          {mockCourses.slice(0, 3).map((course) => (
             <Card
-              key={index}
+              key={course.id}
               className="border-border/50 bg-card/50 backdrop-blur hover:bg-card/80 transition-colors"
             >
-              <div className="aspect-video bg-muted rounded-t-lg flex items-center justify-center">
-                <Play className="h-12 w-12 text-muted-foreground" />
+              <div className="aspect-video bg-muted rounded-t-lg overflow-hidden">
+                <img
+                  src={course.thumbnail}
+                  alt={course.title}
+                  className="h-full w-full object-cover"
+                />
               </div>
               <CardHeader>
                 <div className="flex items-center justify-between mb-2">
@@ -71,20 +47,19 @@ const CourseSection = () => {
                 </div>
                 <CardTitle className="text-lg">{course.title}</CardTitle>
                 <CardDescription>
-                  {"By "}
-                  {course.instructor} • {course.students.toLocaleString()}{" "}
-                  students
+                  By {course.instructor.name} -{" "}
+                  {course.students.toLocaleString()} students
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
                   <span>{course.duration}</span>
                   <span className="font-semibold text-foreground">
-                    {course.price}
+                    ${course.price}
                   </span>
                 </div>
                 <Button className="w-full" asChild>
-                  <Link href={`/courses/${index + 1}`}>{"View Details"}</Link>
+                  <Link href={`/courses/${course.id}`}>View Details</Link>
                 </Button>
               </CardContent>
             </Card>
@@ -94,7 +69,7 @@ const CourseSection = () => {
         <div className="text-center mt-12">
           <Button variant="outline" size="lg" asChild>
             <Link href="/courses">
-              {"View All Courses"}
+              View All Courses
               <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           </Button>

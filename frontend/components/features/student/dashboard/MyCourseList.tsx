@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { CheckCircle, LogIn, Play, Video } from "lucide-react";
+import { CheckCircle, LogIn, Video } from "lucide-react";
 import Link from "next/link";
 
 export function MyCoursesList() {
@@ -96,8 +96,12 @@ export function MyCoursesList() {
               <CardContent className="p-6">
                 <div className="flex flex-col lg:flex-row gap-6">
                   <div className="lg:w-1/3">
-                    <div className="aspect-video bg-muted rounded-lg flex items-center justify-center">
-                      <Play className="h-12 w-12 text-muted-foreground" />
+                    <div className="aspect-video bg-muted rounded-lg overflow-hidden">
+                      <img
+                        src={course.thumbnail}
+                        alt={course.title}
+                        className="h-full w-full object-cover"
+                      />
                     </div>
                   </div>
 

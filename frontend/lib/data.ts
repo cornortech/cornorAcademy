@@ -16,6 +16,17 @@ import {
   UpcomingClass,
 } from "@/types";
 
+export const mockCourseImages = {
+  webDevelopment:
+    "https://images.pexels.com/photos/5483075/pexels-photo-5483075.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  dataScience:
+    "https://images.pexels.com/photos/7947996/pexels-photo-7947996.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  digitalMarketing:
+    "https://images.pexels.com/photos/6483592/pexels-photo-6483592.jpeg?auto=compress&cs=tinysrgb&w=1200",
+  uiUx:
+    "https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=1200",
+};
+
 export const mockAdmin: Admin = {
   id: "admin01",
   uid: "uid_admin_001",
@@ -84,7 +95,7 @@ export const mockCourses: Course[] = [
     reviews: 1250,
     status: "portalActivated",
     certificate: true,
-    thumbnail: "/web-development-course.png",
+    thumbnail: mockCourseImages.webDevelopment,
     modules: [
       {
         title: "Introduction to Web Development",
@@ -171,7 +182,7 @@ export const mockCourses: Course[] = [
       "Work with real-world data problems",
       "Launch a career in data science",
     ],
-    thumbnail: "/data-science-course.png",
+    thumbnail: mockCourseImages.dataScience,
   },
   {
     id: "3",
@@ -234,7 +245,7 @@ export const mockCourses: Course[] = [
       "Analyze marketing performance",
       "Grow your business or career",
     ],
-    thumbnail: "/digital-marketing-course.png",
+    thumbnail: mockCourseImages.digitalMarketing,
   },
 ];
 
@@ -247,7 +258,7 @@ export const mockEnrolledCourses: EnrolledCourse[] = [
     totalLessons: 24,
     completedLessons: 18,
     nextLesson: "JavaScript Functions",
-    thumbnail: "/web-development-course.png",
+    thumbnail: mockCourseImages.webDevelopment,
     status: "in-progress",
     lastAccessed: "2 hours ago",
     startTime: "2024-01-20 14:00",
@@ -262,7 +273,7 @@ export const mockEnrolledCourses: EnrolledCourse[] = [
     totalLessons: 32,
     completedLessons: 14,
     nextLesson: "Data Visualization",
-    thumbnail: "/data-science-course.png",
+    thumbnail: mockCourseImages.dataScience,
     status: "in-progress",
     lastAccessed: "1 day ago",
     startTime: "2024-01-15 10:00",
@@ -277,7 +288,7 @@ export const mockEnrolledCourses: EnrolledCourse[] = [
     totalLessons: 20,
     completedLessons: 20,
     nextLesson: "Course Completed",
-    thumbnail: "/digital-marketing-course.png",
+    thumbnail: mockCourseImages.digitalMarketing,
     status: "completed",
     lastAccessed: "3 days ago",
     startTime: "2023-12-01 09:00",
@@ -292,7 +303,7 @@ export const mockEnrolledCourses: EnrolledCourse[] = [
     totalLessons: 28,
     completedLessons: 6,
     nextLesson: "Color Theory",
-    thumbnail: "/ui-ux-design-course.png",
+    thumbnail: mockCourseImages.uiUx,
     status: "in-progress",
     lastAccessed: "5 days ago",
     startTime: "2024-01-10 11:00",

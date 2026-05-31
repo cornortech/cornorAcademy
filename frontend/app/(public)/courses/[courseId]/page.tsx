@@ -11,6 +11,7 @@ import { CurriculumTab } from "@/components/features/public-course/CurriculumTab
 import { InstructorTab } from "@/components/features/public-course/InstructorTab";
 import { CourseSidebar } from "@/components/features/public-course/CourseSidebar";
 import { courseApi } from "@/lib/api/course";
+import { getCourseImage } from "@/lib/course-images";
 import { LegacyCourse } from "@/types";
 
 // Transform backend course format to frontend format
@@ -43,7 +44,11 @@ function transformCourseForFrontend(backendCourse: any): LegacyCourse {
     reviews: 150, // Default reviews
     status: backendCourse.status === "active" ? "active" : "draft",
     certificate: true,
-    thumbnail: backendCourse.thumbnail,
+    thumbnail: getCourseImage({
+      thumbnail: backendCourse.thumbnail,
+      category: backendCourse.category,
+      title: backendCourse.title,
+    }),
     modules: backendCourse.curriculum.map((item: any) => ({
       title: item.title,
       lessons: item.noOfLesson,
@@ -83,10 +88,17 @@ export default async function CourseDetailsPage({
             <div className="lg:col-span-2">
               <CourseHeader course={course} />
               <Card className="mb-8">
-                <div className="aspect-video bg-muted rounded-t-lg flex items-center justify-center">
-                  <Button size="lg" className="rounded-full h-16 w-16">
-                    <Play className="h-6 w-6" />
-                  </Button>
+                <div className="relative aspect-video bg-muted rounded-t-lg overflow-hidden">
+                  <img
+                    src={course.thumbnail}
+                    alt={course.title}
+                    className="h-full w-full object-cover"
+                  />
+                  <div className="absolute inset-0 flex items-center justify-center bg-black/20">
+                    <Button size="lg" className="rounded-full h-16 w-16">
+                      <Play className="h-6 w-6" />
+                    </Button>
+                  </div>
                 </div>
               </Card>
               <Tabs defaultValue="overview" className="mb-8">
