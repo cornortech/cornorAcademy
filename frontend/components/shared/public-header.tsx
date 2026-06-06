@@ -38,18 +38,14 @@ const PublicHeader = ({
   const navItems = [
     { label: "Courses", href: "/#courses" },
     { label: "Verify Certificate", href: "/#verify-certificate" },
-    { label: "About", href: "/#about" },
+    { label: "About", href: "/about" },
     { label: "Contact", href: "/contact" },
   ];
 
   const pathname = usePathname();
 
-  const isLanding = pathname === "/";
-
   return (
-    <nav className={`border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60 ${
-      isLanding ? "ice-nav" : ""
-    }`}>
+    <nav className="ice-nav border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
