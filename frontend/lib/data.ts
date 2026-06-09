@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+import { Award, BookOpen, Users, TrendingUp } from "lucide-react";
 import {
   Student,
   Teacher,
@@ -26,6 +28,34 @@ export const mockCourseImages = {
   uiUx:
     "https://images.pexels.com/photos/196644/pexels-photo-196644.jpeg?auto=compress&cs=tinysrgb&w=1200",
 };
+
+export interface LandingTestimonial {
+  name: string;
+  role: string;
+  feedback: string;
+  image?: string;
+}
+
+export const landingTestimonials: LandingTestimonial[] = [
+  {
+    name: "Mikel Shahi",
+    role: "Frontend Development",
+    feedback:
+      "Cornor Academy helped me level up my front-end skills with practical projects and a focused curriculum.",
+  },
+  {
+    name: "Sagar Sharma",
+    role: "Fullstack Development",
+    feedback:
+      "The full-stack training was very practical and industry-aligned. I learned both frontend and backend confidently.",
+  },
+  {
+    name: "Avishek Goutam",
+    role: "Fullstack Development",
+    feedback:
+      "Great mentorship and real-world support made learning fullstack development smooth and effective.",
+  },
+];
 
 export const mockAdmin: Admin = {
   id: "admin01",
@@ -416,6 +446,45 @@ export const mockStudentProgress: StudentProgressRecord[] = [
     image: "/student-image.png",
   },
   // ... other progress records
+];
+
+export interface LandingStat {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  description: string;
+  trend: string;
+}
+
+export const landingStats: LandingStat[] = [
+  {
+    icon: Users,
+    label: "Active Students",
+    value: "1000+",
+    description: "Worldwide community of dedicated learners",
+    trend: "+240% YoY",
+  },
+  {
+    icon: Award,
+    label: "Expert Teachers",
+    value: "12+",
+    description: "Experienced industry instructors",
+    trend: "Avg. 12+ years experience",
+  },
+  {
+    icon: BookOpen,
+    label: "Courses Available",
+    value: "15+",
+    description: "High-quality learning paths across domains",
+    trend: "New courses monthly",
+  },
+  {
+    icon: TrendingUp,
+    label: "Success Rate",
+    value: "98%",
+    description: "Strong learner outcomes and completion",
+    trend: "+5% from last year",
+  },
 ];
 
 export const mockUploadedResources: UploadedResource[] = [

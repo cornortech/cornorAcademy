@@ -4,6 +4,7 @@ import FeatureSection from "@/components/features/landingPage/FeatureSection";
 import HeroSection from "@/components/features/landingPage/HeroSection";
 import CourseSection from "@/components/features/landingPage/CourseSection";
 import CertificateVerficationSection from "@/components/features/landingPage/CertificateVerficationSection";
+import TestimonialSection from "@/components/features/landingPage/TestimonialSection";
 import CTASection from "@/components/features/landingPage/CTASection";
 
 export default function Home() {
@@ -15,6 +16,7 @@ export default function Home() {
         <FeatureSection />
         <CourseSection />
         <CertificateVerficationSection />
+        <TestimonialSection />
         <CTASection />
       </main>
       <Footer />

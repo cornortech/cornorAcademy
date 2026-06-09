@@ -38,7 +38,7 @@ const PublicHeader = ({
   const navItems = [
     { label: "Courses", href: "/#courses" },
     { label: "Verify Certificate", href: "/#verify-certificate" },
-    { label: "About", href: "/about" },
+    { label: "About Us", href: "/about" },
     { label: "Contact", href: "/contact" },
   ];
 
