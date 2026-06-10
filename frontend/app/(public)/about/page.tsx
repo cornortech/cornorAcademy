@@ -88,7 +88,7 @@ export default function AboutPage() {
             {[
               { icon: MapPin, label: "Location", value: "Tilottama-3, Janakinagar" },
               { icon: Building2, label: "District", value: "Rupandehi, Nepal" },
-              { icon: Calendar, label: "Established", value: "2020" },
+              { icon: Calendar, label: "Established", value: "2024" },
               { icon: Target, label: "Focus", value: "Practical tech learning" },
             ].map((item, i) => {
               const Icon = item.icon;
