@@ -1,4 +1,3 @@
-import type { LucideIcon } from "lucide-react";
 import { Award, BookOpen, Users, TrendingUp } from "lucide-react";
 import {
   Student,
@@ -16,6 +15,8 @@ import {
   CourseMaterial,
   TeachingCourse,
   UpcomingClass,
+  CompanyInfo,
+  LandingStat,
 } from "@/types";
 
 export const mockCourseImages = {
@@ -56,6 +57,22 @@ export const landingTestimonials: LandingTestimonial[] = [
       "Great mentorship and real-world support made learning fullstack development smooth and effective.",
   },
 ];
+
+export const companyInfo: CompanyInfo = {
+  email: "info@Cornoracademy.com",
+  socialLinks: [
+    {
+      name: "Facebook",
+      url: "https://facebook.com/cornoracademy",
+      icon: "facebook",
+    },
+    {
+      name: "Instagram",
+      url: "https://instagram.com/cornor.academy",
+      icon: "instagram",
+    },
+  ],
+};
 
 export const mockAdmin: Admin = {
   id: "admin01",
@@ -447,14 +464,6 @@ export const mockStudentProgress: StudentProgressRecord[] = [
   },
   // ... other progress records
 ];
-
-export interface LandingStat {
-  icon: LucideIcon;
-  label: string;
-  value: string;
-  description: string;
-  trend: string;
-}
 
 export const landingStats: LandingStat[] = [
   {

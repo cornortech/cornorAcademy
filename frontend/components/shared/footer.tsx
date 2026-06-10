@@ -1,6 +1,8 @@
 import { APP_NAME } from "@/lib/config";
 import Link from "next/link";
 import Image from "next/image";
+import { companyInfo } from "@/lib/data";
+import { Facebook, Instagram, Mail } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -12,7 +14,6 @@ const Footer = () => {
 
           {/* ===== Company Info ===== */}
           <div>
-
             <div className="flex items-center space-x-2 mb-4">
               <div className="h-8 w-8 rounded-lg flex items-center justify-center">
                 <Image
@@ -25,11 +26,39 @@ const Footer = () => {
               </div>
               <span className="text-xl font-bold">{APP_NAME}</span>
             </div>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm mb-4">
               {
                 "Empowering learners worldwide with comprehensive online education."
               }
             </p>
+
+            <div className="flex items-center gap-2 mb-4">
+              <Mail className="h-4 w-4 text-muted-foreground" />
+              <a
+                href={`mailto:${companyInfo.email}`}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {companyInfo.email}
+              </a>
+            </div>
+
+            <div className="flex gap-3">
+              {companyInfo.socialLinks.map((social) => {
+                const Icon = social.icon === "facebook" ? Facebook : Instagram;
+                return (
+                  <a
+                    key={social.name}
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors"
+                    aria-label={social.name}
+                  >
+                    <Icon className="h-5 w-5" />
+                  </a>
+                );
+              })}
+            </div>
           </div>
           {/* ===== EndCompany Info ===== */}
 

@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react";
+
 export type UserRole = "student" | "teacher" | "admin";
 export type UserStatus =
   | "registered"
@@ -391,4 +393,25 @@ export interface CreateCourseAnnouncementInput {
 export interface UpdateCourseAnnouncementInput {
   title?: string;
   message?: string;
+}
+
+// ===== Footer Types =====
+export interface SocialLink {
+  name: string;
+  url: string;
+  icon: string;
+}
+
+export interface CompanyInfo {
+  email: string;
+  socialLinks: SocialLink[];
+}
+
+// ===== Landing Page Types =====
+export interface LandingStat {
+  icon: LucideIcon;
+  label: string;
+  value: string;
+  description: string;
+  trend: string;
 }
