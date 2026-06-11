@@ -31,7 +31,6 @@ class EnrolledCourseApiService {
     }
   }
 
-  // Create enrollment in a course by a student
   async createEnrolledCourse(enrollmentData: CreateEnrolledCourseRequest): Promise<ApiResponse<EnrolledCourse>> {
     return this.request<ApiResponse<EnrolledCourse>>("/enrolled", {
       method: "POST",
@@ -39,7 +38,6 @@ class EnrolledCourseApiService {
     });
   }
 
-  // Get all enrolled courses of student by student id
   async getAllEnrolledCoursesById(studentId: string): Promise<EnrolledCourse[]> {
     return this.request<EnrolledCourse[]>(`/enrolled/${studentId}`);
   }

@@ -81,7 +81,6 @@ const StudentSearchFilter = () => {
         </CardContent>
       </Card>
 
-      {/* Display filtered courses */}
       <div className="space-y-6">
         {filteredCourses.length > 0 ? (
           filteredCourses.map((course) => (

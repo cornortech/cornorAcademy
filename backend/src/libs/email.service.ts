@@ -4,16 +4,10 @@ import crypto from "crypto";
 
 const VERIFICATION_LINK_EXPIRY_HOURS = 24;
 
-/**
- * Generate a verification token for email verification
- */
 export const generateVerificationToken = (): string => {
   return crypto.randomBytes(32).toString("hex");
 };
 
-/**
- * Create and store a verification token in the database
- */
 export const createVerificationToken = async (email: string): Promise<string> => {
   const token = generateVerificationToken();
   const expiresAt = new Date(Date.now() + VERIFICATION_LINK_EXPIRY_HOURS * 60 * 60 * 1000);
@@ -29,9 +23,6 @@ export const createVerificationToken = async (email: string): Promise<string> =>
   return token;
 };
 
-/**
- * Send verification email to user
- */
 export const sendVerificationEmail = async (
   email: string,
   name: string,
@@ -97,9 +88,6 @@ export const sendVerificationEmail = async (
   }
 };
 
-/**
- * Verify a token and return the email if valid
- */
 export const verifyToken = async (token: string): Promise<string | null> => {
   const verificationToken = await prisma.verificationToken.findUnique({
     where: { token },
@@ -109,9 +97,7 @@ export const verifyToken = async (token: string): Promise<string | null> => {
     return null;
   }
 
-  // Check if token has expired
   if (new Date() > verificationToken.expiresAt) {
-    // Delete expired token
     await prisma.verificationToken.delete({
       where: { id: verificationToken.id },
     });
@@ -121,18 +107,12 @@ export const verifyToken = async (token: string): Promise<string | null> => {
   return verificationToken.email;
 };
 
-/**
- * Delete a verification token after successful verification
- */
 export const deleteVerificationToken = async (token: string): Promise<void> => {
   await prisma.verificationToken.deleteMany({
     where: { token },
   });
 };
 
-/**
- * Clean up expired tokens (run periodically)
- */
 export const cleanupExpiredTokens = async (): Promise<number> => {
   const result = await prisma.verificationToken.deleteMany({
     where: {

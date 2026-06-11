@@ -8,7 +8,7 @@ export interface EnrolledCourse {
   courseId: string;
   studentId: string;
   enrolledAt: Date;
-  course: Course; // Assuming Course type is available
+  course: Course;
 }
 
 export interface ApiResponse<T> {
@@ -18,5 +18,4 @@ export interface ApiResponse<T> {
   data?: T;
 }
 
-// Import Course type if needed
 import { Course } from "./course";

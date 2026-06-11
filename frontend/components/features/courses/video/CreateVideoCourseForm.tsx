@@ -65,7 +65,7 @@ export function CreateVideoCourseForm() {
         duration: Number(duration),
       })
       toast.success("Video course created successfully")
-      router.push("/teacher")
+      router.push("/teacher?tab=courses")
     } catch (err: any) {
       toast.error(err.response?.data?.error || "Failed to create course")
     } finally {

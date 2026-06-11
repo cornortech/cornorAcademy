@@ -6,13 +6,7 @@ const getAllCourseMediaByCourseId: AppRouteQueryImplementation<
     typeof courseMediaContract.getAllCourseMediaByCourseId
 > = async ({ req }) => {
     try {
-
-        // const teacherId = req.user.id;
-
-        const 
-        { 
-            courseId 
-        } = req.params;
+        const { courseId } = req.params;
 
         const courseMedia = await prisma.courseMedia.findMany({
             where: {
@@ -83,7 +77,7 @@ const getCourseMediaById: AppRouteQueryImplementation<
                 size:  media.size,
                 type: media.type,
                 createdAt: media.createdAt,
-                updatedAt: media.updatedAt, //announcement add admin
+                updatedAt: media.updatedAt,
             },
         };
 

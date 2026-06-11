@@ -31,8 +31,8 @@ export interface LoginPayload {
 }
 
 export interface UserProfile {
-  userId: string; //DB ID
-  uid: string; //Firebase UID
+  userId: string;
+  uid: string;
   email: string;
   role: "student" | "teacher" | "admin";
 }

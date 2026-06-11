@@ -43,7 +43,6 @@ export function TeacherCourseHeader({
         </Button>
       </div>
 
-      {/* Progress Overview */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">

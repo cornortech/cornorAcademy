@@ -121,12 +121,12 @@ export const updateCourseSchema = z.object({
     includes: z.array(z.string()).optional(),
     whatYouWillLearn: z.array(z.string()).optional(),
     meetingUrl: z.string().optional(),
-    meetingTime: z.date().optional(),
+    meetingTime: z.coerce.date().optional(),
     language: z.enum(['nepali', 'english']).optional(),
     level: z.enum(['beginner', 'intermediate', 'advanced']).optional(),
     thumbnail: z.string().optional(),
     category: z.enum(['WebDevelopment', 'ui', 'DataScience', 'DigitalMarketing']).optional(),
-    startDate: z.date().optional(),
+    startDate: z.coerce.date().optional(),
     duration: z.number().optional(),
     price: z.number().optional(),
     curriculum: z.array(
@@ -135,7 +135,7 @@ export const updateCourseSchema = z.object({
             noOfLesson: z.number().optional(),
             content: z.array(z.string()).optional(),
         }),
-    ),
+    ).optional(),
     teacherId: z.string().uuid().optional(),
 });
 

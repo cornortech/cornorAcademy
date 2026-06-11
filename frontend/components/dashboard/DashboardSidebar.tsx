@@ -58,7 +58,6 @@ export function DashboardSidebar({
 
   const sidebarContent = (
     <div className="flex h-full flex-col bg-card border-r border-border/50">
-      {/* Logo + Toggle */}
       <div className={cn("flex h-16 items-center border-b border-border/50 px-3", collapsed ? "justify-center" : "justify-between")}>
         {!collapsed && (
           <span className="font-bold text-lg text-foreground">{APP_NAME}</span>
@@ -76,7 +75,6 @@ export function DashboardSidebar({
         </Button>
       </div>
 
-      {/* User Info */}
       {!collapsed && (
         <div className="flex items-center gap-3 px-4 py-4 border-b border-border/50">
           <Avatar className="h-10 w-10 shrink-0">
@@ -92,7 +90,6 @@ export function DashboardSidebar({
         </div>
       )}
 
-      {/* Nav Items */}
       <nav className="flex-1 space-y-0.5 overflow-y-auto p-3">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -119,7 +116,6 @@ export function DashboardSidebar({
           );
         })}
 
-        {/* Logout */}
         <button
           onClick={() => { logout(); onMobileClose(); }}
           className={cn(
@@ -137,7 +133,6 @@ export function DashboardSidebar({
 
   return (
     <>
-      {/* Mobile Overlay */}
       {mobileOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/50 lg:hidden"
@@ -145,7 +140,6 @@ export function DashboardSidebar({
         />
       )}
 
-      {/* Mobile Sidebar */}
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-50 w-64 -translate-x-full transition-transform duration-300 lg:hidden",
@@ -208,7 +202,6 @@ export function DashboardSidebar({
         </div>
       </aside>
 
-      {/* Desktop Sidebar */}
       <aside
         className={cn(
           "hidden lg:block fixed left-0 top-0 h-screen z-30 transition-all duration-300",

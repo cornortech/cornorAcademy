@@ -22,7 +22,6 @@ export default function MaterialsViewerPage() {
     materialId ? parseInt(materialId) : 1
   );
 
-  // Fetch data from centralized source
   const course = mockEnrolledCourses.find((c) => c.id === parseInt(courseId));
   const materials = getMaterialsForCourse(courseId);
   const currentMaterial =

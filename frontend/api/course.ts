@@ -11,7 +11,6 @@ import {
   UpdateCourseAnnouncementInput,
 } from "@/types";
 
-// Import Zod schemas from backend (we'll copy them here since frontend can't import from backend directly)
 const createCourseSchema = z.object({
   title: z.string().min(3, "Course title is required"),
   description: z.string().min(10, "Course description is required"),
@@ -73,13 +72,11 @@ const searchCoursesSchema = z.object({
   query: z.string().min(1, "Search query is required"),
 });
 
-// Enrolled Course Schemas
 const createEnrolledCourseSchema = z.object({
   studentId: z.string().uuid(),
   courseId: z.string().uuid(),
 });
 
-// Course Media Schemas
 const createCourseMediaSchema = z.object({
   courseId: z.string(),
   title: z.string().min(3, "Proper course tile is needed"),
@@ -110,13 +107,11 @@ const updateCourseMediaSchema = z.object({
   pathURL: z.string().optional(),
 });
 
-// Infer types from schemas
 export type CreateCourseInput = z.infer<typeof createCourseSchema>;
 export type UpdateCourseInput = z.infer<typeof updateCourseSchema>;
 export type UpdateCourseStatusInput = z.infer<typeof updateCourseStatusSchema>;
 export type SearchCoursesInput = z.infer<typeof searchCoursesSchema>;
 
-// API Response types
 export interface ApiResponse<T> {
   success: boolean;
   message?: string;
@@ -156,7 +151,6 @@ export interface Course {
 
 const API_BASE_URL = "http://localhost:4000";
 
-// Generic API request function
 async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -180,7 +174,6 @@ async function apiRequest<T>(
   return response.json();
 }
 
-// Query Keys
 export const courseQueryKeys = {
   all: ["courses"] as const,
   lists: () => [...courseQueryKeys.all, "list"] as const,
@@ -197,7 +190,6 @@ export const courseQueryKeys = {
   search: (query: string) => [...courseQueryKeys.all, "search", query] as const,
 };
 
-// Queries
 export function useGetAllCourses() {
   return useQuery({
     queryKey: courseQueryKeys.lists(),
@@ -250,7 +242,6 @@ export function useSearchCourses(query: string) {
   });
 }
 
-// Mutations
 export function useCreateCourse() {
   const queryClient = useQueryClient();
 
@@ -271,7 +262,7 @@ export function useUpdateCourse() {
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateCourseInput }) =>
-      apiRequest<ApiResponse<Course>>(`/course/update/${id}`, {
+      apiRequest<ApiResponse<Course>>(`/course/${id}`, {
         method: "PUT",
         body: JSON.stringify(data),
       }),
@@ -312,7 +303,6 @@ export function useUpdateCourseStatus() {
   });
 }
 
-// Enrolled Course Query Keys
 export const enrolledCourseQueryKeys = {
   all: ["enrolledCourses"] as const,
   lists: () => [...enrolledCourseQueryKeys.all, "list"] as const,
@@ -320,7 +310,6 @@ export const enrolledCourseQueryKeys = {
     [...enrolledCourseQueryKeys.lists(), studentId] as const,
 };
 
-// Course Media Query Keys
 export const courseMediaQueryKeys = {
   all: ["courseMedia"] as const,
   lists: () => [...courseMediaQueryKeys.all, "list"] as const,
@@ -330,7 +319,6 @@ export const courseMediaQueryKeys = {
   detail: (id: string) => [...courseMediaQueryKeys.details(), id] as const,
 };
 
-// Enrolled Course Queries
 export function useGetEnrolledCoursesByStudentId(studentId: string) {
   return useQuery({
     queryKey: enrolledCourseQueryKeys.list(studentId),
@@ -339,7 +327,6 @@ export function useGetEnrolledCoursesByStudentId(studentId: string) {
   });
 }
 
-// Enrolled Course Mutations
 export function useCreateEnrolledCourse() {
   const queryClient = useQueryClient();
 
@@ -357,7 +344,6 @@ export function useCreateEnrolledCourse() {
   });
 }
 
-// Course Media Queries
 export function useGetCourseMediaByCourseId(courseId: string) {
   return useQuery({
     queryKey: courseMediaQueryKeys.list(courseId),
@@ -374,7 +360,6 @@ export function useGetCourseMediaById(mediaId: string) {
   });
 }
 
-// Course Media Mutations
 export function useCreateCourseMedia() {
   const queryClient = useQueryClient();
 
@@ -411,7 +396,6 @@ export function useUpdateCourseMedia() {
       queryClient.invalidateQueries({
         queryKey: courseMediaQueryKeys.detail(mediaId),
       });
-      // Also invalidate the list if we can get courseId, but for now invalidate all lists
       queryClient.invalidateQueries({ queryKey: courseMediaQueryKeys.lists() });
     },
   });
@@ -431,7 +415,6 @@ export function useDeleteCourseMedia() {
   });
 }
 
-// Course Announcement Query Keys
 export const courseAnnouncementQueryKeys = {
   all: ["courseAnnouncements"] as const,
   lists: () => [...courseAnnouncementQueryKeys.all, "list"] as const,
@@ -442,7 +425,6 @@ export const courseAnnouncementQueryKeys = {
     [...courseAnnouncementQueryKeys.details(), id] as const,
 };
 
-// Course Announcement Queries
 export function useGetCourseAnnouncementsByCourseId(courseId: string) {
   return useQuery({
     queryKey: courseAnnouncementQueryKeys.list(courseId),
@@ -452,7 +434,6 @@ export function useGetCourseAnnouncementsByCourseId(courseId: string) {
   });
 }
 
-// Course Announcement Mutations
 export function useCreateCourseAnnouncement() {
   const queryClient = useQueryClient();
 
@@ -503,7 +484,6 @@ export function useUpdateCourseAnnouncement() {
       queryClient.invalidateQueries({
         queryKey: courseAnnouncementQueryKeys.detail(announcementId),
       });
-      // Also invalidate the list if we can get courseId, but for now invalidate all lists
       queryClient.invalidateQueries({
         queryKey: courseAnnouncementQueryKeys.lists(),
       });

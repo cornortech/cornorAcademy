@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { getDashboardPathForRole } from "@/lib/dashboard-routes";
 import { UserRole } from "@/types";
 import { Loader2 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
@@ -31,19 +32,7 @@ export function ProtectedRoute({
 
     if (allowedRoles && userRole) {
       if (!allowedRoles.includes(userRole)) {
-        switch (userRole) {
-          case "student":
-            router.push("/student");
-            break;
-          case "teacher":
-            router.push("/teacher");
-            break;
-          case "admin":
-            router.push("/admin");
-            break;
-          default:
-            router.push("/");
-        }
+        router.push(getDashboardPathForRole(userRole));
       }
     }
   }, [user, loading, router, userRole, allowedRoles, pathname]);

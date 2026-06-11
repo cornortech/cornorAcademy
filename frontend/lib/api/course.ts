@@ -34,7 +34,6 @@ export interface UpdateCourseStatusRequest {
   status: "upcoming" | "active" | "completed";
 }
 
-// Enrolled Course Interfaces
 export interface CreateEnrolledCourseRequest {
   courseId: string;
   studentId: string;
@@ -45,10 +44,9 @@ export interface EnrolledCourse {
   courseId: string;
   studentId: string;
   enrolledAt: Date;
-  course: Course; // Assuming Course type is available
+  course: Course;
 }
 
-// Course Media Interfaces
 export interface CreateCourseMediaRequest {
   courseId: string;
   title: string;
@@ -70,7 +68,6 @@ export interface CourseMedia {
   uploadedAt: Date;
 }
 
-// Announcement Interfaces
 export interface CreateAnnouncementRequest {
   title: string;
   content: string;
@@ -118,7 +115,6 @@ class CourseApiService {
     }
   }
 
-  // 📝 Create New Course
   async createCourse(
     courseData: CreateCourseRequest
   ): Promise<ApiResponse<Course>> {
@@ -128,17 +124,14 @@ class CourseApiService {
     });
   }
 
-  // 📚 Get All Courses
   async getAllCourses(): Promise<Course[]> {
     return this.request<Course[]>("/course");
   }
 
-  // 🔍 Get Course By ID
   async getCourseById(id: string): Promise<Course> {
     return this.request<Course>(`/course/${id}`);
   }
 
-  // ✏️ Update Course
   async updateCourse(
     id: string,
     courseData: UpdateCourseRequest
@@ -149,31 +142,26 @@ class CourseApiService {
     });
   }
 
-  // 🗑️ Delete Course
   async deleteCourse(id: string): Promise<ApiResponse<Course>> {
     return this.request<ApiResponse<Course>>(`/course/${id}`, {
       method: "DELETE",
     });
   }
 
-  // 🏷️ Get Courses by Category
   async getCoursesByCategory(category: CourseCategory): Promise<Course[]> {
     return this.request<Course[]>(`/course/category/${category}`);
   }
 
-  // 👨‍🏫 Get Courses by Teacher
   async getCoursesByTeacher(teacherId: string): Promise<Course[]> {
     return this.request<Course[]>(`/course/teacher/${teacherId}`);
   }
 
-  // 📊 Get Courses by Status
   async getCoursesByStatus(
     status: "upcoming" | "active" | "completed"
   ): Promise<Course[]> {
     return this.request<Course[]>(`/course/status/${status}`);
   }
 
-  // 🔄 Update Course Status
   async updateCourseStatus(
     id: string,
     status: UpdateCourseStatusRequest
@@ -184,7 +172,6 @@ class CourseApiService {
     });
   }
 
-  // 🔍 Search Courses
   async searchCourses(query: string): Promise<Course[]> {
     return this.request<Course[]>(
       `/course/search/${encodeURIComponent(query)}`
@@ -194,7 +181,6 @@ class CourseApiService {
 
 export const courseApi = new CourseApiService();
 
-// Enrolled Course API Service
 class EnrolledCourseApiService {
   private async request<T>(
     endpoint: string,
@@ -224,7 +210,6 @@ class EnrolledCourseApiService {
     }
   }
 
-  // Create enrollment in a course by a student
   async createEnrolledCourse(
     enrollmentData: CreateEnrolledCourseRequest
   ): Promise<ApiResponse<EnrolledCourse>> {
@@ -234,7 +219,6 @@ class EnrolledCourseApiService {
     });
   }
 
-  // Get all enrolled courses of student by student id
   async getAllEnrolledCoursesById(
     studentId: string
   ): Promise<EnrolledCourse[]> {
@@ -244,7 +228,6 @@ class EnrolledCourseApiService {
 
 export const enrolledCourseApi = new EnrolledCourseApiService();
 
-// Course Media API Service
 class CourseMediaApiService {
   private async request<T>(
     endpoint: string,
@@ -274,7 +257,6 @@ class CourseMediaApiService {
     }
   }
 
-  // 📎 Upload Course Media
   async createCourseMedia(
     mediaData: CreateCourseMediaRequest
   ): Promise<ApiResponse<CourseMedia>> {
@@ -284,17 +266,14 @@ class CourseMediaApiService {
     });
   }
 
-  // 📁 Get All Course Media
   async getAllCourseMediaByCourseId(courseId: string): Promise<CourseMedia[]> {
     return this.request<CourseMedia[]>(`/course-media/${courseId}`);
   }
 
-  // 📄 Get Specific Media
   async getCourseMediaById(mediaId: string): Promise<CourseMedia> {
     return this.request<CourseMedia>(`/course-media/${mediaId}`);
   }
 
-  // ✏️ Update Course Media
   async updateCourseMedia(
     mediaId: string,
     mediaData: UpdateCourseMediaRequest
@@ -305,7 +284,6 @@ class CourseMediaApiService {
     });
   }
 
-  // 🗑️ Delete Course Media
   async deleteCourseMedia(mediaId: string): Promise<ApiResponse<CourseMedia>> {
     return this.request<ApiResponse<CourseMedia>>(`/course-media/${mediaId}`, {
       method: "DELETE",
@@ -315,7 +293,6 @@ class CourseMediaApiService {
 
 export const courseMediaApi = new CourseMediaApiService();
 
-// Announcement API Service
 class AnnouncementApiService {
   private async request<T>(
     endpoint: string,
@@ -345,7 +322,6 @@ class AnnouncementApiService {
     }
   }
 
-  // 📢 Create Course Announcement
   async createCourseAnnouncement(
     teacherId: string,
     courseId: string,
@@ -360,14 +336,12 @@ class AnnouncementApiService {
     );
   }
 
-  // 📰 Get Course Announcements
   async getAllCourseAnnouncementById(
     courseId: string
   ): Promise<Announcement[]> {
     return this.request<Announcement[]>(`/course/${courseId}/announcement`);
   }
 
-  // ✏️ Update Course Announcement
   async updateCourseAnnouncement(
     announcementId: string,
     announcementData: UpdateAnnouncementRequest
@@ -381,7 +355,6 @@ class AnnouncementApiService {
     );
   }
 
-  // 🗑️ Delete Course Announcement
   async deleteCourseAnnouncement(
     announcementId: string
   ): Promise<ApiResponse<Announcement>> {

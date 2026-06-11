@@ -18,7 +18,6 @@ export function CodeViewer({
 }: CodeViewerProps) {
   return (
     <div className="space-y-4">
-      {/* Code File Viewer */}
       <div className="border border-border rounded-lg overflow-hidden">
         <div className="flex items-center justify-between p-3 border-b border-border bg-muted/50">
           <h3 className="font-medium">{title}</h3>
@@ -46,7 +45,6 @@ export function CodeViewer({
         </div>
       </div>
 
-      {/* Code Actions */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm">

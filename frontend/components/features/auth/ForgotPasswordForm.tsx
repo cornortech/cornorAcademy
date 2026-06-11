@@ -57,7 +57,7 @@ export function ForgotPasswordForm() {
 
     try {
       await sendPasswordResetEmail(auth, data.email, {
-        url: `${window.location.origin}/login`, // Redirect back to login after reset
+        url: `${window.location.origin}/login`,
       });
 
       setIsSuccess(true);

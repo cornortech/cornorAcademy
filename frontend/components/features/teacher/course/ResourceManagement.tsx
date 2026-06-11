@@ -208,7 +208,6 @@ export function ResourceManagement({ resources }: ResourceManagementProps) {
         </div>
       </div>
 
-      {/* Search and Filters */}
       <Card className="border-border/50 bg-card/50 backdrop-blur">
         <CardContent className="p-4">
           <div className="space-y-4">
@@ -301,7 +300,6 @@ export function ResourceManagement({ resources }: ResourceManagementProps) {
         </CardContent>
       </Card>
 
-      {/* Resources List */}
       <div className="grid gap-4">
         {filteredResources.length > 0 ? (
           filteredResources.map((resource) => (

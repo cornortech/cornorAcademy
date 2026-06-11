@@ -116,7 +116,6 @@ export default function AdminDashboard() {
         "p-6 lg:p-8 transition-all duration-300",
         sidebarCollapsed ? "lg:ml-16" : "lg:ml-64"
       )}>
-        {/* Mobile hamburger */}
         <button
           onClick={() => setMobileSidebarOpen(true)}
           className="lg:hidden mb-4 p-2 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground"

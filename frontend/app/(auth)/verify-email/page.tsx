@@ -25,7 +25,6 @@ function VerifyEmailContent() {
   const [error, setError] = useState("");
   const [isResending, setIsResending] = useState(false);
 
-  // Auto-verify if token is in URL
   useEffect(() => {
     if (token) {
       verifyEmail(token);

@@ -36,7 +36,6 @@ export function MaterialsSidebar({
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {/* Course Progress */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-sm">
               <span>Course Progress</span>
@@ -47,7 +46,6 @@ export function MaterialsSidebar({
 
           <Separator />
 
-          {/* Materials List */}
           <div className="space-y-2">
             <h4 className="font-medium text-sm">Course Materials</h4>
             <ScrollArea className="h-[400px]">

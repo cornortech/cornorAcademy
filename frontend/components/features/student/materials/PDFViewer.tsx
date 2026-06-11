@@ -34,9 +34,7 @@ export function PDFViewer({
 
   return (
     <div className="space-y-4">
-      {/* PDF Viewer */}
       <div className="border border-border rounded-lg overflow-hidden">
-        {/* PDF Toolbar */}
         <div className="flex items-center justify-between p-3 border-b border-border bg-muted/50">
           <div className="flex items-center space-x-2">
             <Button
@@ -82,7 +80,6 @@ export function PDFViewer({
           </div>
         </div>
 
-        {/* PDF Content */}
         <div className="bg-gray-100 p-8 min-h-[600px] flex items-center justify-center">
           <div className="bg-white shadow-lg rounded-lg p-8 max-w-2xl w-full">
             <div className="text-center space-y-4">
@@ -102,7 +99,6 @@ export function PDFViewer({
         </div>
       </div>
 
-      {/* PDF Actions */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm">

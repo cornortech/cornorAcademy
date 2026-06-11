@@ -4,12 +4,10 @@ import { authenticate } from "../middleware/auth.middleware";
 
 const router = Router();
 
-// GET /settings - Retrieve system settings
 router.get("/", async (req: Request, res: Response) => {
   try {
     let settings = await prisma.systemSettings.findFirst();
     if (!settings) {
-      // Create default settings if they don't exist yet
       settings = await prisma.systemSettings.create({
         data: {},
       });
@@ -21,7 +19,6 @@ router.get("/", async (req: Request, res: Response) => {
   }
 });
 
-// POST /settings - Update system settings (admin only)
 router.post("/", authenticate, async (req: Request, res: Response) => {
   try {
     if (req.user?.role !== "admin") {

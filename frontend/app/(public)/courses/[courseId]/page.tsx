@@ -35,7 +35,6 @@ interface FrontendCourse {
   outcomes: string[];
 }
 
-// Transform backend course format to frontend format
 function transformCourseForFrontend(backendCourse: any): FrontendCourse {
   return {
     id: backendCourse.id,
@@ -91,14 +90,12 @@ export default async function CourseDetailsPage({
   const { courseId } = await params;
   
   try {
-    // Fetch course data from backend API
     const backendCourse = await courseApi.getCourseById(courseId);
     
     if (!backendCourse) {
       notFound();
     }
 
-    // Transform backend course data to frontend format
     const course = transformCourseForFrontend(backendCourse);
 
     return (

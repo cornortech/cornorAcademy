@@ -2,14 +2,14 @@ import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Image from 'next/image';
 import { LoginForm } from "@/components/features/auth/LoginForm";
+import { AuthenticatedRedirect } from "@/components/features/auth/AuthenticatedRedirect";
 import { APP_NAME } from "@/lib/config";
 
 export default function LoginPage() {
   return (
+    <AuthenticatedRedirect>
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-
-        {/* ===== Header ===== */}
         <div className="text-center mb-8">
           <Link
             href="/"
@@ -37,13 +37,11 @@ export default function LoginPage() {
             Sign in to your account to continue learning
           </p>
         </div>
-        {/* ===== End Header ===== */}
 
-        {/* ===== Login Form Component ===== */}
         <LoginForm />
-        {/* ===== End Login Form Component ===== */}
 
       </div>
     </div>
+    </AuthenticatedRedirect>
   );
 }

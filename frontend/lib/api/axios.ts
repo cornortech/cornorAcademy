@@ -35,7 +35,6 @@ axiosInstance.interceptors.request.use(
         config.headers.Authorization = `Bearer ${token}`;
       }
     } catch {
-      // Continue without auth header
     }
     return config;
   },

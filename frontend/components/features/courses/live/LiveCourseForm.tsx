@@ -46,7 +46,7 @@ export function LiveCourseForm() {
         meetingUrl,
       })
       toast.success("Live class created successfully")
-      router.push("/teacher")
+      router.push("/teacher?tab=upcoming")
     } catch (err: any) {
       toast.error(err.response?.data?.error || "Failed to create course")
     } finally {

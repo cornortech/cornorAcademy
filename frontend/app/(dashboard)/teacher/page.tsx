@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Calendar } from "lucide-react";
 import { TeacherStats } from "@/components/dashboard/teacher/TeacherStats";
 import MyTeachingCourses from "@/components/dashboard/teacher/MyTeachingCourses";
 import { UpcomingClassesWidget } from "@/components/dashboard/teacher/UpcomingClassesWidget";
@@ -65,7 +65,7 @@ export default function TeacherDashboard() {
                 Create New Course
               </Button>
             </div>
-                <MyTeachingCourses courses={courses.filter((c) => !c.isOngoing)} />
+            <MyTeachingCourses courses={courses.filter((c) => !c.isOngoing)} />
           </>
         );
 
@@ -79,13 +79,11 @@ export default function TeacherDashboard() {
             <div className="flex items-center justify-between mb-6">
               <div />
               <Button variant="outline" onClick={handleScheduleLiveClass}>
-                <BookOpen className="h-4 w-4 mr-1" />
+                <Calendar className="h-4 w-4 mr-1" />
                 Schedule New Live Class
               </Button>
             </div>
-            <div className="max-w-2xl">
               <UpcomingClassesWidget courses={courses} />
-            </div>
           </>
         );
 
@@ -116,11 +114,18 @@ export default function TeacherDashboard() {
                   </Button>
                 </div>
 
-            <MyTeachingCourses courses={courses.filter((c) => !c.isOngoing)} />
+                <MyTeachingCourses courses={courses.filter((c) => !c.isOngoing)} />
               </div>
 
               <aside className="space-y-6">
-                <UpcomingClassesWidget courses={courses} />
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold">Upcoming Classes</h2>
+                  <Button variant="outline" size="sm" onClick={handleScheduleLiveClass}>
+                    <Calendar className="h-4 w-4 mr-1" />
+                    Schedule
+                  </Button>
+                </div>
+            <UpcomingClassesWidget courses={courses} />
               </aside>
             </div>
           </>

@@ -22,7 +22,7 @@ const app = express();
 
 const WHITE_LISTED_ORIGINS = process.env.WHITE_LISTED_ORIGINS?.split(",") || [];
 
-app.use(express.json());
+app.use(express.json({ limit: "50mb" }));
 app.use(cookieParser());
 app.use(cors({
   origin: WHITE_LISTED_ORIGINS,

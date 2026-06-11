@@ -1,7 +1,7 @@
 import z from "zod";
 
 export const registerSchema = z.object({
-  uid: z.string().min(1), // Firebase UID
+  uid: z.string().min(1),
   name: z.string().min(1),
   email: z.string().email(),
   phoneNumber: z.string().min(8),

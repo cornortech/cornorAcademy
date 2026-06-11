@@ -15,7 +15,6 @@ export default function AdminCourseDetailPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
 
-  // Mock course data
   const course = {
     id: params.courseId,
     title: "Web Development Fundamentals",
@@ -28,7 +27,6 @@ export default function AdminCourseDetailPage() {
     status: "active",
   };
 
-  // Mock payment data
   const studentPayments = mockStudentPayments;
 
   const filteredPayments = studentPayments.filter((payment) => {
@@ -65,14 +63,12 @@ export default function AdminCourseDetailPage() {
           pendingAmount={pendingAmount}
         />
 
-        {/* Tabs for Payment Details */}
         <Tabs defaultValue="payments" className="space-y-6">
           <TabsList>
             <TabsTrigger value="payments">Student Payments</TabsTrigger>
             <TabsTrigger value="summary">Payment Summary</TabsTrigger>
           </TabsList>
 
-          {/* Student Payments Tab */}
           <TabsContent value="payments" className="space-y-6">
             <div className="flex items-center justify-between mb-6">
               <div>

@@ -46,7 +46,6 @@ const HeroSection = () => {
             </Button>
           </div>
 
-          {/* Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-2xl mx-auto">
             {landingStats.map((stat) => (
               <div key={stat.label} className="text-center">

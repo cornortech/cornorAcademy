@@ -21,7 +21,6 @@ export function SettingsPanel() {
   const { settings, loading, updateSettings } = useSettings();
   const [saving, setSaving] = useState(false);
 
-  // Local state
   const [platformName, setPlatformName] = useState("");
   const [supportEmail, setSupportEmail] = useState("");
   const [supportPhone, setSupportPhone] = useState("");
@@ -33,7 +32,6 @@ export function SettingsPanel() {
   const [currency, setCurrency] = useState("npr");
   const [taxRate, setTaxRate] = useState(0);
 
-  // Sync state with loaded settings
   useEffect(() => {
     if (settings) {
       setPlatformName(settings.platformName || "");
@@ -92,7 +90,6 @@ export function SettingsPanel() {
       </div>
 
       <div className="grid gap-6">
-        {/* General Settings */}
         <Card className="border-border/50 bg-card/50 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-base">General Settings</CardTitle>
@@ -150,7 +147,6 @@ export function SettingsPanel() {
           </CardContent>
         </Card>
 
-        {/* Course Settings */}
         <Card className="border-border/50 bg-card/50 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-base">Course Settings</CardTitle>
@@ -203,7 +199,6 @@ export function SettingsPanel() {
           </CardContent>
         </Card>
 
-        {/* Payment Settings */}
         <Card className="border-border/50 bg-card/50 backdrop-blur">
           <CardHeader>
             <CardTitle className="text-base">Payment Settings</CardTitle>

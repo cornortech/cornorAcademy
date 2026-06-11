@@ -1,7 +1,7 @@
 import z from 'zod';
 
 export const createStudentSchema = z.object({
-    uid: z.string().min(1), // Firebase UID
+    uid: z.string().min(1),
     name: z.string().min(2, "Name is required"),
     email: z.string().email("Email is required"),
     phoneNumber: z.string().min(10, "Phone number is required"),
@@ -21,7 +21,7 @@ export const createStudentSchema = z.object({
 export const getAllStudentsResponseSchema = z.array(
     z.object({
         id: z.string(),
-        uid: z.string(), // Firebase UID
+        uid: z.string(),
         name: z.string(),
         email: z.string().email(),
         phoneNumber: z.string(),
@@ -48,7 +48,7 @@ export const getStudentByIdSchema = z.object({
 
 export const getStudentByIdResponseSchema = z.object({
     id: z.string(),
-    uid: z.string(), // Firebase UID
+    uid: z.string(),
     name: z.string(),
     email: z.string().email(),
     phoneNumber: z.string(),

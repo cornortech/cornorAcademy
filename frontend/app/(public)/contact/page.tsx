@@ -45,8 +45,6 @@ export default function ContactPage() {
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-14">
         <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] items-start">
           <section>
-
-            {/* ===== logo and title ===== */}
             <div className="mb-8 max-w-3xl rounded-3xl border border-border/70 bg-primary/5 p-10 shadow-sm backdrop-blur-sm">
               <div className="mb-1 flex items-center gap-1">
                 <div className="inline-flex h-16 w-16 items-center justify-center rounded-3xl text-primary-foreground">
@@ -67,9 +65,7 @@ export default function ContactPage() {
                 Need help choosing the right course, onboarding your team, or learning about pricing? Our {settings?.platformName || "Cornor Academy"} specialists are ready to match you with the best path.
               </p>
             </div>
-            {/* ===== End Logo and Title ===== */}
 
-            {/* ===== Contact Form ===== */}
             <Card className="border-border/50 bg-card/50 backdrop-blur">
               <CardHeader>
                 <CardTitle>Send us a message</CardTitle>
@@ -181,11 +177,9 @@ export default function ContactPage() {
                 </form>
               </CardContent>
             </Card>
-            {/* ===== End Contact Form ===== */}
 
           </section>
 
-          {/* ===== Contact Information ===== */}
           <aside className="space-y-6">
             <Card className="border-border/50 bg-card/50 backdrop-blur">
               <CardHeader>
@@ -250,7 +244,6 @@ export default function ContactPage() {
               </CardContent>
             </Card>
           </aside>
-          {/* ===== End Contact Information ===== */}
 
         </div>
       </main>

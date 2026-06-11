@@ -127,7 +127,6 @@ export function SignupForm() {
     setSubmitError("");
 
     try {
-      // Create Firebase user
       const cred = await signup(data.email, data.password, data.name);
       if (!cred) throw new Error("Failed to create Firebase account");
 
@@ -204,7 +203,6 @@ export function SignupForm() {
         description="Join thousands of learners worldwide"
       />
 
-      {/* Progress Indicator */}
       <div className="flex items-center justify-center mb-8 gap-2">
         {[1, 2, 3].map((s) => (
           <div

@@ -44,7 +44,7 @@ export interface CourseCurriculumItem {
   id: string;
   title: string;
   noOfLesson: number;
-  duration: number; // in hours
+  duration: number;
   content: string[];
 }
 
@@ -67,7 +67,7 @@ export interface Course {
   thumbnail: string;
   category: CourseCategory;
   startDate: Date;
-  duration: number; // in weeks
+  duration: number;
   price: number;
   curriculum: CourseCurriculumItem[];
   teacher: TeacherInfo | null;

@@ -15,6 +15,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { getInitials } from "@/lib/utils";
+import { getDashboardPathForRole } from "@/lib/dashboard-routes";
 
 interface PublicHeaderProps {
   showNav?: boolean;
@@ -43,25 +44,25 @@ const PublicHeader = ({
   ];
 
   const pathname = usePathname();
+  const homeHref = user && userRole ? getDashboardPathForRole(userRole) : "/";
 
   return (
     <nav className="ice-nav border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
-          {/* ===== Logo and Back Button ===== */}
           <div className="flex items-center space-x-4">
           
             {showBackButton && (
               <Button variant="ghost" size="sm" asChild>
-                <Link href="/">
+                <Link href={homeHref}>
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Home
                 </Link>
               </Button>
             )}
 
-            <Link href="/" className="flex items-center space-x-2">
+            <Link href={homeHref} className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-lg flex items-center justify-center">
                 <Image
                   src="/logo/logo.png"
@@ -77,9 +78,7 @@ const PublicHeader = ({
             </Link>
 
           </div>
-          {/* ===== End Logo and Back Button ===== */}
 
-          {/* ===== Navigation Items ===== */}
           {showNav && !showBackButton && (
             <nav className="hidden md:flex items-center space-x-8">
               {navItems.map((item) => (
@@ -93,9 +92,7 @@ const PublicHeader = ({
               ))}
             </nav>
           )}
-          {/* ===== End Navigation Items ===== */}
 
-          {/* ===== User Profile Dropdown ===== */}
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -133,7 +130,7 @@ const PublicHeader = ({
                   className="cursor-pointer rounded-md focus:bg-accent focus:text-accent-foreground"
                 >
                   <Link
-                    href={`/${userRole || "student"}`}
+                    href={getDashboardPathForRole(userRole || "student")}
                     className="flex items-center px-2 py-2"
                   >
                     <LayoutDashboard className="h-4 w-4 mr-2 text-muted-foreground" />
@@ -172,7 +169,6 @@ const PublicHeader = ({
               </Button>
             </div>
           )}
-          {/* ===== End User Profile Dropdown ===== */}
 
 
         </div>

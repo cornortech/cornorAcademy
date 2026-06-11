@@ -505,7 +505,6 @@ export const mockUploadedResources: UploadedResource[] = [
     downloads: 45,
     description: "Complete guide to JavaScript basics...",
   },
-  // ... other resources
 ];
 
 export const mockCertificates: Record<string, Certificate> = {
@@ -720,8 +719,6 @@ export const getCourseById = (id: string): LegacyCourse | undefined => {
 };
 
 export const getStudentById = (id: string): Student | undefined => {
-  // In a real app, this would be a fetch. For now, we find in the mock array.
-  // Assuming a full `mockStudents` array is populated.
   return undefined;
 };
 

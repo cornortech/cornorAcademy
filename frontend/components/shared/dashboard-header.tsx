@@ -9,6 +9,7 @@ import { BookOpen, Bell, Settings, LogOut } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 import type { UserRole } from "@/types";
 import { APP_NAME } from "@/lib/config";
+import { getDashboardPathForRole } from "@/lib/dashboard-routes";
 import { useAuth } from "@/contexts/AuthContext";
 import {
   DropdownMenu,
@@ -66,9 +67,8 @@ export function DashboardHeader({
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
 
-          {/* ===== Logo ===== */}
           <div className="flex items-center space-x-4">
-            <Link href={"/"} className="flex items-center space-x-2">
+            <Link href={userRole ? getDashboardPathForRole(userRole) : "/"} className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-lg flex items-center justify-center shadow-md">
                 <Image
                   src="/logo/logo.png"
@@ -82,18 +82,13 @@ export function DashboardHeader({
             </Link>
             {getRoleBadge()}
           </div>
-          {/* ===== End Logo ===== */}
 
 
           <div className="flex items-center space-x-4">
-
-            {/* ===== Notifications Button ===== */}
             <Button variant="ghost" size="sm">
               <Bell className="h-4 w-4" />
             </Button>
-            {/* ===== End Notifications Button ===== */}
 
-            {/* ===== User Menu ===== */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -152,7 +147,6 @@ export function DashboardHeader({
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            {/* ===== End User Menu ===== */}
 
           </div>
         </div>

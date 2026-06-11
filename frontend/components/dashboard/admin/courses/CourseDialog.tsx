@@ -95,7 +95,6 @@ export function CourseDialog({
             />
           </div>
 
-          {/* Additional fields for backend API */}
           <div className="space-y-2">
             <Label htmlFor="requirements">Requirements (comma separated)</Label>
             <Input

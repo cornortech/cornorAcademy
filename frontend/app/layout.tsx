@@ -35,10 +35,6 @@ template: "%s | Cornor Academy",
   ],
   authors: [{name: "Cornor Academy Team", url: "https://cornoracademy.com"}],
   creator: 'Cornor Tech Pvt. Ltd.',
-  // metadataBase: {
-  //   protocol: "https",
-  //   host: "cornoracademy.com",
-  // },
   alternates: {
     canonical: "https://cornoracademy.com",
   },
@@ -87,9 +83,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="light" style={{ colorScheme: "light" }}>
+    <html lang="en" className="light" style={{ colorScheme: "light" }} suppressHydrationWarning>
       <body
         className={`min-h-screen bg-background  ${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         <Providers>
           {children}

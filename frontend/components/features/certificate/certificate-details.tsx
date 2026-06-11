@@ -31,7 +31,6 @@ export function CertificateDetails({
     <Card className="border-border/50 bg-card/50 backdrop-blur">
       <CardContent className="pt-6">
         <div className="space-y-6">
-          {/* Success Header */}
           <div className="flex items-center space-x-3">
             <div className="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center">
               <CheckCircle className="h-6 w-6 text-green-600" />
@@ -48,7 +47,6 @@ export function CertificateDetails({
 
           <Separator />
 
-          {/* Certificate Details */}
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-4">
               <div>
@@ -126,7 +124,6 @@ export function CertificateDetails({
 
           <Separator />
 
-          {/* Skills Covered */}
           <div>
             <Label>Skills & Competencies Covered</Label>
             <div className="flex flex-wrap gap-2 mt-2">
@@ -140,7 +137,6 @@ export function CertificateDetails({
 
           <Separator />
 
-          {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3">
             <Button onClick={onDownload} className="flex-1">
               <Download className="h-4 w-4 mr-2" />
@@ -156,7 +152,6 @@ export function CertificateDetails({
             </Button>
           </div>
 
-          {/* Verification Info */}
           <div className="bg-muted/20 p-4 rounded-lg">
             <p className="text-sm text-muted-foreground">
               Verified on {new Date().toLocaleDateString()} at{" "}

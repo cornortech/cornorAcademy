@@ -9,7 +9,6 @@ export default function TeacherDashboardLoading() {
         <Skeleton className="h-5 w-64" />
       </div>
 
-      {/* Teacher Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {[1, 2, 3, 4].map((i) => (
           <Card key={i} className="border-border/50 bg-card/50 backdrop-blur">
@@ -32,7 +31,6 @@ export default function TeacherDashboardLoading() {
             <Skeleton className="h-10 w-40" />
           </div>
 
-          {/* Teaching Courses List */}
           {[1, 2].map((i) => (
             <Card key={i} className="border-border/50 bg-card/50 backdrop-blur">
               <CardContent className="p-6">
@@ -70,7 +68,6 @@ export default function TeacherDashboardLoading() {
           ))}
         </div>
 
-        {/* Sidebar */}
         <div className="space-y-6">
           <Card className="border-border/50 bg-card/50 backdrop-blur">
             <CardHeader>

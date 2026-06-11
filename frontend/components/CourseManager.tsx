@@ -41,7 +41,6 @@ export function CourseManager() {
 
   const [error, setError] = useState<string | null>(null);
 
-  // Form state for creating new course
   const [newCourse, setNewCourse] = useState<Partial<CreateCourseInput>>({
     title: "",
     description: "",
@@ -61,7 +60,6 @@ export function CourseManager() {
     teacherId: "",
   });
 
-  // Create new course
   const createCourse = async () => {
     if (!newCourse.title || !newCourse.description || !newCourse.teacherId) {
       setError("Please fill in all required fields");
@@ -71,7 +69,6 @@ export function CourseManager() {
     setError(null);
     try {
       await createCourseMutation(newCourse as CreateCourseInput);
-      // Reset form
       setNewCourse({
         title: "",
         description: "",
@@ -106,7 +103,6 @@ export function CourseManager() {
         </Button>
       </div>
 
-      {/* Search */}
       <div className="flex gap-4">
         <Input
           placeholder="Search courses..."
@@ -116,14 +112,12 @@ export function CourseManager() {
         />
       </div>
 
-      {/* Error Display */}
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
           {error}
         </div>
       )}
 
-      {/* Create New Course Form */}
       <div className="bg-white p-6 rounded-lg border">
         <h2 className="text-xl font-semibold mb-4">Create New Course</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -219,7 +213,6 @@ export function CourseManager() {
         </Button>
       </div>
 
-      {/* Courses List */}
       <div className="bg-white p-6 rounded-lg border">
         <h2 className="text-xl font-semibold mb-4">All Courses</h2>
         {loading ? (
@@ -243,7 +236,6 @@ export function CourseManager() {
                     size="sm"
                     variant="outline"
                     onClick={() => {
-                      // TODO: Implement view course details
                       console.log("View course", course.id);
                     }}
                   >

@@ -100,14 +100,12 @@ export function LoginForm() {
     setVerificationState("none");
 
     try {
-      // Step 1: Firebase authentication
       const userCredential = await signInWithEmailAndPassword(
         auth,
         data.email,
         data.password
       );
 
-      // Step 2: Check email verification
       await userCredential.user.reload();
 
       const demoAllowed = isDemoAccount(data.email, data.password);
@@ -120,7 +118,6 @@ export function LoginForm() {
         return;
       }
 
-      // Step 3: Backend login with Firebase token
       const token = await userCredential.user.getIdToken();
 
       const response = await axiosInstance.post(
@@ -134,7 +131,6 @@ export function LoginForm() {
         }
       );
 
-      // Step 4: Handle backend response
       const { status, redirectionUrl } = response.data;
 
       if (status === "portalDeactivated") {
@@ -147,7 +143,6 @@ export function LoginForm() {
         return;
       }
 
-      // Step 5: Successful login - Use backend's redirectionUrl
       toast.success("Login successful!");
       router.push(redirectionUrl);
     } catch (error: unknown) {
@@ -156,7 +151,6 @@ export function LoginForm() {
       const loginError = error as LoginError;
       let errorMessage = "Failed to login. Please try again.";
 
-      // Handle specific Firebase errors
       if (
         loginError.code === "auth/wrong-password" ||
         loginError.code === "auth/user-not-found"
@@ -167,10 +161,8 @@ export function LoginForm() {
       } else if (loginError.code === "auth/network-request-failed") {
         errorMessage = "Network error. Check your connection.";
       } else if (loginError.response?.status === 404) {
-        // Backend says user doesn't exist in database
         errorMessage = "Account not found. Please sign up first.";
       } else if (loginError.response?.status === 403) {
-        // Account exists but has status issues
         errorMessage = loginError.response.data?.error || errorMessage;
       } else if (loginError.response?.data?.error) {
         errorMessage = loginError.response.data.error;

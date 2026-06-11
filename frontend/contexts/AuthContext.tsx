@@ -145,7 +145,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         console.error("Code:", error.code);
         console.error("Message:", error.message);
         console.error("Full error:", error);
-        // Continue signup even if email fails - user can resend
       }
 
       return { uid: userCredentials.user.uid };

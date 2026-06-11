@@ -44,14 +44,11 @@ export function Canvas({ onCanvasReady }: SignatureCanvasProps) {
       ctx.putImageData(oldImage, 0, 0);
     };
 
-    // Prevent clearing drawing on resize
     const savedImage = () =>
       ctx.getImageData(0, 0, canvas.width, canvas.height);
 
     const redraw = () => {
-      // const image = savedImage();
       setupCanvas();
-      // if (image) ctx.putImageData(image, 0, 0);
     };
 
     setupCanvas();
@@ -96,7 +93,6 @@ export function Canvas({ onCanvasReady }: SignatureCanvasProps) {
     canvas.addEventListener("touchmove", draw);
     canvas.addEventListener("touchend", end);
 
-    // API exposed to parent
     onCanvasReady?.({
       clear: () => {
         ctx.clearRect(0, 0, canvas.width, canvas.height);

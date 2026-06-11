@@ -75,7 +75,6 @@ export function PaymentForm({ course }: PaymentFormProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          {/* Payment Method Selection */}
           <div className="space-y-4">
             <Label className="text-base font-semibold">Payment Method</Label>
             <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
@@ -119,7 +118,6 @@ export function PaymentForm({ course }: PaymentFormProps) {
             </RadioGroup>
           </div>
 
-          {/* Card Payment Form */}
           {paymentMethod === "card" && (
             <div className="space-y-4">
               <div className="grid grid-cols-1 gap-4">
@@ -151,7 +149,6 @@ export function PaymentForm({ course }: PaymentFormProps) {
             </div>
           )}
 
-          {/* Billing Information */}
           <div className="space-y-4">
             <Label className="text-base font-semibold">
               Billing Information
@@ -188,7 +185,6 @@ export function PaymentForm({ course }: PaymentFormProps) {
             </div>
           </div>
 
-          {/* Order Summary */}
           <div className="space-y-4 p-4 bg-muted/20 rounded-lg">
             <h4 className="font-semibold">Order Summary</h4>
             <div className="space-y-2">
@@ -212,7 +208,6 @@ export function PaymentForm({ course }: PaymentFormProps) {
             </div>
           </div>
 
-          {/* Terms and Conditions */}
           <div className="flex items-start space-x-2">
             <Checkbox id="terms" />
             <Label htmlFor="terms" className="text-sm leading-relaxed">
@@ -227,7 +222,6 @@ export function PaymentForm({ course }: PaymentFormProps) {
             </Label>
           </div>
 
-          {/* Security Notice */}
           <div className="flex items-start space-x-2 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
             <Shield className="h-5 w-5 text-blue-600 mt-0.5 shrink-0" />
             <div className="text-sm">
@@ -249,7 +243,6 @@ export function PaymentForm({ course }: PaymentFormProps) {
               ? "Processing Payment..."
               : `Complete Enrollment - Rs ${course.price}`}
           </Button>
-          {/* Money Back Guarantee */}
           <div className="text-center text-sm text-muted-foreground">
             <p>30-day money-back guarantee • Cancel anytime</p>
           </div>

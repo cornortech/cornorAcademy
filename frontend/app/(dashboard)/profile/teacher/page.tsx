@@ -63,7 +63,6 @@ export default function TeacherProfile() {
 
     setIsSaving(true);
     try {
-      // Simulate API call
       await new Promise((resolve) => setTimeout(resolve, 1000));
       setSuccessMessage("Profile updated successfully!");
       setIsEditing(false);

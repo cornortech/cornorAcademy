@@ -77,7 +77,6 @@ export function TeacherList({
                   </p>
                 </div>
                 <div className="flex items-center space-x-1">
-                  {/* View Dialog */}
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="outline" size="sm">
@@ -125,7 +124,6 @@ export function TeacherList({
                     </DialogContent>
                   </Dialog>
 
-                  {/* Edit Dialog */}
                   <TeacherDialog
                     open={editingId === teacher.id}
                     onOpenChange={(open) => !open && setEditingId(null)}
@@ -146,7 +144,6 @@ export function TeacherList({
                     }
                   />
 
-                  {/* Delete Button */}
                   <Button
                     variant="outline"
                     size="sm"

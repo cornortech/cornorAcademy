@@ -17,14 +17,12 @@ export default function StudentCoursePage() {
   const params = useParams();
   const courseId = params.courseId as string;
 
-  // Fetch data from centralized source
   const course = mockEnrolledCourses.find((c) => c.id === parseInt(courseId));
   const materials = getMaterialsForCourse(courseId);
   const announcements = mockRecentAnnouncements.filter(
     (a) => a.courseId === courseId
   );
 
-  // Mock attendance data (in real app, fetch from API)
   const attendanceData = {
     totalClasses: 12,
     attended: 11,

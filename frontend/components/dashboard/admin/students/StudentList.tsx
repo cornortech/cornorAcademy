@@ -77,7 +77,6 @@ export function StudentList({
                   </p>
                 </div>
                 <div className="flex items-center space-x-1">
-                  {/* View Dialog */}
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button variant="outline" size="sm">
@@ -131,7 +130,6 @@ export function StudentList({
                     </DialogContent>
                   </Dialog>
 
-                  {/* Edit Dialog */}
                   <StudentDialog
                     open={editingId === student.id}
                     onOpenChange={(open) => !open && setEditingId(null)}
@@ -152,7 +150,6 @@ export function StudentList({
                     }
                   />
 
-                  {/* Delete Button */}
                   <Button
                     variant="outline"
                     size="sm"

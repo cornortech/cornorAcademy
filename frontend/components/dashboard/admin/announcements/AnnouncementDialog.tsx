@@ -33,7 +33,6 @@ export function AnnouncementDialog({
 }: AnnouncementDialogProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle announcement creation
     alert("Announcement published!");
     onOpenChange(false);
   };

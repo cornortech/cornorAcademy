@@ -43,7 +43,6 @@ export function VideoPlayer({
 
   return (
     <div className="space-y-4">
-      {/* Video Player */}
       <div className="relative bg-black rounded-lg overflow-hidden aspect-video">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-white text-center">
@@ -53,10 +52,8 @@ export function VideoPlayer({
           </div>
         </div>
 
-        {/* Video Controls */}
         <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-4">
           <div className="space-y-2">
-            {/* Progress Bar */}
             <div className="flex items-center space-x-2 text-white text-sm">
               <span>{formatTime(currentTime)}</span>
               <div className="flex-1">
@@ -68,7 +65,6 @@ export function VideoPlayer({
               <span>{duration}</span>
             </div>
 
-            {/* Control Buttons */}
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 <Button
@@ -134,7 +130,6 @@ export function VideoPlayer({
         </div>
       </div>
 
-      {/* Video Actions */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm">

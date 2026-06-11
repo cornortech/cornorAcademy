@@ -1,12 +1,8 @@
-// Firebase Admin SDK - Config & Initialization
-// Initializes the Firebase Admin SDK using service account credentials
-// from environment variables and exports a singleton admin instance.
-
 import admin from "firebase-admin";
 
 const serviceAccount = {
   projectId: process.env.FIREBASE_PROJECT_ID,
-  privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"), // Handle newlines
+  privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
   clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
 };
 

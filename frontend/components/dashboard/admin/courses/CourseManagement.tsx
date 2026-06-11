@@ -22,23 +22,21 @@ export function CourseManagement() {
   const [filterStatus, setFilterStatus] = useState("all");
   const [courseType, setCourseType] = useState<"all" | "live" | "video">("all");
 
-  // Teachers data for the dialog (you might want to fetch this from API too)
   const teachers = [
     {
-      id: "3fa85f64-5717-4562-b3fc-2c963f66afa6", // Using UUID format for backend
+      id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
       uid: "TCH001",
       name: "Dr. Sarah Johnson",
       email: "sarah.johnson@Cornoracademy.com",
     },
     {
-      id: "3fa85f64-5717-4562-b3fc-2c963f66afa7", // Using UUID format for backend
+      id: "3fa85f64-5717-4562-b3fc-2c963f66afa7",
       uid: "TCH002",
       name: "Dr. Michael Chen",
       email: "michael.chen@Cornoracademy.com",
     },
   ];
 
-  // TanStack Query hooks
   const {
     data: courses = [],
     isLoading: loading,
@@ -51,7 +49,6 @@ export function CourseManagement() {
 
   const error = queryError?.message || null;
 
-  // Filter courses based on search, status, and course type
   const filteredCourses = courses.filter((course) => {
     const matchesSearch = searchQuery
       ? course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -68,7 +65,6 @@ export function CourseManagement() {
 
   const handleCreateCourse = async (formData: any) => {
     try {
-      // Transform form data to match backend API format
       const courseData: CreateCourseInput = {
         title: formData.title,
         description: formData.description,
@@ -79,7 +75,7 @@ export function CourseManagement() {
         meetingTime: formData.startTime
           ? new Date(formData.startTime)
           : new Date(),
-        language: "english", // Default value
+        language: "english",
         level: formData.level || "beginner",
         thumbnail: getCourseImage({
           thumbnail: formData.thumbnail,
@@ -92,7 +88,7 @@ export function CourseManagement() {
           : new Date(),
         duration: parseInt(formData.duration) || 12,
         price: parseInt(formData.price) || 299,
-        curriculum: [], // You can add curriculum creation logic here
+        curriculum: [],
         teacherId: formData.instructorId,
       };
 
@@ -117,7 +113,7 @@ export function CourseManagement() {
         duration: parseInt(formData.duration),
         level: formData.level,
         category: formData.category,
-        curriculum: [], // Required field for update
+        curriculum: [],
       };
 
       await updateCourseMutation.mutateAsync({ id, data: updateData });
@@ -142,21 +138,20 @@ export function CourseManagement() {
     }
   };
 
-  // Transform courses for the table component (backward compatibility)
   const transformedCourses = filteredCourses.map((course) => ({
-    id: parseInt(course.id), // Convert string ID to number for table compatibility
+    id: parseInt(course.id),
     title: course.title,
     instructor: course.teacher?.name || "No instructor",
     instructorId: course.teacher?.id || "",
-    students: 0, // Backend doesn't provide enrolled count
+    students: 0,
     price: course.price,
-    status: "active", // Default status since backend doesn't have status
+    status: "active",
     created: new Date(course.createdAt).toLocaleDateString(),
-    completion: 0, // You might want to calculate this based on enrolled students
-    rating: 4.5, // Default rating
-    enrolled: 0, // Backend doesn't provide enrolled count
+    completion: 0,
+    rating: 4.5,
+    enrolled: 0,
     isOngoing: course.isOngoing,
-    startTime: course.startDate.toISOString(),
+    startTime: new Date(course.startDate).toISOString(),
     description: course.description,
     thumbnail: getCourseImage({
       thumbnail: course.thumbnail,
@@ -201,14 +196,12 @@ export function CourseManagement() {
         </div>
       </div>
 
-      {/* Error Display */}
       {error && (
         <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
           {error}
         </div>
       )}
 
-      {/* Course Type Tabs */}
       <div className="flex gap-1 border-b border-border/50">
         {(["all", "live", "video"] as const).map((type) => (
           <button

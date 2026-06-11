@@ -19,7 +19,6 @@ export default function TeacherCoursePage() {
   const params = useParams();
   const courseId = params.courseId as string;
 
-  // Fetch data from centralized source
   const course = mockTeachingCourses.find((c) => c.id === parseInt(courseId));
 
   if (!course) {

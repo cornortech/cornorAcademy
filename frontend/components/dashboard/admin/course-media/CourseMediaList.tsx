@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CourseMediaDialog } from "./CourseMediaDialog";
 import { CourseMedia } from "@/lib/types/courseMedia";
-// import { courseMediaApi } from "@/lib/api/courseMediaApi";
 
 interface CourseMediaListProps {
   courseId: string;
@@ -44,9 +43,6 @@ export function CourseMediaList({ courseId }: CourseMediaListProps) {
   const loadMedia = async () => {
     try {
       setLoading(true);
-      // TODO: Implement API call
-      // const mediaData = await courseMediaApi.getAllCourseMediaByCourseId(courseId);
-      // setMedia(mediaData);
     } catch (error) {
       console.error("Failed to load course media:", error);
     } finally {
@@ -56,8 +52,6 @@ export function CourseMediaList({ courseId }: CourseMediaListProps) {
 
   const handleDelete = async (mediaId: string) => {
     try {
-      // TODO: Implement API call
-      // await courseMediaApi.deleteCourseMedia(mediaId);
       await loadMedia();
     } catch (error) {
       console.error("Failed to delete media:", error);

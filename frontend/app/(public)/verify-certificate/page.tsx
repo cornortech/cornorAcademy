@@ -29,7 +29,6 @@ export default function VerifyCertificatePage() {
     setIsVerifying(true);
     setVerificationResult(null);
 
-    // Simulate API call delay
     await new Promise((resolve) => setTimeout(resolve, 1500));
 
     const trimmedId = certificateId.trim().toUpperCase();
@@ -62,7 +61,6 @@ export default function VerifyCertificatePage() {
   };
 
   const handleDownloadCertificate = () => {
-    // In a real app, this would generate and download the certificate PDF
     alert("Certificate download would start here");
   };
 
@@ -77,12 +75,10 @@ export default function VerifyCertificatePage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
       <PublicHeader />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
           <div className="text-center mb-12">
             <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-6">
               <Award className="h-8 w-8 text-primary" />
@@ -96,7 +92,6 @@ export default function VerifyCertificatePage() {
             </p>
           </div>
 
-          {/* Verification Form */}
           <Card className="border-border/50 bg-card/50 backdrop-blur mb-8">
             <CardHeader>
               <CardTitle className="flex items-center">
@@ -116,7 +111,6 @@ export default function VerifyCertificatePage() {
             </CardContent>
           </Card>
 
-          {/* Verification Result */}
           {verificationResult &&
             (verificationResult.success && verificationResult.certificate ? (
               <CertificateDetails
@@ -131,7 +125,6 @@ export default function VerifyCertificatePage() {
               />
             ))}
 
-          {/* Sample Certificates for Testing */}
           <Card className="border-border/50 bg-card/50 backdrop-blur mt-8">
             <CardHeader>
               <CardTitle>Sample Certificates for Testing</CardTitle>

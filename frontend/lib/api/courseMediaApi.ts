@@ -31,7 +31,6 @@ class CourseMediaApiService {
     }
   }
 
-  // 📎 Upload Course Media
   async createCourseMedia(mediaData: CreateCourseMediaRequest): Promise<ApiResponse<CourseMedia>> {
     return this.request<ApiResponse<CourseMedia>>("/course-media", {
       method: "POST",
@@ -39,17 +38,14 @@ class CourseMediaApiService {
     });
   }
 
-  // 📁 Get All Course Media
   async getAllCourseMediaByCourseId(courseId: string): Promise<CourseMedia[]> {
     return this.request<CourseMedia[]>(`/course-media/${courseId}`);
   }
 
-  // 📄 Get Specific Media
   async getCourseMediaById(mediaId: string): Promise<CourseMedia> {
     return this.request<CourseMedia>(`/course-media/${mediaId}`);
   }
 
-  // ✏️ Update Course Media
   async updateCourseMedia(mediaId: string, mediaData: UpdateCourseMediaRequest): Promise<ApiResponse<CourseMedia>> {
     return this.request<ApiResponse<CourseMedia>>(`/course-media/${mediaId}`, {
       method: "PUT",
@@ -57,7 +53,6 @@ class CourseMediaApiService {
     });
   }
 
-  // 🗑️ Delete Course Media
   async deleteCourseMedia(mediaId: string): Promise<ApiResponse<CourseMedia>> {
     return this.request<ApiResponse<CourseMedia>>(`/course-media/${mediaId}`, {
       method: "DELETE",

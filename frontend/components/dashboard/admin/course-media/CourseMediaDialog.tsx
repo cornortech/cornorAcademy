@@ -52,10 +52,6 @@ export function CourseMediaDialog({
     try {
       const validatedData = createCourseMediaSchema.parse(formData);
       setLoading(true);
-
-      // TODO: Implement API call
-      // await courseMediaApi.createCourseMedia(validatedData);
-
       onSuccess();
       onOpenChange(false);
       setFormData({

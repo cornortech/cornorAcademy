@@ -210,7 +210,6 @@ export default function LegalAgreementPage() {
           </div>
 
           <div className="grid gap-8">
-            {/* Legal Agreement Content */}
             <Card className="border-border/50 bg-card/50 backdrop-blur overflow-auto">
               <CardHeader>
                 <CardTitle>Terms & Conditions</CardTitle>
@@ -224,7 +223,6 @@ export default function LegalAgreementPage() {
               </CardContent>
             </Card>
 
-            {/* Student Information */}
             <Card className="border-border/50 bg-card/50 backdrop-blur">
               <CardHeader>
                 <CardTitle>Student Information</CardTitle>
@@ -254,7 +252,6 @@ export default function LegalAgreementPage() {
               </CardContent>
             </Card>
 
-            {/* Digital Signature */}
             <Card className="border-border/50 bg-card/50 backdrop-blur">
               <CardHeader>
                 <CardTitle>Digital Signature</CardTitle>
@@ -295,7 +292,6 @@ export default function LegalAgreementPage() {
               </CardContent>
             </Card>
 
-            {/* Agreement Checkboxes */}
             <Card className="border-border/50 bg-card/50 backdrop-blur">
               <CardHeader>
                 <CardTitle>Confirmation</CardTitle>

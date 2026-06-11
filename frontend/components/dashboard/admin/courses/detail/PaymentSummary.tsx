@@ -17,7 +17,6 @@ export function PaymentSummary({
 }: PaymentSummaryProps) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-      {/* Payment Status Distribution */}
       <Card className="border-border/50 bg-card/50 backdrop-blur">
         <CardHeader>
           <CardTitle className="text-base">
@@ -58,7 +57,6 @@ export function PaymentSummary({
         </CardContent>
       </Card>
 
-      {/* Revenue Breakdown */}
       <Card className="border-border/50 bg-card/50 backdrop-blur">
         <CardHeader>
           <CardTitle className="text-base">Revenue Summary</CardTitle>

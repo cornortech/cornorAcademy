@@ -31,7 +31,6 @@ class CourseApiService {
     }
   }
 
-  // 📝 Create New Course
   async createCourse(courseData: CreateCourseRequest): Promise<ApiResponse<Course>> {
     return this.request<ApiResponse<Course>>("/course", {
       method: "POST",
@@ -39,17 +38,14 @@ class CourseApiService {
     });
   }
 
-  // 📚 Get All Courses
   async getAllCourses(): Promise<Course[]> {
     return this.request<Course[]>("/course");
   }
 
-  // 🔍 Get Course By ID
   async getCourseById(id: string): Promise<Course> {
     return this.request<Course>(`/course/${id}`);
   }
 
-  // ✏️ Update Course
   async updateCourse(id: string, courseData: UpdateCourseRequest): Promise<ApiResponse<Course>> {
     return this.request<ApiResponse<Course>>(`/course/update/${id}`, {
       method: "PUT",
@@ -57,29 +53,24 @@ class CourseApiService {
     });
   }
 
-  // 🗑️ Delete Course
   async deleteCourse(id: string): Promise<ApiResponse<Course>> {
     return this.request<ApiResponse<Course>>(`/course/${id}`, {
       method: "DELETE",
     });
   }
 
-  // 🏷️ Get Courses by Category
   async getCoursesByCategory(category: string): Promise<Course[]> {
     return this.request<Course[]>(`/course/category/${category}`);
   }
 
-  // 👨‍🏫 Get Courses by Teacher
   async getCoursesByTeacher(teacherId: string): Promise<Course[]> {
     return this.request<Course[]>(`/course/teacher/${teacherId}`);
   }
 
-  // 📊 Get Courses by Status
   async getCoursesByStatus(status: "upcoming" | "active" | "completed"): Promise<Course[]> {
     return this.request<Course[]>(`/course/status/${status}`);
   }
 
-  // 🔄 Update Course Status
   async updateCourseStatus(id: string, status: UpdateCourseStatusRequest): Promise<ApiResponse<Course>> {
     return this.request<ApiResponse<Course>>(`/course/status/${id}`, {
       method: "PATCH",
@@ -87,7 +78,6 @@ class CourseApiService {
     });
   }
 
-  // 🔍 Search Courses
   async searchCourses(query: string): Promise<Course[]> {
     return this.request<Course[]>(`/course/search/${encodeURIComponent(query)}`);
   }

@@ -126,7 +126,6 @@ export function StudentDialog({
                 </SelectContent>
               </Select>
             </div>
-            {/* Add more fields as needed */}
           </div>
           <DialogFooter>
             <Button type="submit">

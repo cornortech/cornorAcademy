@@ -1,4 +1,3 @@
-// swagger.ts - Complete API Documentation
 import { generateOpenApi } from "@ts-rest/open-api";
 import { contract } from "../contract";
 

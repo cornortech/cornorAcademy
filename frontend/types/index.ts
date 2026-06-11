@@ -52,7 +52,7 @@ export interface Student extends BaseUser {
   about?: string;
   educationInstitute?: string;
   qualification?: string;
-  enrolledCourses: string[]; // Array of Course IDs
+  enrolledCourses: string[];
   completedCourses: string[];
   totalLearningHours: number;
   currentStreak: number;
@@ -67,7 +67,7 @@ export interface Teacher extends BaseUser {
   isApproved?: boolean;
   totalStudents?: number;
   totalVideos?: number;
-  activeCourses?: string[]; // Array of Course IDs
+  activeCourses?: string[];
 }
 
 export interface Admin extends BaseUser {
@@ -102,7 +102,7 @@ export interface CourseCurriculumItem {
   id: string;
   title: string;
   noOfLesson: number;
-  duration: number; // in hours
+  duration: number;
   content: string[];
 }
 
@@ -136,7 +136,6 @@ export interface Course {
   updatedAt: Date;
 }
 
-// Legacy interface for backward compatibility
 export interface LegacyCourse {
   id: string | number;
   title: string;
@@ -188,13 +187,13 @@ export interface CourseMaterial {
   id: number;
   title: string;
   type: CourseMaterialType;
-  duration?: string; // For videos
-  size?: string; // For files
-  pages?: number; // For PDFs
+  duration?: string;
+  size?: string;
+  pages?: number;
   completed: boolean;
   url: string;
   description: string;
-  transcript?: string; // For videos
+  transcript?: string;
 }
 
 export interface EnrolledCourse {
@@ -314,7 +313,6 @@ export interface Certificate {
   validUntil?: string;
 }
 
-// Enrolled Course Types
 export interface EnrolledCourseItem {
   id: string;
   status: "requested" | "approved" | "rejected";
@@ -345,7 +343,6 @@ export interface CreateEnrolledCourseInput {
   courseId: string;
 }
 
-// Course Media Types
 export interface CourseMediaItem {
   id: string;
   courseId: string;
@@ -387,7 +384,6 @@ export interface UpdateCourseMediaInput {
   pathURL?: string;
 }
 
-// Announcement Types
 export interface CourseAnnouncementItem {
   id: string;
   courseId: string;
@@ -407,7 +403,6 @@ export interface UpdateCourseAnnouncementInput {
   message?: string;
 }
 
-// ===== Footer Types =====
 export interface SocialLink {
   name: string;
   url: string;
@@ -419,7 +414,6 @@ export interface CompanyInfo {
   socialLinks: SocialLink[];
 }
 
-// ===== Landing Page Types =====
 export interface LandingStat {
   icon: LucideIcon;
   label: string;

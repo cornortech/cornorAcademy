@@ -58,8 +58,6 @@ export default function AboutPage() {
       <PublicHeader showNav={true} />
 
       <main className="container mx-auto px-4 sm:px-6 lg:px-8">
-
-        {/* ===== About Us Section ===== */}
         <section className="py-20">
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-3">About Us</h2>
@@ -108,9 +106,7 @@ export default function AboutPage() {
             })}
           </div>
         </section>
-        {/* ===== End About Us Section ===== */}
 
-        {/* ===== Success Metrics ===== */}
         <section id="impact" className="py-16">
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-3">Our Impact</h2>
@@ -139,9 +135,7 @@ export default function AboutPage() {
             })}
           </div>
         </section>
-        {/* ===== End Success Metrics ===== */}
 
-        {/* ===== Core Values ===== */}
         <section id="values" className="py-16">
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-3">Our Mission & Values</h2>
@@ -173,9 +167,7 @@ export default function AboutPage() {
             })}
           </div>
         </section>
-        {/* ===== End Core Values ===== */}
 
-        {/* ===== Why Choose Us ===== */}
         <section className="py-16">
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-3">Why Choose {settings?.platformName || "Cornor Academy"}?</h2>
@@ -203,9 +195,7 @@ export default function AboutPage() {
             ))}
           </div>
         </section>
-        {/* ===== End Why Choose Us ===== */}
 
-        {/* ===== Course Outcomes ===== */}
         <section className="py-16">
           <div className="mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-3">What You&apos;ll Achieve</h2>
@@ -258,9 +248,7 @@ export default function AboutPage() {
             </Card>
           </div>
         </section>
-        {/* ===== End Course Outcomes ===== */}
 
-        {/* ===== Call to Action ===== */}
         <section className="py-16 md:py-24">
           <div className="max-w-2xl mx-auto text-center rounded-3xl border border-border/70 bg-primary/5 p-10 md:p-16 shadow-sm backdrop-blur-sm">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to get started?</h2>
@@ -278,7 +266,6 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
-        {/* ===== End Call to Action ===== */}
       </main>
 
       <Footer />

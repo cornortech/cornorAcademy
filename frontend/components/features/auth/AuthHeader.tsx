@@ -1,4 +1,3 @@
-// AuthHeader is a reusable component for displaying the header section on authentication pages (login, register, etc.). It includes a back link to the home page, the app logo and name, and a title and description for the specific auth page.
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
@@ -12,8 +11,6 @@ interface AuthHeaderProps {
 export function AuthHeader({ title, description }: AuthHeaderProps) {
   return (
     <div className="text-center mb-8">
-
-      {/* ===== Back To Home ===== */}
       <Link
         href="/"
         className="inline-flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
@@ -21,7 +18,6 @@ export function AuthHeader({ title, description }: AuthHeaderProps) {
         <ArrowLeft className="h-4 w-4" />
         <span>Back to Home</span>
       </Link>
-      {/* ===== End Back To Home ===== */}
 
 
       <div className="flex items-center justify-center space-x-2 mb-4">

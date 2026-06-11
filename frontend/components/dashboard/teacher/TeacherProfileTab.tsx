@@ -18,9 +18,7 @@ export function TeacherProfileTab({ teacher }: TeacherProfileTabProps) {
 
   const handleInputChange = (
     _e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    // TODO: implement inline editing
-  };
+  ) => {};
 
   const handleSave = async () => {
     setIsSaving(true);

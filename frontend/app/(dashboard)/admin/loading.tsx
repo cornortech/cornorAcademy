@@ -9,7 +9,6 @@ export default function AdminDashboardLoading() {
         <Skeleton className="h-5 w-96" />
       </div>
 
-      {/* Admin Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {[1, 2, 3, 4].map((i) => (
           <Card key={i} className="border-border/50 bg-card/50 backdrop-blur">
@@ -25,7 +24,6 @@ export default function AdminDashboardLoading() {
         ))}
       </div>
 
-      {/* Tabs Skeleton */}
       <div className="space-y-6">
         <div className="w-full border-b border-border/50">
           <div className="flex gap-2 -mb-px">
@@ -35,7 +33,6 @@ export default function AdminDashboardLoading() {
           </div>
         </div>
 
-        {/* Tab Content - Table Skeleton */}
         <div className="space-y-6">
           <div className="flex justify-between items-center">
             <div className="space-y-2">
@@ -53,13 +50,11 @@ export default function AdminDashboardLoading() {
 
           <Card className="border-border/50 bg-card/50 backdrop-blur">
             <div className="p-4 space-y-4">
-              {/* Table Header */}
               <div className="grid grid-cols-6 gap-4 pb-4 border-b border-border/50">
                 {[1, 2, 3, 4, 5, 6].map((i) => (
                   <Skeleton key={i} className="h-4 w-full" />
                 ))}
               </div>
-              {/* Table Rows */}
               {[1, 2, 3, 4, 5].map((i) => (
                 <div
                   key={i}
