@@ -65,7 +65,7 @@ const createCourseAnnouncement: AppRouteMutationImplementation<
             status: 500,
             body: {
                 success: false,
-                error: "Internal Server Error" || error,
+                error: "Internal Server Error",
             },
         };
     }
@@ -121,7 +121,7 @@ typeof announcementContract.updateCourseAnnouncement
             status: 500,
             body: {
                 success: false,
-                error: "Internal Server Error" || error,
+                error: "Internal Server Error",
             },
         };
     }
@@ -170,7 +170,7 @@ typeof announcementContract.deleteCourseAnnouncement
             status: 500,
             body: {
                 success: false,
-                error: "Internal Server Error" || error,
+                error: "Internal Server Error",
             },
         };
     }

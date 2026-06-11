@@ -90,7 +90,7 @@ const createStudent: AppRouteMutationImplementation<
             status: 500,
             body: {
                 success: false,
-                error: "Internal Server Error" || error,
+                error: "Internal Server Error",
             },
         };
     }
@@ -174,7 +174,7 @@ const updateStudent: AppRouteMutationImplementation<
             status: 500,
             body: {
                 success: false,
-                error: "Internal Server Error" || error,
+                error: "Internal Server Error",
             },
         };
     }

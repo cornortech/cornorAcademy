@@ -188,7 +188,7 @@ export default function LegalAgreementPage() {
             </div>
             <div className="space-y-3">
               <Button asChild className="w-full">
-                <Link href={`/${userRole}`}>Proceed to Dashboard</Link>
+                <Link href={userRole ? `/${userRole}` : "/"}>Proceed to Dashboard</Link>
               </Button>
               <Button
                 variant="outline"

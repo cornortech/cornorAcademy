@@ -30,9 +30,9 @@ const UpcomingClasses = () => {
               className="w-full bg-transparent"
               asChild
             >
-              <Link href={class_.meetingLink} target="_blank">
+              <a href={class_.meetingLink} target="_blank" rel="noopener noreferrer">
                 Join Meeting
-              </Link>
+              </a>
             </Button>
           </div>
         ))}

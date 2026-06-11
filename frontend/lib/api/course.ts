@@ -1,6 +1,6 @@
 import { Course, CourseCategory, CourseCurriculumItem } from "@/types";
 
-const API_BASE_URL = "http://localhost:3001";
+const API_BASE_URL = "http://localhost:4000";
 
 export interface ApiResponse<T> {
   success: boolean;

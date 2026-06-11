@@ -187,12 +187,13 @@ const StudentSearchFilter = () => {
                                 </div>
                                 <DialogFooter>
                                   <Button asChild>
-                                    <Link
+                                    <a
                                       href={course.meetingLink}
                                       target="_blank"
+                                      rel="noopener noreferrer"
                                     >
                                       Join Meeting
-                                    </Link>
+                                    </a>
                                   </Button>
                                 </DialogFooter>
                               </DialogContent>

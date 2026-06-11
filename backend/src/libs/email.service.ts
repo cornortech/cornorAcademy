@@ -83,7 +83,7 @@ export const sendVerificationEmail = async (
 
   try {
     await transporter.sendMail({
-      from: process.env.SMTP_USER,
+      from: `"Cornor Academy" <${process.env.SMTP_USER}>`,
       to: email,
       subject: "Verify Your CornorAcademy Email",
       html: htmlTemplate,

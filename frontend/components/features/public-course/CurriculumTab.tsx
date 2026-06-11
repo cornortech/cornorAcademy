@@ -1,15 +1,15 @@
 import { TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { Course } from "@/types";
+
 
 interface TabProps {
-  course: Course;
+  course: any;
 }
 
 export function CurriculumTab({ course }: TabProps) {
   return (
     <TabsContent value="curriculum" className="space-y-4">
-      {course.modules.map((module, index) => (
+      {course.modules.map((module: { title: string; lessons: number; duration: string }, index: number) => (
         <Card key={index}>
           <CardHeader>
             <div className="flex items-center justify-between">

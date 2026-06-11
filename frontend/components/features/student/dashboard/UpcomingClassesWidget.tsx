@@ -30,7 +30,7 @@ export function UpcomingClassesWidget() {
               className="w-full bg-transparent"
               asChild
             >
-              <Link href={class_.meetingLink} target="_blank">
+              <Link href={class_.meetingLink as any} target="_blank">
                 Join Meeting
               </Link>
             </Button>

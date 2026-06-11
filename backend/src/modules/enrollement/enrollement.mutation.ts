@@ -118,7 +118,7 @@ const updateEnrollementRequestForAdmin: AppRouteMutationImplementation<
             status: 500,
             body: {
                 success: false,
-                error: "Internal server error" || error,
+                error: "Internal server error",
             },
         };
     }

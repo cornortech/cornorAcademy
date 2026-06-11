@@ -162,7 +162,7 @@ export const ProfessionalStep = ({ control }: StepProps) => {
               <FormLabel className="text-sm font-normal leading-relaxed cursor-pointer">
                 I agree to the{" "}
                 <Link
-                  href="/terms"
+                  href="/legal-agreement"
                   className="text-primary hover:underline font-medium"
                   target="_blank"
                 >
@@ -170,7 +170,7 @@ export const ProfessionalStep = ({ control }: StepProps) => {
                 </Link>{" "}
                 and{" "}
                 <Link
-                  href="/privacy"
+                  href="/legal-agreement"
                   className="text-primary hover:underline font-medium"
                   target="_blank"
                 >

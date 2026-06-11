@@ -18,10 +18,12 @@ export const getAllEnrollementRequestResponseSchema = z.array(
         id: z.string(),
         paymentURL: z.string(),
         status: z.enum(['requested', 'approved', 'rejected']),
+        createdAt: z.date(),
         course: z.object({
             id: z.string().uuid(),
             title: z.string(),
             description: z.string(),
+            price: z.number(),
             teacher: z.object({
                 id: z.string().uuid(),
                 name: z.string(),

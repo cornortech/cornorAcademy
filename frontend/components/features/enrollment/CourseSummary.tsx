@@ -1,11 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Course } from "@/types";
 import { Check, Clock } from "lucide-react";
 
 interface CourseSummaryProps {
-  course: Course;
+  course: any;
 }
 
 export function CourseSummary({ course }: CourseSummaryProps) {
@@ -49,7 +48,7 @@ export function CourseSummary({ course }: CourseSummaryProps) {
 
           <div className="space-y-2">
             <h4 className="font-semibold">What's included:</h4>
-            {course.features.slice(0, 4).map((feature, index) => (
+            {course.features.slice(0, 4).map((feature: string, index: number) => (
               <div key={index} className="flex items-center text-sm">
                 <Check className="h-4 w-4 text-green-500 mr-2 shrink-0" />
                 {feature}

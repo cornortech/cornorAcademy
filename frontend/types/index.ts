@@ -316,10 +316,13 @@ export interface EnrolledCourseItem {
   id: string;
   status: "requested" | "approved" | "rejected";
   paymentURL?: string;
+  createdAt?: Date | string;
+  amount?: number;
   course: {
     id: string;
     title: string;
     description: string;
+    price?: number;
     thumbnail?: string;
     teacher: {
       id: string;

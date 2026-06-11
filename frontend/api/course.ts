@@ -154,7 +154,7 @@ export interface Course {
   updatedAt: Date;
 }
 
-const API_BASE_URL = "http://localhost:3001";
+const API_BASE_URL = "http://localhost:4000";
 
 // Generic API request function
 async function apiRequest<T>(

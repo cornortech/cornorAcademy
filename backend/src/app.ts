@@ -15,6 +15,7 @@ import progressRouter from "./routes/progress";
 import certificateRouter from "./routes/certificate";
 import authRouter from "./routes/auth";
 import enrollmentRouter from "./routes/enrollment";
+import settingsRouter from "./routes/settings";
 
 const app = express();
 
@@ -43,6 +44,7 @@ app.use("/api", teacherRouter);
 app.use("/api", lessonRouter);
 app.use("/api", progressRouter);
 app.use("/api", certificateRouter);
+app.use("/settings", settingsRouter);
 
 app.get("/", (req, res) => {
   res.json({

@@ -14,8 +14,12 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export function EnrollmentRequestList() {
-  const enrollmentRequests = [
+interface Props {
+  enrollments?: any[];
+}
+
+export function EnrollmentRequestList({ enrollments: propEnrollments }: Props) {
+  const enrollmentRequests = propEnrollments && propEnrollments.length > 0 ? propEnrollments : [
     {
       id: 1,
       studentName: "John Smith",

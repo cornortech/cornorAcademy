@@ -20,6 +20,8 @@ export const useUploadImage = () => {
       const uploadTask = uploadBytesResumable(storageRef, file);
 
       const url = await new Promise<string>((resolve, reject) => {
+        const timeout = setTimeout(() => reject(new Error("Upload timeout")), 15000);
+
         uploadTask.on(
           "state_changed",
           (snapshot) => {
@@ -27,8 +29,12 @@ export const useUploadImage = () => {
               (snapshot.bytesTransferred / snapshot.totalBytes) * 100
             );
           },
-          (error) => reject(error),
+          (error) => {
+            clearTimeout(timeout);
+            reject(error);
+          },
           async () => {
+            clearTimeout(timeout);
             const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
             resolve(downloadURL);
           }
@@ -37,7 +43,8 @@ export const useUploadImage = () => {
 
       return { progress: 100, url, isCompleted: true };
     } catch (err) {
-      return { progress, isCompleted: false };
+      console.error("Image upload failed:", err);
+      return { progress, isCompleted: true, url: "" };
     }
   };
 

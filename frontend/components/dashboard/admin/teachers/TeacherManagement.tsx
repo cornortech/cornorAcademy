@@ -1,46 +1,41 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SearchAndFilter } from "../shared/SearchAndFilter";
 import { TeacherDialog } from "./TeacherDialog";
 import { TeacherList } from "./TeacherList";
+import { Teacher } from "@/types";
 
-export function TeacherManagement() {
+interface Props {
+  teachers?: Teacher[];
+}
+
+export function TeacherManagement({ teachers: propTeachers }: Props) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [teachers, setTeachers] = useState([
-    {
-      id: 1,
-      uid: "TCH001",
-      name: "Dr. Sarah Johnson",
-      email: "sarah.johnson@Cornoracademy.com",
-      bio: "Experienced full-stack developer",
-      noOfYearsExperience: 12,
-      expertise: "Web Development, JavaScript, React",
-      dob: "1985-07-22",
-      gender: "Female",
-      status: "active",
-      courses: 3,
-      avatar: "/teacher-avatar.png",
-    },
-    {
-      id: 2,
-      uid: "TCH002",
-      name: "Dr. Michael Chen",
-      email: "michael.chen@Cornoracademy.com",
-      bio: "Data Science expert",
-      noOfYearsExperience: 10,
-      expertise: "Python, Machine Learning, Data Analysis",
-      dob: "1988-03-15",
-      gender: "Male",
-      status: "active",
-      courses: 2,
-      avatar: "/teacher-avatar-2.png",
-    },
-  ]);
+  const [teachers, setTeachers] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (propTeachers && propTeachers.length > 0) {
+      setTeachers(propTeachers.map((t) => ({
+        id: t.id,
+        uid: t.uid,
+        name: t.name,
+        email: t.email,
+        bio: t.bio || "",
+        noOfYearsExperience: t.noOfYearsExperience || 0,
+        expertise: t.expertise || "",
+        dob: t.dob || "",
+        gender: t.gender || "",
+        status: t.status || "active",
+        courses: 0,
+        avatar: "/placeholder.svg",
+      })));
+    }
+  }, [propTeachers]);
 
   const filteredTeachers = teachers.filter((teacher) => {
     const matchesSearch =

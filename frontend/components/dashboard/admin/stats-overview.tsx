@@ -1,5 +1,6 @@
 import { StatsCard } from "@/components/shared/stats-card";
 import { Users, BookOpen, DollarSign, TrendingUp } from "lucide-react";
+import { useSettings } from "@/contexts/SettingsContext";
 
 interface StatsOverviewProps {
   totalStudents: number;
@@ -20,6 +21,8 @@ export function StatsOverview({
   totalRevenue,
   completionRate,
 }: StatsOverviewProps) {
+  const { formatPrice } = useSettings();
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
       <StatsCard
@@ -36,8 +39,8 @@ export function StatsOverview({
       />
       <StatsCard
         title="Monthly Revenue"
-        value={`$${monthlyRevenue.toLocaleString()}`}
-        description={`$${totalRevenue.toLocaleString()} total`}
+        value={formatPrice(monthlyRevenue)}
+        description={`${formatPrice(totalRevenue)} total`}
         icon={DollarSign}
       />
       <StatsCard

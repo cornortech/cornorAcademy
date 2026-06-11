@@ -1,9 +1,8 @@
 import { Badge } from "@/components/ui/badge";
-import { Course } from "@/types";
 import { Clock, Star, Users, Calendar } from "lucide-react";
 
 interface CourseHeaderProps {
-  course: Course;
+  course: any;
 }
 
 export function CourseHeader({ course }: CourseHeaderProps) {

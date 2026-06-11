@@ -1,39 +1,47 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { UserPlus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SearchAndFilter } from "../shared/SearchAndFilter";
 import { StudentDialog } from "./StudentDialog";
 import { StudentList } from "./StudentList";
+import { Student } from "@/types";
 
-export function StudentManagement() {
+interface Props {
+  students?: Student[];
+}
+
+export function StudentManagement({ students: propStudents }: Props) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
-  const [students, setStudents] = useState([
-    {
-      id: 1,
-      uid: "STU001",
-      name: "John Smith",
-      email: "john.smith@email.com",
-      phoneNumber: "+1 (555) 123-4567",
-      gender: "Male",
-      dob: "1995-03-15",
-      address: "123 Main Street",
-      city: "New York",
-      district: "Manhattan",
-      pincode: "10001",
-      country: "United States",
-      about: "Passionate learner",
-      educationInstitute: "NYU",
-      qualification: "Bachelor's",
-      status: "active",
-      courses: 3,
-      avatar: "/student-avatar.png",
-    },
-    // ... more students
-  ]);
+  const [students, setStudents] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (propStudents && propStudents.length > 0) {
+      setStudents(propStudents.map((s) => ({
+        id: s.id,
+        uid: s.uid,
+        name: s.name,
+        email: s.email,
+        phoneNumber: s.phoneNumber || "",
+        gender: s.gender || "",
+        dob: s.dob || "",
+        address: s.address || "",
+        city: s.city || "",
+        district: s.district || "",
+        pincode: s.pincode || "",
+        country: s.country || "",
+        about: s.about || "",
+        educationInstitute: (s as any).educationInstitute || "",
+        qualification: (s as any).qualification || "",
+        status: s.status || "active",
+        courses: 0,
+        avatar: "/placeholder.svg",
+      })));
+    }
+  }, [propStudents]);
 
   const filteredStudents = students.filter((student) => {
     const matchesSearch =

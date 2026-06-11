@@ -85,7 +85,7 @@ const PublicHeader = ({
               {navItems.map((item) => (
                 <Link
                   key={item.label}
-                  href={item.href}
+                  href={item.href as any}
                   className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-md transition-all"
                 >
                   {item.label}

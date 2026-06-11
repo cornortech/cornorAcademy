@@ -27,7 +27,8 @@ const createCourse: AppRouteMutationImplementation<
                 teacherId
             } = req.body;
 
-        const adminId = "3fa85f64-5717-4562-b3fc-2c963f66afa6";
+        const admin = await prisma.admin.findFirst();
+        const adminId = admin?.id || "";
 
         const courseData = await prisma.course.create({
             data: {
@@ -200,7 +201,7 @@ typeof courseContract.createCourseAgreement
             status: 500,
             body: {
                 success: false,
-                error: "Internal server error" || error,
+                error: "Internal server error",
             },
         }
     }

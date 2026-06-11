@@ -48,7 +48,7 @@ typeof courseMediaContract.createCourseMedia
             status: 500,
             body: {
                 success: false,
-                error: "Internal Server Error" || error,
+                error: "Internal Server Error",
             },
         };
     }
@@ -116,7 +116,7 @@ typeof courseMediaContract.updateCourseMedia
             status: 500,
             body: {
                 success: false,
-                error: "Internal Server Error" || error,
+                error: "Internal Server Error",
             },
         };
     }
@@ -165,7 +165,7 @@ const deleteCourseMedia: AppRouteMutationImplementation<
             status: 500,
             body: {
                 success: false,
-                error: "Internal Server Error" || error,
+                error: "Internal Server Error",
             },
         };
     }

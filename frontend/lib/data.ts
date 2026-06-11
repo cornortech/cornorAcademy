@@ -3,7 +3,7 @@ import {
   Student,
   Teacher,
   Admin,
-  Course,
+  LegacyCourse,
   Certificate,
   StudentPayment,
   EnrolledCourse,
@@ -123,7 +123,7 @@ export const mockTeacherData: Teacher = {
   updatedAt: "2024-01-20",
 };
 
-export const mockCourses: Course[] = [
+export const mockCourses: LegacyCourse[] = [
   {
     id: "1",
     title: "Web Development Fundamentals",
@@ -433,7 +433,6 @@ export const mockAdminManagedCourses: AdminManagedCourse[] = [
     startTime: "2024-01-20 14:00",
     description: "Learn web development from scratch",
   },
-  // ... other managed course objects
 ];
 
 export const mockEnrollmentRequests: EnrollmentRequest[] = [
@@ -448,7 +447,6 @@ export const mockEnrollmentRequests: EnrollmentRequest[] = [
     createdAt: "2024-01-20",
     amount: 299,
   },
-  // ... other requests
 ];
 
 export const mockStudentProgress: StudentProgressRecord[] = [
@@ -457,12 +455,12 @@ export const mockStudentProgress: StudentProgressRecord[] = [
     name: "Alex Johnson",
     email: "alex.johnson@email.com",
     progress: 85,
-    lastportalActivated: "2 hours ago",
+    lastActive: "2 hours ago",
     attendance: 92,
     assignments: "8/10",
-    image: "/student-image.png",
+    image: "/student-avatar.png",
+    avatar: "/student-avatar.png",
   },
-  // ... other progress records
 ];
 
 export const landingStats: LandingStat[] = [
@@ -712,12 +710,11 @@ export const mockCourseAnnouncements: Announcement[] = [
   },
 ];
 
-// These functions simulate API calls, making it easy to swap them out later.
 export const getAnnouncementsForCourse = (courseId: string): Announcement[] => {
   return mockCourseAnnouncements.filter((a) => a.courseId === courseId);
 };
 
-export const getCourseById = (id: string): Course | undefined => {
+export const getCourseById = (id: string): LegacyCourse | undefined => {
   const course = mockCourses.find((course) => course.id === id);
   return course;
 };

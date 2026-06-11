@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -14,13 +16,9 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Course } from "@/types";
-import { Check, CreditCard, Shield, Wallet, Building } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-
+import { Building, Check, CreditCard, Loader2, Shield, Wallet } from "lucide-react";
 interface PaymentFormProps {
-  course: Course;
+  course: any;
 }
 
 export function PaymentForm({ course }: PaymentFormProps) {
@@ -219,11 +217,11 @@ export function PaymentForm({ course }: PaymentFormProps) {
             <Checkbox id="terms" />
             <Label htmlFor="terms" className="text-sm leading-relaxed">
               I agree to the{" "}
-              <Link href="/terms" className="text-primary hover:underline">
+              <Link href="/legal-agreement" className="text-primary hover:underline">
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link href="/privacy" className="text-primary hover:underline">
+              <Link href="/legal-agreement" className="text-primary hover:underline">
                 Privacy Policy
               </Link>
             </Label>

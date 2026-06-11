@@ -33,10 +33,12 @@ const getAllEnrollementRequest: AppRouteQueryImplementation<
                 id: enrollement.id,
                 paymentURL: enrollement.paymentURL,
                 status: enrollement.status,
+                createdAt: enrollement.createdAt,
                 course: {
                     id: enrollement.course.id,
                     title: enrollement.course.title,
                     description: enrollement.course.description,
+                    price: enrollement.course.price,
                     teacher: enrollement.course.teacher
                         ? {
                             id: enrollement.course.teacher.id,

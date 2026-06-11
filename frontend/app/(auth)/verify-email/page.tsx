@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,9 +13,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Mail, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams, useRouter } from "next/navigation";
-import axiosInstance from "@/lib/api/axios";
 
-export default function VerifyEmailPage() {
+function VerifyEmailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
@@ -38,22 +37,23 @@ export default function VerifyEmailPage() {
       setError("");
       setIsVerifying(true);
 
-      const response = await axiosInstance.post("/auth/verify-email", {
-        token: verificationToken,
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000"}/auth/verify-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: verificationToken }),
       });
 
-      if (response.data.success) {
+      const data = await res.json();
+
+      if (data.success) {
         setIsVerified(true);
-        // Redirect to login after 2 seconds
         setTimeout(() => {
           router.push("/login");
         }, 2000);
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error("Verification error:", err);
-      setError(
-        err.response?.data?.error || "Failed to verify email. Token may have expired."
-      );
+      setError("Failed to verify email. Token may have expired.");
     } finally {
       setIsVerifying(false);
     }
@@ -69,19 +69,26 @@ export default function VerifyEmailPage() {
     setIsResending(true);
 
     try {
-      // Call backend to resend verification email
-      const response = await axiosInstance.post("/auth/resend-verification", {
-        email,
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000"}/auth/resend-verification`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
       });
 
-      if (response.data.success) {
-        alert("✅ Verification email sent! Check your inbox.");
+      const data = await res.json();
+
+      if (data.success) {
+        if (data.verificationToken) {
+          await verifyEmail(data.verificationToken);
+        } else {
+          alert("Verification email sent! Check your inbox.");
+        }
+      } else {
+        setError(data.error || "Failed to resend verification email.");
       }
-    } catch (err: any) {
+    } catch (err) {
       console.error("Resend error:", err);
-      setError(
-        err.response?.data?.error || "Failed to resend verification email."
-      );
+      setError("Cannot reach server. Make sure the backend is running on port 4000.");
     } finally {
       setIsResending(false);
     }
@@ -180,5 +187,13 @@ export default function VerifyEmailPage() {
         </Card>
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-background flex items-center justify-center p-4"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>}>
+      <VerifyEmailContent />
+    </Suspense>
   );
 }

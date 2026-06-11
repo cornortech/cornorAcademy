@@ -12,10 +12,31 @@ import { InstructorTab } from "@/components/features/public-course/InstructorTab
 import { CourseSidebar } from "@/components/features/public-course/CourseSidebar";
 import { courseApi } from "@/lib/api/course";
 import { getCourseImage } from "@/lib/course-images";
-import { LegacyCourse } from "@/types";
+interface FrontendCourse {
+  id: string;
+  title: string;
+  description: string;
+  longDescription: string;
+  instructor: any;
+  price: number;
+  originalPrice: number;
+  duration: string;
+  level: string;
+  language: string;
+  students: number;
+  rating: number;
+  reviews: number;
+  status: string;
+  certificate: boolean;
+  thumbnail: string;
+  modules: { title: string; lessons: number; duration: string; }[];
+  features: string[];
+  requirements: string[];
+  outcomes: string[];
+}
 
 // Transform backend course format to frontend format
-function transformCourseForFrontend(backendCourse: any): LegacyCourse {
+function transformCourseForFrontend(backendCourse: any): FrontendCourse {
   return {
     id: backendCourse.id,
     title: backendCourse.title,
@@ -26,8 +47,8 @@ function transformCourseForFrontend(backendCourse: any): LegacyCourse {
       uid: "",
       name: backendCourse.teacher?.name || "Unknown Instructor",
       email: "",
-      avatar: "",
-      status: "active" as const,
+      image: backendCourse.teacher?.image || "",
+      status: "portalActivated",
       createdAt: "",
       updatedAt: "",
       role: "teacher" as const,
@@ -86,7 +107,7 @@ export default async function CourseDetailsPage({
         <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1">
           <div className="grid lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              <CourseHeader course={course} />
+              <CourseHeader course={course as any} />
               <Card className="mb-8">
                 <div className="relative aspect-video bg-muted rounded-t-lg overflow-hidden">
                   <img
@@ -107,12 +128,12 @@ export default async function CourseDetailsPage({
                   <TabsTrigger value="curriculum">Curriculum</TabsTrigger>
                   <TabsTrigger value="instructor">Instructor</TabsTrigger>
                 </TabsList>
-                <OverviewTab course={course} />
-                <CurriculumTab course={course} />
-                <InstructorTab course={course} />
+                <OverviewTab course={course as any} />
+                <CurriculumTab course={course as any} />
+                <InstructorTab course={course as any} />
               </Tabs>
             </div>
-            <CourseSidebar course={course} />
+            <CourseSidebar course={course as any} />
           </div>
         </main>
         <Footer />

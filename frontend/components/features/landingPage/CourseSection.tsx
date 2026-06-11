@@ -1,3 +1,5 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +13,11 @@ import { mockCourses } from "@/lib/data";
 import { ArrowRight, Star } from "lucide-react";
 import Link from "next/link";
 
+import { useSettings } from "@/contexts/SettingsContext";
+
 const CourseSection = () => {
+  const { formatPrice } = useSettings();
+
   return (
     <section id="courses" className="py-20">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -55,7 +61,7 @@ const CourseSection = () => {
                 <div className="flex items-center justify-between text-sm text-muted-foreground mb-4">
                   <span>{course.duration}</span>
                   <span className="font-semibold text-foreground">
-                    ${course.price}
+                    {formatPrice(course.price)}
                   </span>
                 </div>
                 <Button className="w-full" asChild>

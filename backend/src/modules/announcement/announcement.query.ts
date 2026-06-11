@@ -49,7 +49,7 @@ const getCourseAnnouncementById: AppRouteQueryImplementation<
             status: 500,
             body: {
                 success: false,
-                error: "Internal Server Error" || error,
+                error: "Internal Server Error",
             },
         };
     }

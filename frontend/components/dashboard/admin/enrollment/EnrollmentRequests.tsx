@@ -1,12 +1,34 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SearchAndFilter } from "../shared/SearchAndFilter";
 import { EnrollmentRequestList } from "./EnrollmentRequestList";
+import { EnrolledCourseItem } from "@/types";
 
-export function EnrollmentRequests() {
+interface Props {
+  enrollments?: EnrolledCourseItem[];
+}
+
+export function EnrollmentRequests({ enrollments: propEnrollments }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [enrollments, setEnrollments] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (propEnrollments && propEnrollments.length > 0) {
+      setEnrollments(propEnrollments.map((e) => ({
+        id: parseInt(e.id),
+        studentName: e.student?.name || "Unknown",
+        studentEmail: e.student?.email || "",
+        courseTitle: e.course?.title || "",
+        courseId: parseInt(e.course?.id || "0"),
+        paymentScreenshotUrl: e.paymentURL || "",
+        status: e.status === "approved" ? "approved" : e.status === "rejected" ? "rejected" : "pending",
+        createdAt: new Date(e.course?.createdAt || Date.now()).toLocaleDateString(),
+        amount: 0,
+      })));
+    }
+  }, [propEnrollments]);
 
   return (
     <div className="space-y-6">
@@ -33,7 +55,7 @@ export function EnrollmentRequests() {
         ]}
       />
 
-      <EnrollmentRequestList />
+      <EnrollmentRequestList enrollments={enrollments} />
     </div>
   );
 }

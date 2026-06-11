@@ -16,7 +16,6 @@ import { PersonalStep } from "./signup-steps/PersonalStep";
 import { ProfessionalStep } from "./signup-steps/ProfessionalStep";
 import { AuthHeader } from "./AuthHeader";
 import { useAuth } from "@/contexts/AuthContext";
-import { useUploadImage } from "@/hooks/use-media";
 import { authService } from "@/lib/api/auth.service";
 import { SignupFormData, signupSchema } from "@/lib/validations/auth";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -47,7 +46,6 @@ const step3Fields = [
 export function SignupForm() {
   const router = useRouter();
   const { signup } = useAuth();
-  const { uploadImage } = useUploadImage();
 
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -115,23 +113,14 @@ export function SignupForm() {
       const cred = await signup(data.email, data.password, data.name);
       if (!cred) throw new Error("Failed to create Firebase account");
 
-      // Step 2: Upload image
-      let uploadedImageUrl = "";
-      if (data.image instanceof File) {
-        const fileUploadRes = await uploadImage(data.image);
-        if (fileUploadRes.isCompleted && fileUploadRes.url) {
-          uploadedImageUrl = fileUploadRes.url;
-        }
-      }
-
-      // Step 3: Register in Backend
+      // Step 2: Register in Backend
       const registerPayload = {
         uid: cred.uid,
         name: data.name,
         email: data.email.toLowerCase(),
         phoneNumber: data.phoneNumber,
         gender: data.gender,
-        image: uploadedImageUrl,
+        image: "",
         dob: new Date(data.dob).toISOString(),
         address: data.address,
         city: data.city,
@@ -143,8 +132,9 @@ export function SignupForm() {
         qualification: data.qualification,
       };
 
-      await authService.registerStudent(registerPayload);
-      router.push(`/verify-email?email=${data.email}`);
+      const registerResponse = await authService.registerStudent(registerPayload);
+      const tokenParam = registerResponse.verificationToken ? `&token=${registerResponse.verificationToken}` : "";
+      router.push(`/verify-email?email=${data.email}${tokenParam}`);
     } catch (error: any) {
       console.error("Signup Error:", error);
 

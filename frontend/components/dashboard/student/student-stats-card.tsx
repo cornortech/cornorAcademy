@@ -1,8 +1,13 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockStudentData } from "@/lib/data";
 import { Award, BookOpen, Clock, TrendingUp } from "lucide-react";
 
-const StudentStatsCard = () => {
+interface Props {
+  enrollments: { id: string; course: { id: string; title: string } }[];
+}
+
+const StudentStatsCard = ({ enrollments }: Props) => {
+  const enrolledCount = enrollments.length;
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <Card className="border-border/50 bg-card/50 backdrop-blur">
@@ -13,10 +18,10 @@ const StudentStatsCard = () => {
           <BookOpen className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {mockStudentData.enrolledCourses}
-          </div>
-          <p className="text-xs text-muted-foreground">+1 from last month</p>
+          <div className="text-2xl font-bold">{enrolledCount}</div>
+          <p className="text-xs text-muted-foreground">
+            {enrolledCount > 0 ? "Active enrollments" : "No enrollments yet"}
+          </p>
         </CardContent>
       </Card>
 
@@ -26,9 +31,7 @@ const StudentStatsCard = () => {
           <Award className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {mockStudentData.completedCourses}
-          </div>
+          <div className="text-2xl font-bold">{0}</div>
           <p className="text-xs text-muted-foreground">Courses finished</p>
         </CardContent>
       </Card>
@@ -39,9 +42,7 @@ const StudentStatsCard = () => {
           <Clock className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {mockStudentData.totalLearningHours}
-          </div>
+          <div className="text-2xl font-bold">{0}</div>
           <p className="text-xs text-muted-foreground">Total time spent</p>
         </CardContent>
       </Card>
@@ -52,9 +53,7 @@ const StudentStatsCard = () => {
           <TrendingUp className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">
-            {mockStudentData.currentStreak}
-          </div>
+          <div className="text-2xl font-bold">{0}</div>
           <p className="text-xs text-muted-foreground">Days in a row</p>
         </CardContent>
       </Card>

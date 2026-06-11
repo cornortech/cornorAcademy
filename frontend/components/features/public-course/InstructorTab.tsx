@@ -7,12 +7,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Course } from "@/types";
+
 import { Users } from "lucide-react";
 import { getInitials } from "@/lib/utils";
 
 interface TabProps {
-  course: Course;
+  course: any;
 }
 
 export function InstructorTab({ course }: TabProps) {

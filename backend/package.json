@@ -8,9 +8,10 @@
   "main": "dist/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "generate": "npx prisma generate",
+    "generate": "npx prisma generate --schema=prisma/schema.prisma",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.18.0",
@@ -19,9 +20,11 @@
     "@ts-rest/open-api": "^3.52.1",
     "@types/cors": "^2.8.19",
     "@types/morgan": "^1.9.10",
+    "@types/pdfkit": "^0.17.6",
     "@types/stripe": "^8.0.416",
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.10.0",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
@@ -33,12 +36,13 @@
     "morgan": "^1.10.1",
     "nodemailer": "^7.0.5",
     "npx": "^10.2.2",
+    "pdfkit": "^0.19.1",
     "prisma": "^6.18.0",
+    "prisma-zod-generator": "^1.30.2",
     "stripe": "^18.3.0",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.1",
-    "zod": "^3.25.76",
-    "prisma-zod-generator": "^1.30.2"
+    "zod": "^3.25.76"
   },
   "devDependencies": {
     "@types/cookie-parser": "^1.4.9",

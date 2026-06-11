@@ -73,7 +73,7 @@ export function CourseTable({
                 <td className="px-6 py-4">
                   <div className="flex items-center space-x-1">
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={`/dashboard/admin/courses/${course.id}`}>
+                      <Link href={("/dashboard/admin/courses/" + course.id) as any}>
                         <Eye className="h-4 w-4" />
                       </Link>
                     </Button>
@@ -99,7 +99,7 @@ export function CourseTable({
                     />
 
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={`/dashboard/admin/courses/${course.id}`}>
+                      <Link href={("/dashboard/admin/courses/" + course.id) as any}>
                         <BarChart3 className="h-4 w-4" />
                       </Link>
                     </Button>
