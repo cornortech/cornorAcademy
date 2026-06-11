@@ -20,6 +20,7 @@ export function CourseManagement() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [courseType, setCourseType] = useState<"all" | "live" | "video">("all");
 
   // Teachers data for the dialog (you might want to fetch this from API too)
   const teachers = [
@@ -50,17 +51,19 @@ export function CourseManagement() {
 
   const error = queryError?.message || null;
 
-  // Filter courses based on search and status
+  // Filter courses based on search, status, and course type
   const filteredCourses = courses.filter((course) => {
     const matchesSearch = searchQuery
       ? course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         course.description.toLowerCase().includes(searchQuery.toLowerCase())
       : true;
 
-    // Note: Backend doesn't have status field, so we'll skip status filtering for now
-    // const matchesStatus = filterStatus !== "all" ? course.status === filterStatus : true;
+    const matchesType =
+      courseType === "all" ? true :
+      courseType === "live" ? course.isOngoing :
+      !course.isOngoing;
 
-    return matchesSearch;
+    return matchesSearch && matchesType;
   });
 
   const handleCreateCourse = async (formData: any) => {
@@ -152,6 +155,7 @@ export function CourseManagement() {
     completion: 0, // You might want to calculate this based on enrolled students
     rating: 4.5, // Default rating
     enrolled: 0, // Backend doesn't provide enrolled count
+    isOngoing: course.isOngoing,
     startTime: course.startDate.toISOString(),
     description: course.description,
     thumbnail: getCourseImage({
@@ -203,6 +207,23 @@ export function CourseManagement() {
           {error}
         </div>
       )}
+
+      {/* Course Type Tabs */}
+      <div className="flex gap-1 border-b border-border/50">
+        {(["all", "live", "video"] as const).map((type) => (
+          <button
+            key={type}
+            onClick={() => setCourseType(type)}
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+              courseType === type
+                ? "border-primary text-primary"
+                : "border-transparent text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            {type === "all" ? "All Courses" : type === "live" ? "Live Classes" : "Video Courses"}
+          </button>
+        ))}
+      </div>
 
       <SearchAndFilter
         searchQuery={searchQuery}

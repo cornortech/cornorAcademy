@@ -90,3 +90,10 @@ Manage platform-wide settings through an admin panel, including:
 - **Course Settings:** Certificate requirements, auto-archiving
 - **Payment Settings:** Currency, tax rate, refund policy
 - Settings are fetched globally via `SettingsContext` and used across the app (footer, contact page, pricing, etc.)
+
+### Teacher Management
+Admin panel for managing teacher accounts, including:
+- **Verification:** Approve or revoke teacher verification — only verified teachers can create courses
+- **CRUD:** Create, edit, view, and delete teacher profiles
+- **Filter & Search:** Search by name/email, filter by status
+- **Course Creation:** Teachers choose between **Live Class** (scheduled with meeting link) or **Video Course** (multi-part with Cloudinary uploads)

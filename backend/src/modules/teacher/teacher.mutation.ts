@@ -1,6 +1,7 @@
 import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { teacherContract } from "../../contract/teacher/teacher.contract";
 import prisma from "../../libs/db";
+import admin from "../../libs/admin";
 
 const createTeacher: AppRouteMutationImplementation<
     typeof teacherContract.createTeacher
@@ -51,9 +52,20 @@ const updateTeacher: AppRouteMutationImplementation<
     typeof teacherContract.updateTeacher
 > = async ({ req }) => {
     try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return { status: 401, body: { success: false, error: "Unauthorized" } };
+        }
+        const token = authHeader.split("Bearer ")[1];
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const caller = await prisma.admin.findFirst({ where: { email: decodedToken.email } });
+        if (!caller) {
+            return { status: 403, body: { success: false, error: "Admin access required" } };
+        }
+
         const { teacherId } = req.params;
 
-        const { name, email, image, bio, noOfYearsExperience, expertise, dob, gender, status } = req.body;
+        const { name, email, image, bio, noOfYearsExperience, expertise, dob, gender, status, isApproved } = req.body;
 
         const teacherExists = await prisma.teacher.findUnique({
             where: {
@@ -85,6 +97,7 @@ const updateTeacher: AppRouteMutationImplementation<
                 dob,
                 gender,
                 status,
+                isApproved,
             },
         });
 
@@ -112,6 +125,16 @@ const deleteTeacher:AppRouteMutationImplementation<
 typeof teacherContract.deleteTeacher
 > = async ({ req }) => {
     try {
+        const authHeader = req.headers.authorization;
+        if (!authHeader) {
+            return { status: 401, body: { success: false, error: "Unauthorized" } };
+        }
+        const token = authHeader.split("Bearer ")[1];
+        const decodedToken = await admin.auth().verifyIdToken(token);
+        const caller = await prisma.admin.findFirst({ where: { email: decodedToken.email } });
+        if (!caller) {
+            return { status: 403, body: { success: false, error: "Admin access required" } };
+        }
 
         const { 
             teacherId,

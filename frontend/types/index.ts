@@ -64,6 +64,7 @@ export interface Teacher extends BaseUser {
   bio?: string;
   noOfYearsExperience?: number;
   expertise?: string;
+  isApproved?: boolean;
   totalStudents?: number;
   totalVideos?: number;
   activeCourses?: string[]; // Array of Course IDs
@@ -124,8 +125,10 @@ export interface Course {
   thumbnail: string;
   category: CourseCategory;
   startDate: Date;
-  duration: number; // in weeks
+  duration: number;
   price: number;
+  isOngoing: boolean;
+  status: CourseStatus;
   curriculum: CourseCurriculumItem[];
   teacher: TeacherInfo | null;
   enrolledStudentsCount?: number;

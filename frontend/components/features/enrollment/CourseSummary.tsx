@@ -33,12 +33,12 @@ export function CourseSummary({ course }: CourseSummaryProps) {
           <div className="space-y-2">
             <div className="flex justify-between">
               <span className="text-muted-foreground line-through">
-                ${course.originalPrice}
+                Rs {course.originalPrice}
               </span>
               <Badge variant="destructive">25% OFF</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold">${course.price}</span>
+              <span className="text-2xl font-bold">Rs {course.price}</span>
               <span className="text-sm text-muted-foreground">
                 one-time payment
               </span>

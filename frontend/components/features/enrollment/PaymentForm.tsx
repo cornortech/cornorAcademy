@@ -194,20 +194,20 @@ export function PaymentForm({ course }: PaymentFormProps) {
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span>Course Price</span>
-                <span>${course.originalPrice}</span>
+                <span>Rs {course.originalPrice}</span>
               </div>
               <div className="flex justify-between text-green-600">
                 <span>Discount (25%)</span>
-                <span>-${course.originalPrice - course.price}</span>
+                <span>-Rs {course.originalPrice - course.price}</span>
               </div>
               <div className="flex justify-between">
                 <span>Tax</span>
-                <span>$0</span>
+                <span>Rs 0</span>
               </div>
               <Separator />
               <div className="flex justify-between font-semibold text-lg">
                 <span>Total</span>
-                <span>${course.price}</span>
+                <span>Rs {course.price}</span>
               </div>
             </div>
           </div>
@@ -247,7 +247,7 @@ export function PaymentForm({ course }: PaymentFormProps) {
           >
             {isProcessing
               ? "Processing Payment..."
-              : `Complete Enrollment - $${course.price}`}
+              : `Complete Enrollment - Rs ${course.price}`}
           </Button>
           {/* Money Back Guarantee */}
           <div className="text-center text-sm text-muted-foreground">

@@ -67,7 +67,7 @@ export function PaymentSummary({
           <div className="space-y-3">
             <div className="flex justify-between">
               <span className="text-muted-foreground">Course Price</span>
-              <span className="font-medium">${coursePrice}</span>
+              <span className="font-medium">Rs {coursePrice}</span>
             </div>
             <div className="flex justify-between">
               <span className="text-muted-foreground">Completed Payments</span>
@@ -75,7 +75,7 @@ export function PaymentSummary({
             </div>
             <div className="border-t pt-3 flex justify-between font-semibold">
               <span>Total Revenue</span>
-              <span className="text-lg">${totalRevenue}</span>
+              <span className="text-lg">Rs {totalRevenue}</span>
             </div>
           </div>
         </CardContent>

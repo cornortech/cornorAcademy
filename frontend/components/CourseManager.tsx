@@ -236,7 +236,7 @@ export function CourseManager() {
                   <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded">
                     {course.category}
                   </span>
-                  <span className="font-semibold">${course.price}</span>
+                  <span className="font-semibold">Rs {course.price}</span>
                 </div>
                 <div className="flex gap-2 mt-2">
                   <Button

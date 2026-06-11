@@ -25,6 +25,7 @@ export const getAllTeachersResponseSchema = z.array(
         dob: z.string(),
         gender: z.enum(['male', 'female', 'other']),
         status: z.enum(['registered', 'portalActivated', 'portalDeactivated', 'rejected']),
+        isApproved: z.boolean(),
         createdAt: z.date(),
         updatedAt: z.date(),
     }),
@@ -46,6 +47,7 @@ export const getTeacherByIdResponseSchema = z.object({
     dob: z.string(),
     gender: z.enum(['male', 'female', 'other']),
     status: z.enum(['registered', 'portalActivated', 'portalDeactivated', 'rejected']),
+    isApproved: z.boolean(),
     createdAt: z.date(),
     updatedAt: z.date(),
 });
@@ -62,8 +64,9 @@ export const updateTeacherSchema = z.object({
     noOfYearsExperience: z.number().optional(),
     expertise: z.string().optional(),
     dob: z.string().optional(),
-    gender: z.enum(['male', 'female', 'other']),
+    gender: z.enum(['male', 'female', 'other']).optional(),
     status: z.enum(['registered', 'portalActivated', 'portalDeactivated', 'rejected']).optional(),
+    isApproved: z.boolean().optional(),
 });
 
 export const deleteTeacherParamsSchema = z.object({

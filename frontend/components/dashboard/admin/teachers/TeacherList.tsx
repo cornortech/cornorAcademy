@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Eye, Edit, Trash2 } from "lucide-react";
+import { Eye, Edit, Trash2, ShieldCheck, ShieldX } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -18,12 +18,14 @@ interface TeacherListProps {
   teachers: any[];
   onUpdate: (id: number, data: any) => void;
   onDelete: (id: number) => void;
+  onToggleApproval: (id: string, current: boolean) => void;
 }
 
 export function TeacherList({
   teachers,
   onUpdate,
   onDelete,
+  onToggleApproval,
 }: TeacherListProps) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [deletingId, setDeletingId] = useState<number | null>(null);
@@ -53,16 +55,14 @@ export function TeacherList({
                     {teacher.email}
                   </p>
                   <div className="flex items-center space-x-2 mt-1">
-                    <Badge
-                      variant={
-                        teacher.status === "active" ? "default" : "secondary"
-                      }
-                      className="text-xs"
-                    >
-                      {teacher.status}
-                    </Badge>
                     <Badge variant="outline" className="text-xs">
                       {teacher.noOfYearsExperience} years
+                    </Badge>
+                    <Badge
+                      variant={teacher.isApproved ? "default" : "secondary"}
+                      className="text-xs"
+                    >
+                      {teacher.isApproved ? "Verified" : "Unverified"}
                     </Badge>
                   </div>
                 </div>
@@ -165,6 +165,19 @@ export function TeacherList({
                       setDeletingId(null);
                     }}
                   />
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => onToggleApproval(teacher.id, teacher.isApproved)}
+                    title={teacher.isApproved ? "Revoke verification" : "Verify teacher"}
+                  >
+                    {teacher.isApproved ? (
+                      <ShieldCheck className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <ShieldX className="h-4 w-4 text-muted-foreground" />
+                    )}
+                  </Button>
                 </div>
               </div>
             </div>

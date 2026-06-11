@@ -53,7 +53,7 @@ const MyTeachingCourses = ({ courses }: Props) => {
                       </div>
                       <div className="space-y-2">
                         <div className="text-sm font-medium">Price</div>
-                        <div className="text-sm text-muted-foreground">${course.price}</div>
+                        <div className="text-sm text-muted-foreground">Rs {course.price}</div>
                       </div>
                     </div>
 

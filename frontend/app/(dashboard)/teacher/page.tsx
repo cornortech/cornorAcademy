@@ -1,11 +1,13 @@
 "use client"
 
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { BookOpen } from "lucide-react";
 import { TeacherStats } from "@/components/dashboard/teacher/TeacherStats";
 import MyTeachingCourses from "@/components/dashboard/teacher/MyTeachingCourses";
 import { UpcomingClassesWidget } from "@/components/dashboard/teacher/UpcomingClassesWidget";
 import { TeacherProfileTab } from "@/components/dashboard/teacher/TeacherProfileTab";
+import { UnverifiedDialog } from "@/components/dashboard/teacher/UnverifiedDialog";
 import { useTeacherDashboard } from "@/hooks/use-teacher-dashboard";
 import { useSearchParams } from "next/navigation";
 
@@ -13,6 +15,23 @@ export default function TeacherDashboard() {
   const { teacher, courses, loading, error } = useTeacherDashboard();
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab") || "dashboard";
+  const [showVerifyDialog, setShowVerifyDialog] = useState(false);
+
+  const handleCreateCourse = () => {
+    if (teacher?.isApproved) {
+      window.location.href = "/teacher/create-video-course";
+    } else {
+      setShowVerifyDialog(true);
+    }
+  };
+
+  const handleScheduleLiveClass = () => {
+    if (teacher?.isApproved) {
+      window.location.href = "/teacher/schedule-live-class";
+    } else {
+      setShowVerifyDialog(true);
+    }
+  };
 
   if (loading) {
     return (
@@ -41,12 +60,12 @@ export default function TeacherDashboard() {
             </div>
             <div className="flex items-center justify-between mb-6">
               <div />
-              <Button variant="outline">
+              <Button variant="outline" onClick={handleCreateCourse}>
                 <BookOpen className="h-4 w-4 mr-1" />
                 Create New Course
               </Button>
             </div>
-            <MyTeachingCourses courses={courses} />
+                <MyTeachingCourses courses={courses.filter((c) => !c.isOngoing)} />
           </>
         );
 
@@ -57,8 +76,15 @@ export default function TeacherDashboard() {
               <h1 className="text-3xl font-bold mb-2">Upcoming Classes</h1>
               <p className="text-muted-foreground">Your scheduled classes and meetings.</p>
             </div>
+            <div className="flex items-center justify-between mb-6">
+              <div />
+              <Button variant="outline" onClick={handleScheduleLiveClass}>
+                <BookOpen className="h-4 w-4 mr-1" />
+                Schedule New Live Class
+              </Button>
+            </div>
             <div className="max-w-2xl">
-              <UpcomingClassesWidget />
+              <UpcomingClassesWidget courses={courses} />
             </div>
           </>
         );
@@ -84,17 +110,17 @@ export default function TeacherDashboard() {
               <div className="lg:col-span-2 space-y-6">
                 <div className="flex items-center justify-between">
                   <h2 className="text-2xl font-bold">My Courses</h2>
-                  <Button variant="outline">
+                  <Button variant="outline" onClick={handleCreateCourse}>
                     <BookOpen className="h-4 w-4 mr-1" />
                     Create New Course
                   </Button>
                 </div>
 
-                <MyTeachingCourses courses={courses} />
+            <MyTeachingCourses courses={courses.filter((c) => !c.isOngoing)} />
               </div>
 
               <aside className="space-y-6">
-                <UpcomingClassesWidget />
+                <UpcomingClassesWidget courses={courses} />
               </aside>
             </div>
           </>
@@ -102,5 +128,10 @@ export default function TeacherDashboard() {
     }
   };
 
-  return <>{renderContent()}</>;
+  return (
+    <>
+      <UnverifiedDialog open={showVerifyDialog} onOpenChange={setShowVerifyDialog} />
+      {renderContent()}
+    </>
+  );
 }

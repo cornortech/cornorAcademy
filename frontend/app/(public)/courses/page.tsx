@@ -92,7 +92,7 @@ export default async function CoursesPage() {
                   </div>
                   <div className="flex items-center justify-between gap-4">
                     <span className="text-lg font-semibold">
-                      ${course.price}
+                      Rs {course.price}
                     </span>
                     <Button asChild>
                       <Link href={`/courses/${course.id}`}>View Details</Link>

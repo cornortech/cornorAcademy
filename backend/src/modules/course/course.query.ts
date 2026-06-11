@@ -36,6 +36,8 @@ const getAllCourses: AppRouteQueryImplementation<
                 startDate: course.startDate,
                 duration: course.duration,
                 price: course.price,
+                isOngoing: course.isOngoing,
+                status: course.status,
                 curriculum: course.courseCurriculum.map((c) => ({
                     id: c.id,
                     title: c.title,
@@ -112,6 +114,8 @@ const getCourseById: AppRouteQueryImplementation<
                 startDate: courseById.startDate,
                 duration: courseById.duration,
                 price: courseById.price,
+                isOngoing: courseById.isOngoing,
+                status: courseById.status,
                 curriculum: courseById.courseCurriculum.map((c) => ({
                     id: c.id,
                     title: c.title,
@@ -180,6 +184,8 @@ const getCoursesByCategory: AppRouteQueryImplementation<
                 startDate: course.startDate,
                 duration: course.duration,
                 price: course.price,
+                isOngoing: course.isOngoing,
+                status: course.status,
                 curriculum: course.courseCurriculum.map((c) => ({
                     id: c.id,
                     title: c.title,
@@ -263,6 +269,8 @@ const getCoursesByTeacher: AppRouteQueryImplementation<
                 startDate: course.startDate,
                 duration: course.duration,
                 price: course.price,
+                isOngoing: course.isOngoing,
+                status: course.status,
                 curriculum: course.courseCurriculum.map((c) => ({
                     id: c.id,
                     title: c.title,
@@ -332,6 +340,8 @@ const getCoursesByStatus: AppRouteQueryImplementation<
                 startDate: course.startDate,
                 duration: course.duration,
                 price: course.price,
+                isOngoing: course.isOngoing,
+                status: course.status,
                 curriculum: course.courseCurriculum.map((c) => ({
                     id: c.id,
                     title: c.title,
@@ -416,6 +426,8 @@ const searchCourses: AppRouteQueryImplementation<
                 startDate: course.startDate,
                 duration: course.duration,
                 price: course.price,
+                isOngoing: course.isOngoing,
+                status: course.status,
                 curriculum: course.courseCurriculum.map((c) => ({
                     id: c.id,
                     title: c.title,

@@ -1,6 +1,5 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Teacher } from "@/types";
 import { getInitials } from "@/lib/utils";
@@ -29,7 +28,6 @@ export function TeacherProfileCard({
         <div>
           <h2 className="text-2xl font-bold">{user.name}</h2>
           <p className="text-muted-foreground">{user.email}</p>
-          <Badge className="mt-2">{user.status}</Badge>
         </div>
         <div className="pt-4 space-y-2 border-t border-border/50">
           <div className="flex justify-between">

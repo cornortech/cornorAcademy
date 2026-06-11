@@ -27,6 +27,13 @@ const createCourse: AppRouteMutationImplementation<
                 teacherId
             } = req.body;
 
+        if (teacherId) {
+            const teacher = await prisma.teacher.findUnique({ where: { id: teacherId } });
+            if (!teacher || !teacher.isApproved) {
+                return { status: 403, body: { success: false, error: "CONTACT ADMINISTRATION TO VERIFY YOUR ACCOUNT CORNOR ACADEMY" } };
+            }
+        }
+
         const admin = await prisma.admin.findFirst();
         const adminId = admin?.id || "";
 

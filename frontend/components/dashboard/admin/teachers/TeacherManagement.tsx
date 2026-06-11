@@ -2,11 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { UserPlus } from "lucide-react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { SearchAndFilter } from "../shared/SearchAndFilter";
 import { TeacherDialog } from "./TeacherDialog";
 import { TeacherList } from "./TeacherList";
 import { Teacher } from "@/types";
+import { updateTeacherApproval } from "@/lib/api/teacher.api";
 
 interface Props {
   teachers?: Teacher[];
@@ -31,6 +33,7 @@ export function TeacherManagement({ teachers: propTeachers }: Props) {
         dob: t.dob || "",
         gender: t.gender || "",
         status: t.status || "active",
+        isApproved: t.isApproved || false,
         courses: 0,
         avatar: "/placeholder.svg",
       })));
@@ -80,6 +83,18 @@ export function TeacherManagement({ teachers: propTeachers }: Props) {
     setTeachers(teachers.filter((t) => t.id !== id));
   };
 
+  const handleToggleApproval = async (id: string, current: boolean) => {
+    try {
+      await updateTeacherApproval(id, !current);
+      setTeachers(teachers.map((t) =>
+        t.id === id ? { ...t, isApproved: !current } : t
+      ));
+      toast.success(`Teacher ${!current ? "verified" : "unverified"} successfully`);
+    } catch {
+      toast.error("Failed to update teacher verification");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -114,6 +129,7 @@ export function TeacherManagement({ teachers: propTeachers }: Props) {
         teachers={filteredTeachers}
         onUpdate={handleUpdateTeacher}
         onDelete={handleDeleteTeacher}
+        onToggleApproval={handleToggleApproval}
       />
     </div>
   );

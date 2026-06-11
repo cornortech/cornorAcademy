@@ -30,6 +30,7 @@ export function CourseTable({
           <thead>
             <tr className="border-b border-border/50">
               <th className="px-6 py-3 text-left font-medium">Course Title</th>
+              <th className="px-6 py-3 text-left font-medium">Type</th>
               <th className="px-6 py-3 text-left font-medium">Instructor</th>
               <th className="px-6 py-3 text-left font-medium">Students</th>
               <th className="px-6 py-3 text-left font-medium">Price</th>
@@ -45,11 +46,16 @@ export function CourseTable({
                 className="border-b border-border/50 last:border-b-0 hover:bg-accent/30 transition-colors"
               >
                 <td className="px-6 py-4 font-medium">{course.title}</td>
+                <td className="px-6 py-4">
+                  <Badge variant={course.isOngoing ? "default" : "secondary"}>
+                    {course.isOngoing ? "Live" : "Video"}
+                  </Badge>
+                </td>
                 <td className="px-6 py-4 text-muted-foreground">
                   {course.instructor}
                 </td>
                 <td className="px-6 py-4">{course.enrolled}</td>
-                <td className="px-6 py-4">${course.price}</td>
+                <td className="px-6 py-4">Rs {course.price}</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center space-x-2">
                     <div className="w-12 h-2 bg-secondary rounded-full overflow-hidden">

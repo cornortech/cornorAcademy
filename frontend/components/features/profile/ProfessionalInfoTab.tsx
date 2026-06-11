@@ -54,10 +54,6 @@ export function ProfessionalInfoTab({
             <Label htmlFor="uid">UID</Label>
             <Input id="uid" value={formData.uid} disabled />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="status">Status</Label>
-            <Input id="status" value={formData.status} disabled />
-          </div>
         </div>
         <div className="space-y-2">
           <Label htmlFor="tch-password">Change Password</Label>

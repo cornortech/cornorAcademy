@@ -47,6 +47,9 @@ export const getAllCoursesResponseSchema = z.array(
         startDate: z.date(),
         duration: z.number(),
         price: z.number(),
+        isOngoing: z.boolean(),
+        status: z.enum(['upcoming', 'active', 'completed']),
+        enrolledStudentsCount: z.number(),
         curriculum: z.array(
             z.object({
                 id: z.string().uuid(),
@@ -87,6 +90,8 @@ export const getCourseByIdResponseSchema = z.object({
     startDate: z.date(),
     duration: z.number(),
     price: z.number(),
+    isOngoing: z.boolean(),
+    status: z.enum(['upcoming', 'active', 'completed']),
     curriculum: z.array(
         z.object({
             id: z.string().uuid(),
