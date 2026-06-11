@@ -24,6 +24,12 @@ import { authService } from "@/lib/api/auth.service";
 import Image from "next/image";
 import { APP_NAME } from "@/lib/config";
 
+interface SignatureCanvasApi {
+  clear: () => void;
+  toDataURL: () => string;
+  isEmpty: () => boolean;
+}
+
 const dataURLtoFile = (dataURL: string, filename: string): File => {
   const arr = dataURL.split(",");
   const mime = arr[0].match(/:(.*?);/)?.[1] || "image/png";
@@ -35,60 +41,26 @@ const dataURLtoFile = (dataURL: string, filename: string): File => {
 };
 
 export default function LegalAgreementPage() {
-  const {
-    user,
-    userRole,
-    userStatus,
-    updateUserStatus,
-    refreshUser,
-    refreshUserData,
-  } = useAuth();
+  const { user, userRole } = useAuth();
   const { uploadImage } = useUploadImage();
   const router = useRouter();
 
-  const [signatureURL, setSignatureURL] = useState<string | null>(null);
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const [agreedToPolicy, setAgreedToPolicy] = useState(false);
   const [agreedToRefund, setAgreedToRefund] = useState(false);
-  const [studentName, setStudentName] = useState("");
-  const [studentEmail, setStudentEmail] = useState("");
-  const [signaturePad, setSignaturePad] = useState<any>(null);
+  const [signaturePad, setSignaturePad] = useState<SignatureCanvasApi | null>(null);
   const [isSigned, setIsSigned] = useState(false);
   const [isAgreementSigned, setIsAgreementSigned] = useState(false);
+  const studentName = user?.displayName || "";
+  const studentEmail = user?.email || "";
 
   useEffect(() => {
     if (!user) {
       router.push("/login");
-      return;
     }
+  }, [router, user]);
 
-    setStudentName(user.displayName || "");
-    setStudentEmail(user.email || "");
-
-    if (!userStatus || !userRole) return;
-
-    if (userStatus === "portalActivated") {
-      redirectToDashboard();
-    }
-  }, [user, userStatus, userRole]);
-
-  const redirectToDashboard = () => {
-    if (!userRole) return;
-
-    switch (userRole) {
-      case "student":
-        router.push("/student");
-        break;
-      case "teacher":
-        router.push("/teacher");
-        break;
-      case "admin":
-        router.push("/admin");
-        break;
-    }
-  };
-
-  const handleSignature = useCallback((canvas: any) => {
+  const handleSignature = useCallback((canvas: SignatureCanvasApi) => {
     setSignaturePad(canvas);
   }, []);
 
@@ -122,15 +94,9 @@ export default function LegalAgreementPage() {
       const uploadResult = await uploadImage(file);
 
       if (uploadResult.url) {
-        setSignatureURL(uploadResult.url);
-
         try {
           const res = await authService.uploadLegalAgreement(uploadResult.url);
-          const profileRes = await authService.getUserProfile();
-          profileRes.role;
           if (res.success) {
-            updateUserStatus("portalActivated");
-            await refreshUserData();
             toast.success(res.message || "Agreement signed successfully");
             setIsAgreementSigned(true);
           } else {

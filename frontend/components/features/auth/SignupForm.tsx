@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { AccountStep } from "./signup-steps/AccountStep";
 import { PersonalStep } from "./signup-steps/PersonalStep";
 import { ProfessionalStep } from "./signup-steps/ProfessionalStep";
+import { TeacherProfessionalStep } from "./signup-steps/TeacherProfessionalStep";
 import { AuthHeader } from "./AuthHeader";
 import { useAuth } from "@/contexts/AuthContext";
 import { authService } from "@/lib/api/auth.service";
@@ -24,7 +25,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form } from "@/components/ui/form";
 
-const step1Fields = ["name", "email", "password", "confirmPassword"] as const;
+const step1Fields = ["role", "name", "email", "password", "confirmPassword"] as const;
 const step2Fields = [
   "phoneNumber",
   "gender",
@@ -35,10 +36,18 @@ const step2Fields = [
   "pincode",
   "country",
 ] as const;
-const step3Fields = [
+const studentStep3Fields = [
   "educationInstitute",
   "qualification",
   "about",
+  "agreeToTerms",
+  "image",
+] as const;
+
+const teacherStep3Fields = [
+  "bio",
+  "expertise",
+  "noOfYearsExperience",
   "agreeToTerms",
   "image",
 ] as const;
@@ -54,6 +63,7 @@ export function SignupForm() {
   const form = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
+      role: "student",
       name: "",
       email: "",
       password: "",
@@ -69,17 +79,25 @@ export function SignupForm() {
       about: "",
       educationInstitute: "",
       qualification: "",
+      bio: "",
+      expertise: "",
+      noOfYearsExperience: "",
       agreeToTerms: false,
       image: undefined,
     },
-    mode: "onBlur",
+    mode: "onSubmit",
   });
 
-  const handleNext = async () => {
-    let fieldsToValidate: any[] = [];
-    if (step === 1) fieldsToValidate = [...step1Fields];
-    if (step === 2) fieldsToValidate = [...step2Fields];
+  const watchedRole = form.watch("role");
+  const step3Fields = watchedRole === "teacher" ? teacherStep3Fields : studentStep3Fields;
 
+  const handleNext = async () => {
+    if (step === 1 && !watchedRole) {
+      setSubmitError("Please select your role");
+      return;
+    }
+
+    const fieldsToValidate = step === 1 ? [...step1Fields] : [...step2Fields];
     const isStepValid = await form.trigger(fieldsToValidate);
 
     if (isStepValid) {
@@ -109,36 +127,54 @@ export function SignupForm() {
     setSubmitError("");
 
     try {
-      // Step 1: Create Firebase user
+      // Create Firebase user
       const cred = await signup(data.email, data.password, data.name);
       if (!cred) throw new Error("Failed to create Firebase account");
 
-      // Step 2: Register in Backend
-      const registerPayload = {
-        uid: cred.uid,
-        name: data.name,
-        email: data.email.toLowerCase(),
-        phoneNumber: data.phoneNumber,
-        gender: data.gender,
-        image: "",
-        dob: new Date(data.dob).toISOString(),
-        address: data.address,
-        city: data.city,
-        district: data.district,
-        pincode: data.pincode,
-        country: data.country,
-        about: data.about || "",
-        educationInstitute: data.educationInstitute,
-        qualification: data.qualification,
-      };
+      const email = data.email.toLowerCase();
 
-      const registerResponse = await authService.registerStudent(registerPayload);
-      const tokenParam = registerResponse.verificationToken ? `&token=${registerResponse.verificationToken}` : "";
-      router.push(`/verify-email?email=${data.email}${tokenParam}`);
+      if (data.role === "student") {
+        const registerPayload = {
+          uid: cred.uid,
+          name: data.name,
+          email,
+          phoneNumber: data.phoneNumber,
+          gender: data.gender,
+          image: "",
+          dob: new Date(data.dob).toISOString(),
+          address: data.address,
+          city: data.city,
+          district: data.district,
+          pincode: data.pincode,
+          country: data.country,
+          about: data.about || "",
+          educationInstitute: data.educationInstitute || "",
+          qualification: data.qualification || "",
+        };
+
+        const registerResponse = await authService.registerStudent(registerPayload);
+        const tokenParam = registerResponse.verificationToken ? `&token=${registerResponse.verificationToken}` : "";
+        router.push(`/verify-email?email=${email}${tokenParam}`);
+      } else {
+        const registerPayload = {
+          uid: cred.uid,
+          name: data.name,
+          email,
+          image: "",
+          bio: data.bio || "",
+          noOfYearsExperience: data.noOfYearsExperience || "",
+          expertise: data.expertise || "",
+          dob: new Date(data.dob).toISOString(),
+          gender: data.gender,
+        };
+
+        const registerResponse = await authService.registerTeacher(registerPayload);
+        const tokenParam = registerResponse.verificationToken ? `&token=${registerResponse.verificationToken}` : "";
+        router.push(`/verify-email?email=${email}${tokenParam}`);
+      }
     } catch (error: any) {
       console.error("Signup Error:", error);
 
-      // Handle Firebase/Backend errors
       let msg = "Failed to create account.";
       if (error.code === "auth/email-already-in-use")
         msg = "Email already in use.";
@@ -158,7 +194,7 @@ export function SignupForm() {
   const stepDescriptions = [
     "Set up your login and role",
     "Tell us more about yourself",
-    "Share your qualifications and experience",
+    watchedRole === "teacher" ? "Share your teaching experience" : "Share your qualifications and experience",
   ];
 
   return (
@@ -200,7 +236,13 @@ export function SignupForm() {
             >
               {step === 1 && <AccountStep control={form.control} />}
               {step === 2 && <PersonalStep control={form.control} />}
-              {step === 3 && <ProfessionalStep control={form.control} />}
+              {step === 3 && (
+                watchedRole === "teacher" ? (
+                  <TeacherProfessionalStep control={form.control} />
+                ) : (
+                  <ProfessionalStep control={form.control} />
+                )
+              )}
 
               <div className="flex gap-3 mt-6">
                 {step > 1 && (

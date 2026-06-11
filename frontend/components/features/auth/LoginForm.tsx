@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle, Loader2, Mail } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 import Link from "next/link";
 import { PasswordInput } from "./PasswordInput";
 import { useForm } from "react-hook-form";
@@ -33,11 +33,21 @@ const isDemoAccount = (email: string, password: string) =>
     (demo) => demo.email === email && demo.password === password
   );
 
+interface LoginError {
+  code?: string;
+  message?: string;
+  response?: {
+    status?: number;
+    data?: {
+      error?: string;
+    };
+  };
+}
+
 type VerificationState =
   | "none"
   | "not-verified"
-  | "expired"
-  | "account-pending";
+  | "expired";
 
 export function LoginForm() {
   const router = useRouter();
@@ -46,7 +56,6 @@ export function LoginForm() {
     useState<VerificationState>("none");
   const [verificationEmail, setVerificationEmail] = useState("");
   const [resendingEmail, setResendingEmail] = useState(false);
-  const [accountStatus, setAccountStatus] = useState<string>("");
 
   const {
     register,
@@ -74,8 +83,9 @@ export function LoginForm() {
 
       toast.success("Verification email sent! Check your inbox.");
       setVerificationState("not-verified");
-    } catch (error: any) {
-      if (error.code === "auth/too-many-requests") {
+    } catch (error: unknown) {
+      const loginError = error as LoginError;
+      if (loginError.code === "auth/too-many-requests") {
         toast.error("Too many attempts. Please try again later.");
       } else {
         toast.error("Failed to resend email. Please try again.");
@@ -88,7 +98,6 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormData) => {
     setIsLoading(true);
     setVerificationState("none");
-    setAccountStatus("");
 
     try {
       // Step 1: Firebase authentication
@@ -128,57 +137,43 @@ export function LoginForm() {
       // Step 4: Handle backend response
       const { status, redirectionUrl } = response.data;
 
-      // Check account status
-      if (status === "registered") {
-        setVerificationState("account-pending");
-        setAccountStatus("Your account is pending admin approval.");
-        router.push("/legal-agreement");
-        return;
-      }
-
       if (status === "portalDeactivated") {
         toast.error("Your account has been deactivated. Contact admin.");
-        router.push("/legal-agreement");
+        return;
       }
 
       if (status === "rejected") {
         toast.error("Your registration was rejected. Contact admin.");
-        router.push("/legal-agreement");
+        return;
       }
 
       // Step 5: Successful login - Use backend's redirectionUrl
       toast.success("Login successful!");
       router.push(redirectionUrl);
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error("Login error:", error);
 
+      const loginError = error as LoginError;
       let errorMessage = "Failed to login. Please try again.";
 
       // Handle specific Firebase errors
       if (
-        error.code === "auth/wrong-password" ||
-        error.code === "auth/user-not-found"
+        loginError.code === "auth/wrong-password" ||
+        loginError.code === "auth/user-not-found"
       ) {
         errorMessage = "Invalid email or password.";
-      } else if (error.code === "auth/too-many-requests") {
+      } else if (loginError.code === "auth/too-many-requests") {
         errorMessage = "Too many failed attempts. Please try again later.";
-      } else if (error.code === "auth/network-request-failed") {
+      } else if (loginError.code === "auth/network-request-failed") {
         errorMessage = "Network error. Check your connection.";
-      } else if (error.response?.status === 404) {
+      } else if (loginError.response?.status === 404) {
         // Backend says user doesn't exist in database
         errorMessage = "Account not found. Please sign up first.";
-      } else if (error.response?.status === 403) {
+      } else if (loginError.response?.status === 403) {
         // Account exists but has status issues
-        const backendError = error.response.data.error;
-        if (backendError.includes("not activated")) {
-          setVerificationState("account-pending");
-          setAccountStatus(backendError);
-          router.push("/legal-agreement");
-          return;
-        }
-        errorMessage = backendError;
-      } else if (error.response?.data?.error) {
-        errorMessage = error.response.data.error;
+        errorMessage = loginError.response.data?.error || errorMessage;
+      } else if (loginError.response?.data?.error) {
+        errorMessage = loginError.response.data.error;
       }
 
       toast.error(errorMessage);
@@ -223,22 +218,6 @@ export function LoginForm() {
                   </>
                 )}
               </Button>
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {verificationState === "account-pending" && (
-          <Alert className="mb-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
-            <AlertCircle className="h-4 w-4 text-yellow-600" />
-            <AlertDescription className="text-sm">
-              <p className="font-semibold mb-2">Account not activated, yet.</p>
-              <p className="text-muted-foreground mb-2">
-                {accountStatus || "Your account is awaiting admin approval."}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                You'll be redirected to agreement signing page to activate your
-                portal.
-              </p>
             </AlertDescription>
           </Alert>
         )}
@@ -293,7 +272,7 @@ export function LoginForm() {
           </Button>
 
           <div className="text-center text-sm">
-            Don't have an account?{" "}
+            Don&apos;t have an account?{" "}
             <Link href="/signup" className="text-primary hover:underline">
               Sign up
             </Link>

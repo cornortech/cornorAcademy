@@ -38,6 +38,44 @@ router.post("/register", async (req: Request, res: Response) => {
   }
 });
 
+router.post("/register/teacher", async (req: Request, res: Response) => {
+  try {
+    const { uid, name, email, image, bio, noOfYearsExperience, expertise, dob, gender } = req.body;
+
+    if (!uid || !name || !email || !bio || noOfYearsExperience === undefined || !expertise || !dob || !gender) {
+      return res.status(400).json({ success: false, error: "Missing required fields" });
+    }
+
+    const existingUser = await prisma.teacher.findFirst({ where: { OR: [{ uid }, { email }] } });
+    if (existingUser) {
+      return res.status(400).json({ success: false, error: "Teacher with same uid or email already exists" });
+    }
+
+    const studentWithEmail = await prisma.student.findUnique({ where: { email } });
+    if (studentWithEmail) {
+      return res.status(400).json({ success: false, error: "Email already registered as a student" });
+    }
+
+    const newTeacher = await prisma.teacher.create({
+      data: { uid, name, email, image: image || "", bio, noOfYearsExperience: parseInt(noOfYearsExperience), expertise, dob, gender: gender.toLowerCase() },
+    });
+
+    let verificationToken = "";
+    try {
+      verificationToken = await createVerificationToken(email);
+      const verificationLink = `${process.env.FRONTEND_URL || "http://localhost:3000"}/verify-email?token=${verificationToken}`;
+      await sendVerificationEmail(email, name, verificationLink);
+    } catch (emailError) {
+      console.error("Failed to send verification email:", emailError);
+    }
+
+    return res.status(201).json({ success: true, teacherId: newTeacher.id, verificationToken, message: "Account created." });
+  } catch (error) {
+    console.error("Error creating teacher:", error);
+    return res.status(500).json({ success: false, error: "Internal server error" });
+  }
+});
+
 router.post("/login", async (req: Request, res: Response) => {
   try {
     const { email } = req.body;
@@ -62,7 +100,7 @@ router.post("/login", async (req: Request, res: Response) => {
     if (role === "student") {
       switch (user.status) {
         case "registered":
-          return res.status(200).json({ uid: user.uid, id: user.id, name: user.name, email: user.email, role: "student", status: user.status, redirectionUrl: "/legal-agreement" });
+          break;
         case "portalActivated":
           break;
         case "portalDeactivated":

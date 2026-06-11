@@ -45,8 +45,24 @@ export const professionalStepSchema = z.object({
   }),
 });
 
+export const teacherProfessionalStepSchema = z.object({
+  image: z
+    .any()
+    .refine((file) => file instanceof File, "Profile image is required"),
+  bio: z.string().min(10, "Bio must be at least 10 characters"),
+  expertise: z.string().min(2, "Expertise is required"),
+  noOfYearsExperience: z.string().refine(
+    (val) => val.trim() !== "" && !isNaN(Number(val)) && Number(val) >= 0,
+    "Valid years of experience is required"
+  ),
+  agreeToTerms: z.boolean().refine((val) => val === true, {
+    message: "You must agree to the terms and conditions",
+  }),
+});
+
 export const signupSchema = z
   .object({
+    role: z.enum(["student", "teacher"]),
     name: z.string().min(2, "Name must be at least 2 characters"),
     email: z.string().email("Invalid email address"),
     password: z
@@ -69,8 +85,11 @@ export const signupSchema = z
     pincode: z.string().min(4, "Pincode is required"),
     country: z.string().min(2, "Country is required"),
     about: z.string().optional(),
-    educationInstitute: z.string().min(2, "Institute name is required"),
-    qualification: z.string().min(2, "Qualification is required"),
+    educationInstitute: z.string().optional(),
+    qualification: z.string().optional(),
+    bio: z.string().optional(),
+    expertise: z.string().optional(),
+    noOfYearsExperience: z.string().optional(),
     agreeToTerms: z
       .boolean()
       .refine((val) => val === true, { message: "You must agree to the terms and conditions." }),
@@ -78,6 +97,26 @@ export const signupSchema = z
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
+  })
+  .superRefine((data, ctx) => {
+    if (data.role === "student") {
+      if (!data.educationInstitute || data.educationInstitute.length < 2) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Education institute is required", path: ["educationInstitute"] });
+      }
+      if (!data.qualification || data.qualification.length < 2) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Qualification is required", path: ["qualification"] });
+      }
+    } else if (data.role === "teacher") {
+      if (!data.bio || data.bio.length < 10) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Bio must be at least 10 characters", path: ["bio"] });
+      }
+      if (!data.expertise || data.expertise.length < 2) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Expertise is required", path: ["expertise"] });
+      }
+      if (!data.noOfYearsExperience || data.noOfYearsExperience.trim() === "" || isNaN(Number(data.noOfYearsExperience)) || Number(data.noOfYearsExperience) < 0) {
+        ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Valid years of experience is required", path: ["noOfYearsExperience"] });
+      }
+    }
   });
 
 export const loginSchema = z.object({

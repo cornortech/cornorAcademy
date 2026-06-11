@@ -18,7 +18,6 @@ const uploadLegalAgreement: AppRouteMutationImplementation<typeof authContract.u
     }
 
     await prisma.courseAgreement.create({ data: { agreementURL, student: { connect: { id: studentId } } } });
-    await prisma.student.update({ where: { id: studentId }, data: { status: "portalActivated" } });
 
     return { status: 201, body: { success: true, message: "Agreement Uploaded Successfully" } };
   } catch (error) {

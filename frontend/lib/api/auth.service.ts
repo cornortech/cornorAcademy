@@ -44,6 +44,25 @@ export interface RegisterResponse {
   verificationToken?: string;
 }
 
+export interface RegisterTeacherPayload {
+  uid: string;
+  name: string;
+  email: string;
+  image?: string;
+  bio: string;
+  noOfYearsExperience: string;
+  expertise: string;
+  dob: string;
+  gender: "male" | "female" | "other";
+}
+
+export interface RegisterTeacherResponse {
+  success: boolean;
+  message: string;
+  teacherId: string;
+  verificationToken?: string;
+}
+
 export interface UpdateStudentPayload extends Partial<RegisterStudentPayload> {}
 
 class AuthService {
@@ -62,6 +81,25 @@ class AuthService {
       return response.data;
     } catch (error: any) {
       console.error("Registration API error:", error.response?.data || error);
+      throw error;
+    }
+  }
+
+  async registerTeacher(
+    payload: RegisterTeacherPayload
+  ): Promise<RegisterTeacherResponse> {
+    try {
+      console.log("Calling backend API:", "/auth/register/teacher");
+      console.log("Payload:", payload);
+
+      const response = await axiosInstance.post<RegisterTeacherResponse>(
+        "/auth/register/teacher",
+        payload
+      );
+      console.log("Backend response:", response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error("Teacher registration API error:", error.response?.data || error);
       throw error;
     }
   }
