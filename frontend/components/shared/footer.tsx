@@ -1,10 +1,15 @@
-import { APP_NAME } from "@/lib/config";
+"use client";
 import Link from "next/link";
 import Image from "next/image";
-import { companyInfo } from "@/lib/data";
 import { Facebook, Instagram, Mail } from "lucide-react";
+import { useSettings } from "@/contexts/SettingsContext";
 
 const Footer = () => {
+  const { settings } = useSettings();
+  const platformName = settings?.platformName || "Cornor Academy";
+  const email = settings?.supportEmail || "info@cornor.academy";
+  const facebookUrl = settings?.facebookUrl || "https://facebook.com/cornoracademy";
+  const instagramUrl = settings?.instagramUrl || "https://instagram.com/cornor.academy";
   return (
     <footer className="border-t border-border/40 py-12">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -24,7 +29,7 @@ const Footer = () => {
                   className="object-contain"
                 />
               </div>
-              <span className="text-xl font-bold">{APP_NAME}</span>
+              <span className="text-xl font-bold">{platformName}</span>
             </div>
             <p className="text-muted-foreground text-sm mb-4">
               {
@@ -35,29 +40,32 @@ const Footer = () => {
             <div className="flex items-center gap-2 mb-4">
               <Mail className="h-4 w-4 text-muted-foreground" />
               <a
-                href={`mailto:${companyInfo.email}`}
+                href={`mailto:${email}`}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                {companyInfo.email}
+                {email}
               </a>
             </div>
 
             <div className="flex gap-3">
-              {companyInfo.socialLinks.map((social) => {
-                const Icon = social.icon === "facebook" ? Facebook : Instagram;
-                return (
-                  <a
-                    key={social.name}
-                    href={social.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-muted-foreground hover:text-primary transition-colors"
-                    aria-label={social.name}
-                  >
-                    <Icon className="h-5 w-5" />
-                  </a>
-                );
-              })}
+              <a
+                href={facebookUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+                aria-label="Facebook"
+              >
+                <Facebook className="h-5 w-5" />
+              </a>
+              <a
+                href={instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-muted-foreground hover:text-primary transition-colors"
+                aria-label="Instagram"
+              >
+                <Instagram className="h-5 w-5" />
+              </a>
             </div>
           </div>
           {/* ===== EndCompany Info ===== */}
@@ -76,7 +84,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/teachers"
+                  href={"/teachers" as any}
                   className="hover:text-foreground transition-colors"
                 >
                   {"For Teachers"}
@@ -84,7 +92,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/enterprise"
+                  href={"/enterprise" as any}
                   className="hover:text-foreground transition-colors"
                 >
                   {"Enterprise"}
@@ -92,7 +100,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link
-                  href="/pricing"
+                  href={"/pricing" as any}
                   className="hover:text-foreground transition-colors"
                 >
                   {"Pricing"}
@@ -107,12 +115,12 @@ const Footer = () => {
             <h3 className="font-semibold mb-4">{"Support"}</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
-                <Link
-                  href="/help"
-                  className="hover:text-foreground transition-colors"
-                >
-                  {"Help Center"}
-                </Link>
+                  <Link
+                    href={"/help" as any}
+                    className="hover:text-foreground transition-colors"
+                  >
+                    {"Help Center"}
+                  </Link>
               </li>
               <li>
                 <Link
@@ -131,12 +139,12 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/community"
-                  className="hover:text-foreground transition-colors"
-                >
-                  {"Community"}
-                </Link>
+                  <Link
+                    href={"/community" as any}
+                    className="hover:text-foreground transition-colors"
+                  >
+                    {"Community"}
+                  </Link>
               </li>
               {/* <li>
                 <Link
@@ -163,28 +171,28 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="/careers"
-                  className="hover:text-foreground transition-colors"
-                >
-                  {"Careers"}
-                </Link>
+                  <Link
+                    href={"/careers" as any}
+                    className="hover:text-foreground transition-colors"
+                  >
+                    {"Careers"}
+                  </Link>
               </li>
               <li>
-                <Link
-                  href="/privacy"
-                  className="hover:text-foreground transition-colors"
-                >
-                  {"Privacy Policy"}
-                </Link>
+                  <Link
+                    href={"/privacy" as any}
+                    className="hover:text-foreground transition-colors"
+                  >
+                    {"Privacy Policy"}
+                  </Link>
               </li>
               <li>
-                <Link
-                  href="/terms"
-                  className="hover:text-foreground transition-colors"
-                >
-                  {"Terms of Service"}
-                </Link>
+                  <Link
+                    href={"/terms" as any}
+                    className="hover:text-foreground transition-colors"
+                  >
+                    {"Terms of Service"}
+                  </Link>
               </li>
             </ul>
           </div>
@@ -195,7 +203,7 @@ const Footer = () => {
 
         {/* ===== FOOTER BOTTOM ===== */}
         <div className="border-t border-border/40 mt-8 pt-8 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} {APP_NAME}. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {platformName}. All rights reserved.</p>
         </div>
         {/* ===== END FOOTER BOTTOM ===== */}
 

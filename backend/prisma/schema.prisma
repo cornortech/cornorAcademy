@@ -282,3 +282,18 @@ model VerificationToken {
   @@index([email])
   @@index([token])
 }
+
+model SystemSettings {
+  id                 String   @id @default("system-settings-id")
+  platformName       String   @default("Cornor Academy")
+  supportEmail       String   @default("info@cornor.academy")
+  supportPhone       String   @default("+977 9801234567")
+  facebookUrl        String   @default("https://facebook.com/cornoracademy")
+  instagramUrl       String   @default("https://instagram.com/cornor.academy")
+  allowRefunds       Boolean  @default(true)
+  requireCertificate Boolean  @default(true)
+  autoArchive        Boolean  @default(false)
+  currency           String   @default("npr")
+  taxRate            Float    @default(0)
+  updatedAt          DateTime @updatedAt
+}

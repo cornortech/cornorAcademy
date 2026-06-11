@@ -15,8 +15,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useSettings } from "@/contexts/SettingsContext";
 
 export default function ContactPage() {
+  const { settings } = useSettings();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -57,12 +59,12 @@ export default function ContactPage() {
                   />
                 </div>
                 <div>
-                  <p className="text-xl font-bold text-foreground">Cornor Academy</p>
+                  <p className="text-xl font-bold text-foreground">{settings?.platformName || "Cornor Academy"}</p>
                 </div>
               </div>
               <h1 className="text-4xl font-bold tracking-tight mb-4">Talk to a learning advisor</h1>
               <p className="text-lg text-muted-foreground leading-8">
-                Need help choosing the right course, onboarding your team, or learning about pricing? Our Cornor Academy specialists are ready to match you with the best path.
+                Need help choosing the right course, onboarding your team, or learning about pricing? Our {settings?.platformName || "Cornor Academy"} specialists are ready to match you with the best path.
               </p>
             </div>
             {/* ===== End Logo and Title ===== */}
@@ -200,7 +202,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="font-semibold">Email</p>
-                      <p className="text-sm text-muted-foreground">support@cornoracademy.com</p>
+                      <p className="text-sm text-muted-foreground">{settings?.supportEmail || "support@cornoracademy.com"}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">
@@ -209,7 +211,7 @@ export default function ContactPage() {
                     </div>
                     <div>
                       <p className="font-semibold">Phone</p>
-                      <p className="text-sm text-muted-foreground">+977 9828750115</p>
+                      <p className="text-sm text-muted-foreground">{settings?.supportPhone || "+977 9828750115"}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-4">

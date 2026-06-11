@@ -19,8 +19,10 @@ import Footer from "@/components/shared/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { landingStats } from "@/lib/data";
+import { useSettings } from "@/contexts/SettingsContext";
 
 export default function AboutPage() {
+  const { settings } = useSettings();
   const successMetrics = landingStats;
 
   const coreValues = [
@@ -69,7 +71,7 @@ export default function AboutPage() {
           <div className="rounded-2xl border border-border/50 bg-card/50 p-6 mb-6">
             <div className="space-y-4 text-muted-foreground leading-8">
               <p>
-                Cornor Academy started with a clear goal: make technology education useful,
+                {settings?.platformName || "Cornor Academy"} started with a clear goal: make technology education useful,
                 easy to follow, and aligned with the needs of modern learners and employers.
               </p>
               <p>
@@ -176,7 +178,7 @@ export default function AboutPage() {
         {/* ===== Why Choose Us ===== */}
         <section className="py-16">
           <div className="mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">Why Choose Cornor Academy?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-3">Why Choose {settings?.platformName || "Cornor Academy"}?</h2>
             <p className="text-muted-foreground text-lg">
               Stand out with skills that matter
             </p>
@@ -263,7 +265,7 @@ export default function AboutPage() {
           <div className="max-w-2xl mx-auto text-center rounded-3xl border border-border/70 bg-primary/5 p-10 md:p-16 shadow-sm backdrop-blur-sm">
             <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to get started?</h2>
             <p className="text-lg text-muted-foreground mb-8">
-              Join thousands of learners already transforming their careers at Cornor Academy.
+              Join thousands of learners already transforming their careers at {settings?.platformName || "Cornor Academy"}.
               Choose a course and begin your learning journey today.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
