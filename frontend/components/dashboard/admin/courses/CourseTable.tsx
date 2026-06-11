@@ -9,8 +9,8 @@ import { DeleteConfirmDialog } from "../shared/DeleteConfirmDialog";
 
 interface CourseTableProps {
   courses: any[];
-  onUpdate: (id: number, data: any) => void;
-  onDelete: (id: number) => void;
+  onUpdate: (id: string, data: any) => void;
+  onDelete: (id: string) => void;
   teachers?: any[];
 }
 
@@ -20,8 +20,8 @@ export function CourseTable({
   onDelete,
   teachers = [],
 }: CourseTableProps) {
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [deletingId, setDeletingId] = useState<number | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur overflow-hidden">

@@ -139,7 +139,7 @@ export function CourseManagement() {
   };
 
   const transformedCourses = filteredCourses.map((course) => ({
-    id: parseInt(course.id),
+    id: course.id,
     title: course.title,
     instructor: course.teacher?.name || "No instructor",
     instructorId: course.teacher?.id || "",
@@ -240,10 +240,10 @@ export function CourseManagement() {
       ) : (
         <CourseTable
           courses={transformedCourses}
-          onUpdate={(id: number, formData: any) =>
-            handleUpdateCourse(id.toString(), formData)
+          onUpdate={(id: string, formData: any) =>
+            handleUpdateCourse(id, formData)
           }
-          onDelete={(id: number) => handleDeleteCourse(id.toString())}
+          onDelete={(id: string) => handleDeleteCourse(id)}
           teachers={teachers}
         />
       )}
