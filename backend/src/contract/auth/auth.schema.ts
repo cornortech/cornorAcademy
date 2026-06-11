@@ -32,6 +32,7 @@ export const loginResponseSchema = z.object({
     .enum(["registered", "portalActivated", "portalDeactivated", "rejected"])
     .optional(),
   role: z.enum(["student", "teacher", "admin"]),
+  redirectionUrl: z.string().optional(),
 });
 
 export const logout = z.object({});
@@ -62,6 +63,18 @@ export const updateStudentDetailsSchema = z.object({
   about: z.string().optional(),
   educationInstitute: z.string().optional(),
   qualification: z.string().optional(),
+});
+
+export const registerTeacherSchema = z.object({
+  uid: z.string().min(1),
+  name: z.string().min(1),
+  email: z.string().email(),
+  image: z.string(),
+  bio: z.string(),
+  noOfYearsExperience: z.number().int().min(0),
+  expertise: z.string(),
+  dob: z.string(),
+  gender: z.enum(["male", "female", "other"]),
 });
 
 export const uploadLegalAgreementSchema = z.object({

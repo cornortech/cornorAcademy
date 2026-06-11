@@ -12,7 +12,8 @@ export type CourseStatus =
   | "completed"
   | "draft"
   | "in-progress"
-  | "upcoming";
+  | "upcoming"
+  | "portalActivated";
 export type CourseLevel = "beginner" | "intermediate" | "advanced";
 
 export interface LoginResponse {
@@ -164,7 +165,7 @@ export interface TeachingCourse {
   completedLessons: number;
   avgProgress: number;
   nextClass: string;
-  status: "active" | "completed";
+  status: "active" | "completed" | "portalActivated";
   startTime: string;
 }
 
@@ -228,7 +229,7 @@ export interface AdminManagedCourse {
   instructorId: number;
   students: number;
   price: number;
-  status: "active" | "completed" | "draft";
+  status: "active" | "completed" | "draft" | "portalActivated";
   created: string;
   completion: number;
   rating: number;
@@ -246,6 +247,7 @@ export interface StudentProgressRecord {
   attendance: number;
   assignments: string;
   image: string;
+  avatar: string;
 }
 
 export interface UploadedResource {
@@ -312,19 +314,23 @@ export interface Certificate {
 // Enrolled Course Types
 export interface EnrolledCourseItem {
   id: string;
+  status: "requested" | "approved" | "rejected";
+  paymentURL?: string;
   course: {
     id: string;
     title: string;
     description: string;
+    thumbnail?: string;
     teacher: {
       id: string;
       name: string;
     } | null;
-    student: {
-      id: string;
-      name: string;
-    };
     createdAt: Date;
+  };
+  student: {
+    id: string;
+    name: string;
+    email: string;
   };
 }
 

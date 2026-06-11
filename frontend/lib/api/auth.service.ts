@@ -41,6 +41,7 @@ export interface RegisterResponse {
   success: boolean;
   message: string;
   studentId: string;
+  verificationToken?: string;
 }
 
 export interface UpdateStudentPayload extends Partial<RegisterStudentPayload> {}

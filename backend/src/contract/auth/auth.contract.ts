@@ -5,6 +5,7 @@ import {
   loginResponseSchema,
   loginSchema,
   registerSchema,
+  registerTeacherSchema,
   updateStudentDetailsSchema,
   uploadLegalAgreementSchema,
 } from "./auth.schema";
@@ -21,34 +22,6 @@ export const authContract = c.router({
     summary: "Get user profile",
     responses: {
       200: getProfileSchema,
-      404: errorSchema,
-      500: errorSchema,
-    },
-  },
-
-  registerStudent: {
-    method: "POST",
-    path: "/auth/register",
-    body: registerSchema,
-    summary: "Regsiter new student self",
-    responses: {
-      201: successSchema.extend({
-        studentId: z.string(),
-      }),
-      400: errorSchema,
-      500: errorSchema,
-    },
-  },
-
-  login: {
-    method: "POST",
-    path: "/auth/login",
-    body: loginSchema,
-    summary: "User Login",
-    responses: {
-      200: loginResponseSchema,
-      400: errorSchema,
-      401: errorSchema,
       404: errorSchema,
       500: errorSchema,
     },
@@ -75,38 +48,6 @@ export const authContract = c.router({
       200: successSchema,
       400: errorSchema,
       404: errorSchema,
-      500: errorSchema,
-    },
-  },
-
-  verifyEmail: {
-    method: "POST",
-    path: "/auth/verify-email",
-    body: z.object({
-      token: z.string().describe("Email verification token"),
-    }),
-    summary: "Verify email with token",
-    responses: {
-      200: successSchema.extend({
-        message: z.string(),
-      }),
-      400: errorSchema,
-      500: errorSchema,
-    },
-  },
-
-  resendVerification: {
-    method: "POST",
-    path: "/auth/resend-verification",
-    body: z.object({
-      email: z.string().email().describe("User email"),
-    }),
-    summary: "Resend verification email",
-    responses: {
-      200: successSchema.extend({
-        message: z.string(),
-      }),
-      400: errorSchema,
       500: errorSchema,
     },
   },

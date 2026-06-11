@@ -17,20 +17,25 @@ const waitForAuth = () => {
       unsubscribe();
       resolve(user);
     });
+    setTimeout(() => { unsubscribe(); resolve(null); }, 5000);
   });
 };
 
 axiosInstance.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    if (!auth.currentUser) {
-      await waitForAuth();
-    }
+    try {
+      if (!auth.currentUser) {
+        await waitForAuth();
+      }
 
-    const user = auth.currentUser;
+      const user = auth.currentUser;
 
-    if (user) {
-      const token = await user.getIdToken();
-      config.headers.Authorization = `Bearer ${token}`;
+      if (user) {
+        const token = await user.getIdToken(false);
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch {
+      // Continue without auth header
     }
     return config;
   },
