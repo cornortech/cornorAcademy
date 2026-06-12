@@ -135,6 +135,8 @@ export interface Course {
   startDate: Date;
   duration: number;
   price: number;
+  isOngoing: boolean;
+  status: "upcoming" | "active" | "completed";
   curriculum: {
     id: string;
     title: string;

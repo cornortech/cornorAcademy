@@ -4,6 +4,7 @@ import StudentStatsCard from "@/components/dashboard/student/student-stats-card"
 import { UpcomingClassesWidget } from "@/components/features/student/dashboard/UpcomingClassesWidget";
 import { MyCoursesList } from "@/components/features/student/dashboard/MyCourseList";
 import RecentAnnouncementWidget from "@/components/features/student/dashboard/RecentAnnouncementsWidget";
+import { AnnouncementsTab } from "@/components/features/student/dashboard/AnnouncementsTab";
 import { StudentProfileTab } from "@/components/dashboard/student/StudentProfileTab";
 import { useStudentDashboard } from "@/hooks/use-student-dashboard";
 import { useSearchParams } from "next/navigation";
@@ -54,6 +55,9 @@ export default function StudentDashboard() {
             </div>
           </>
         );
+
+      case "announcements":
+        return <AnnouncementsTab announcements={announcements} />;
 
       case "profile":
         return <StudentProfileTab />;

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { authService } from "@/lib/api/auth.service"
+import axiosInstance from "@/lib/api/axios"
 import type { Admin, Student, Teacher, EnrolledCourseItem } from "@/types"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000"
@@ -35,7 +36,7 @@ export function useAdminDashboard(): AdminDashboardData {
         const [studentsRes, teachersRes, enrollmentsRes] = await Promise.all([
           fetch(`${API_BASE_URL}/student`).then(r => r.json()).catch(() => []),
           fetch(`${API_BASE_URL}/teacher`).then(r => r.json()).catch(() => []),
-          fetch(`${API_BASE_URL}/enrollement/`).then(r => r.json()).catch(() => []),
+          axiosInstance.get("/enrollement/").then(r => r.data).catch(() => []),
         ])
         if (cancelled) return
 

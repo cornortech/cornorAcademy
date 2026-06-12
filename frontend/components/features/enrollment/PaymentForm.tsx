@@ -1,8 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -10,53 +8,69 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Building, Check, CreditCard, Loader2, Shield, Wallet } from "lucide-react";
+import { Check, Loader2, Shield } from "lucide-react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import axiosInstance from "@/lib/api/axios";
+import type { Course } from "@/types";
+
 interface PaymentFormProps {
-  course: any;
+  course: Course;
+  studentId: string;
 }
 
-export function PaymentForm({ course }: PaymentFormProps) {
-  const [paymentMethod, setPaymentMethod] = useState("card");
+export function PaymentForm({ course, studentId }: PaymentFormProps) {
   const [isProcessing, setIsProcessing] = useState(false);
-  const [enrollmentComplete, setEnrollmentComplete] = useState(false);
-  const router = useRouter();
+  const [error, setError] = useState<string | null>(null);
+  const searchParams = useSearchParams();
+  const isEnrolled = searchParams.get("enrolled") === "success";
 
-  const handleEnrollment = async () => {
+  const handleKhaltiPayment = async () => {
     setIsProcessing(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setIsProcessing(false);
-    setEnrollmentComplete(true);
+    setError(null);
+
+    try {
+      const res = await axiosInstance.post("/payment/khalti/initiate", {
+        courseId: course.id,
+      });
+
+      if (res.data.success && res.data.payment_url) {
+        window.location.href = res.data.payment_url;
+      } else {
+        setError(res.data?.error || "Failed to initiate payment");
+        setIsProcessing(false);
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.error || err.message || "Failed to initiate payment");
+      setIsProcessing(false);
+    }
   };
 
-  if (enrollmentComplete) {
+  if (isEnrolled) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center p-4">
-        <Card className="w-full max-w-md border-border/50 bg-card/50 backdrop-blur">
+      <div className="lg:col-span-2">
+        <Card className="border-border/50 bg-card/50 backdrop-blur">
           <CardContent className="pt-6 text-center">
             <div className="h-16 w-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Check className="h-8 w-8 text-green-600" />
             </div>
-            <h2 className="text-2xl font-bold mb-2">Enrollment Successful!</h2>
+            <h2 className="text-2xl font-bold mb-2">Enrollment Request Submitted!</h2>
             <p className="text-muted-foreground mb-6">
-              Welcome to {course.title}! You'll receive an email with your
-              course access details shortly.
+              Your payment has been received. Your enrollment request is now pending approval
+              by the course instructor. You will be notified once it is approved.
             </p>
             <div className="space-y-3">
               <Button asChild className="w-full">
-                <Link href="/student">Go to Dashboard</Link>
+                <Link href={`/courses/${course.id}`}>Go to Course</Link>
               </Button>
               <Button
                 variant="outline"
                 asChild
                 className="w-full bg-transparent"
               >
-                <Link href="/">Back to Home</Link>
+                <Link href="/student">Go to Dashboard</Link>
               </Button>
             </div>
           </CardContent>
@@ -69,136 +83,18 @@ export function PaymentForm({ course }: PaymentFormProps) {
     <div className="lg:col-span-2">
       <Card className="border-border/50 bg-card/50 backdrop-blur">
         <CardHeader>
-          <CardTitle>Payment Information</CardTitle>
+          <CardTitle>Payment</CardTitle>
           <CardDescription>
-            Choose your payment method and complete your enrollment
+            Complete your enrollment using Khalti
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
-          <div className="space-y-4">
-            <Label className="text-base font-semibold">Payment Method</Label>
-            <RadioGroup value={paymentMethod} onValueChange={setPaymentMethod}>
-              <div className="flex items-center space-x-2 p-4 border border-border/50 rounded-lg">
-                <RadioGroupItem value="card" id="card" />
-                <CreditCard className="h-5 w-5" />
-                <Label htmlFor="card" className="flex-1 cursor-pointer">
-                  Credit/Debit Card
-                </Label>
-                <div className="flex space-x-1">
-                  <div className="w-8 h-5 bg-blue-600 rounded text-white text-xs flex items-center justify-center">
-                    VISA
-                  </div>
-                  <div className="w-8 h-5 bg-red-600 rounded text-white text-xs flex items-center justify-center">
-                    MC
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-2 p-4 border border-border/50 rounded-lg">
-                <RadioGroupItem value="paypal" id="paypal" />
-                <Wallet className="h-5 w-5" />
-                <Label htmlFor="paypal" className="flex-1 cursor-pointer">
-                  PayPal
-                </Label>
-                <div className="text-blue-600 font-semibold text-sm">
-                  PayPal
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-2 p-4 border border-border/50 rounded-lg">
-                <RadioGroupItem value="bank" id="bank" />
-                <Building className="h-5 w-5" />
-                <Label htmlFor="bank" className="flex-1 cursor-pointer">
-                  Bank Transfer
-                </Label>
-                <div className="text-sm text-muted-foreground">
-                  2-3 business days
-                </div>
-              </div>
-            </RadioGroup>
-          </div>
-
-          {paymentMethod === "card" && (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="card-number">Card Number</Label>
-                  <Input
-                    id="card-number"
-                    placeholder="1234 5678 9012 3456"
-                    className="font-mono"
-                  />
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="expiry">Expiry Date</Label>
-                    <Input id="expiry" placeholder="MM/YY" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="cvc">CVC</Label>
-                    <Input id="cvc" placeholder="123" />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="cardholder">Cardholder Name</Label>
-                  <Input id="cardholder" placeholder="John Smith" />
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="space-y-4">
-            <Label className="text-base font-semibold">
-              Billing Information
-            </Label>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="first-name">First Name</Label>
-                <Input id="first-name" placeholder="John" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="last-name">Last Name</Label>
-                <Input id="last-name" placeholder="Smith" />
-              </div>
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="john.smith@email.com"
-                />
-              </div>
-              <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="address">Address</Label>
-                <Input id="address" placeholder="123 Main Street" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="city">City</Label>
-                <Input id="city" placeholder="New York" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="zip">ZIP Code</Label>
-                <Input id="zip" placeholder="10001" />
-              </div>
-            </div>
-          </div>
-
           <div className="space-y-4 p-4 bg-muted/20 rounded-lg">
             <h4 className="font-semibold">Order Summary</h4>
             <div className="space-y-2">
               <div className="flex justify-between">
                 <span>Course Price</span>
-                <span>Rs {course.originalPrice}</span>
-              </div>
-              <div className="flex justify-between text-green-600">
-                <span>Discount (25%)</span>
-                <span>-Rs {course.originalPrice - course.price}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Tax</span>
-                <span>Rs 0</span>
+                <span>Rs {course.price}</span>
               </div>
               <Separator />
               <div className="flex justify-between font-semibold text-lg">
@@ -208,20 +104,6 @@ export function PaymentForm({ course }: PaymentFormProps) {
             </div>
           </div>
 
-          <div className="flex items-start space-x-2">
-            <Checkbox id="terms" />
-            <Label htmlFor="terms" className="text-sm leading-relaxed">
-              I agree to the{" "}
-              <Link href="/legal-agreement" className="text-primary hover:underline">
-                Terms of Service
-              </Link>{" "}
-              and{" "}
-              <Link href="/legal-agreement" className="text-primary hover:underline">
-                Privacy Policy
-              </Link>
-            </Label>
-          </div>
-
           <div className="flex items-start space-x-2 p-3 bg-blue-50 dark:bg-blue-950/20 rounded-lg">
             <Shield className="h-5 w-5 text-blue-600 mt-0.5 shrink-0" />
             <div className="text-sm">
@@ -229,22 +111,34 @@ export function PaymentForm({ course }: PaymentFormProps) {
                 Secure Payment
               </p>
               <p className="text-blue-700 dark:text-blue-200">
-                Your payment information is encrypted and secure. We never store
-                your card details.
+                You will be redirected to Khalti&apos;s secure payment page to
+                complete your transaction.
               </p>
             </div>
           </div>
+
+          {error && (
+            <div className="p-3 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg">
+              <p className="text-sm text-red-700 dark:text-red-300">{error}</p>
+            </div>
+          )}
+
           <Button
-            onClick={handleEnrollment}
+            onClick={handleKhaltiPayment}
             disabled={isProcessing}
-            className="w-full h-12 text-lg"
+            className="w-full h-12 text-lg bg-purple-600 hover:bg-purple-700"
           >
-            {isProcessing
-              ? "Processing Payment..."
-              : `Complete Enrollment - Rs ${course.price}`}
+            {isProcessing ? (
+              <>
+                <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                Redirecting to Khalti...
+              </>
+            ) : (
+              `Pay Rs ${course.price} with Khalti`
+            )}
           </Button>
           <div className="text-center text-sm text-muted-foreground">
-            <p>30-day money-back guarantee • Cancel anytime</p>
+            <p>30-day money-back guarantee &bull; Cancel anytime</p>
           </div>
         </CardContent>
       </Card>

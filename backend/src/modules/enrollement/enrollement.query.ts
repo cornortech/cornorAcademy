@@ -6,11 +6,27 @@ const getAllEnrollementRequest: AppRouteQueryImplementation<
     typeof enrollementRequestContract.getAllEnrollementRequest
 > = async ({ req }) => {
     try {
+        if (!req.user) {
+            return { status: 401, body: { success: false, error: "Unauthorized" } };
+        }
 
         const { status } = req.query;
 
+        let whereClause: any = status ? { status } : {};
+
+        if (req.user.role === "teacher") {
+            const teacherCourses = await prisma.course.findMany({
+                where: { teacherId: req.user.id },
+                select: { id: true },
+            });
+            const courseIds = teacherCourses.map((c) => c.id);
+            whereClause = { ...whereClause, courseId: { in: courseIds } };
+        } else if (req.user.role === "student") {
+            whereClause = { ...whereClause, studentId: req.user.id };
+        }
+
         const enrollementRequest = await prisma.enrolledCourses.findMany({
-            where: status ? { status } : {},
+            where: whereClause,
             include: {
                 course: {
                     include: {

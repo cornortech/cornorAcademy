@@ -17,18 +17,26 @@ export function EnrollmentRequests({ enrollments: propEnrollments }: Props) {
   useEffect(() => {
     if (propEnrollments && propEnrollments.length > 0) {
       setEnrollments(propEnrollments.map((e) => ({
-        id: parseInt(e.id),
+        id: e.id,
         studentName: e.student?.name || "Unknown",
         studentEmail: e.student?.email || "",
         courseTitle: e.course?.title || "",
-        courseId: parseInt(e.course?.id || "0"),
-        paymentScreenshotUrl: e.paymentURL || "",
+        courseId: e.course?.id || "",
+        studentId: e.student?.id || "",
         status: e.status === "approved" ? "approved" : e.status === "rejected" ? "rejected" : "pending",
         createdAt: new Date(e.course?.createdAt || Date.now()).toLocaleDateString(),
-        amount: 0,
       })));
     }
   }, [propEnrollments]);
+
+  const filteredEnrollments = enrollments.filter((e) => {
+    const matchesSearch =
+      !searchQuery ||
+      e.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.courseTitle.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesFilter = filterStatus === "all" || e.status === filterStatus;
+    return matchesSearch && matchesFilter;
+  });
 
   return (
     <div className="space-y-6">
@@ -55,7 +63,7 @@ export function EnrollmentRequests({ enrollments: propEnrollments }: Props) {
         ]}
       />
 
-      <EnrollmentRequestList enrollments={enrollments} />
+      <EnrollmentRequestList enrollments={filteredEnrollments} />
     </div>
   );
 }

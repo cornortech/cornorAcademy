@@ -7,12 +7,13 @@ import { TeacherStats } from "@/components/dashboard/teacher/TeacherStats";
 import MyTeachingCourses from "@/components/dashboard/teacher/MyTeachingCourses";
 import { UpcomingClassesWidget } from "@/components/dashboard/teacher/UpcomingClassesWidget";
 import { TeacherProfileTab } from "@/components/dashboard/teacher/TeacherProfileTab";
+import { TeacherEnrollmentList } from "@/components/dashboard/teacher/TeacherEnrollmentList";
 import { UnverifiedDialog } from "@/components/dashboard/teacher/UnverifiedDialog";
 import { useTeacherDashboard } from "@/hooks/use-teacher-dashboard";
 import { useSearchParams } from "next/navigation";
 
 export default function TeacherDashboard() {
-  const { teacher, courses, loading, error } = useTeacherDashboard();
+  const { teacher, courses, enrollments, loading, error } = useTeacherDashboard();
   const searchParams = useSearchParams();
   const tab = searchParams.get("tab") || "dashboard";
   const [showVerifyDialog, setShowVerifyDialog] = useState(false);
@@ -89,6 +90,9 @@ export default function TeacherDashboard() {
 
       case "profile":
         return <TeacherProfileTab teacher={teacher} />;
+
+      case "enrollments":
+        return <TeacherEnrollmentList enrollments={enrollments} teacherId={teacher?.id} />;
 
       default:
         return (

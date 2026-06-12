@@ -28,7 +28,7 @@ const CTASection = () => {
               className="text-lg px-8 bg-transparent"
               asChild
             >
-              <Link href="/contact">{"Contact Sales"}</Link>
+              <Link href="/contact">{"Contact Us"}</Link>
             </Button>
           </div>
         </div>

@@ -36,7 +36,7 @@ template: "%s | Cornor Academy",
   authors: [{name: "Cornor Academy Team", url: "https://cornoracademy.com"}],
   creator: 'Cornor Tech Pvt. Ltd.',
   alternates: {
-    canonical: "https://cornoracademy.com",
+    canonical: "https://academy.cornortech.com",
   },
   icons: {
     icon: "/favicon.png",
@@ -47,11 +47,11 @@ template: "%s | Cornor Academy",
   openGraph: {
     title: "Cornor Academy | Empower Your Learning Journey",
     description: "Cornor Academy is a online learning management system (LMS) designed to empower learners and educators. With a user-friendly interface, robust features, and a focus on personalized learning, Cornor Academy provides an engaging platform for students to acquire new skills and knowledge. Whether you're a student looking to enhance your education or an educator seeking to create impactful courses, Cornor Academy is your go-to destination for a transformative learning experience.",
-    url: "https://cornoracademy.com",
+    url: "https://academy.cornortech.com",
     siteName: "Cornor Academy",
     images: [
       {
-        url: "https://cornoracademy.com/og-image.png",
+        url: "https://academy.cornortech.com/og-image.png",
         width: 1200,
         height: 630,
         alt: "Cornor Academy Open Graph Image",
@@ -64,7 +64,7 @@ template: "%s | Cornor Academy",
     card: "summary_large_image",
     title: "Cornor Academy | Empower Your Learning Journey",
     description: "Cornor Academy is a online learning management system (LMS) designed to empower learners and educators. With a user-friendly interface, robust features, and a focus on personalized learning, Cornor Academy provides an engaging platform for students to acquire new skills and knowledge. Whether you're a student looking to enhance your education or an educator seeking to create impactful courses, Cornor Academy is your go-to destination for a transformative learning experience.",
-    image: "https://cornoracademy.com/og-image.png",
+    image: "https://academy.cornortech.com/og-image.png",
   },
   robots: {
     index: true,

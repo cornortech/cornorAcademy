@@ -16,7 +16,7 @@ export function AuthenticatedRedirect({ children }: AuthenticatedRedirectProps) 
 
   useEffect(() => {
     if (loading || !user || !userRole) return;
-    router.replace(getDashboardPathForRole(userRole));
+    router.replace(getDashboardPathForRole(userRole) as any);
   }, [user, userRole, loading, router]);
 
   if (loading) {

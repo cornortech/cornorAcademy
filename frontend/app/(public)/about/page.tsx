@@ -18,12 +18,10 @@ import PublicHeader from "@/components/shared/public-header";
 import Footer from "@/components/shared/footer";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { landingStats } from "@/lib/data";
 import { useSettings } from "@/contexts/SettingsContext";
 
 export default function AboutPage() {
   const { settings } = useSettings();
-  const successMetrics = landingStats;
 
   const coreValues = [
     {
@@ -100,35 +98,6 @@ export default function AboutPage() {
                     </div>
                     <p className="text-sm text-muted-foreground mb-1">{item.label}</p>
                     <p className="text-lg font-semibold">{item.value}</p>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          </div>
-        </section>
-
-        <section id="impact" className="py-16">
-          <div className="mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-3">Our Impact</h2>
-            <p className="text-muted-foreground text-lg">
-              Trusted by thousands of learners worldwide
-            </p>
-          </div>
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {successMetrics.map((metric, index) => {
-              const Icon = metric.icon;
-              return (
-                <Card
-                  key={index}
-                  className="border-border/50 bg-card/50 backdrop-blur hover:bg-card/70 transition-colors"
-                >
-                  <CardContent className="pt-6">
-                    <div className="rounded-2xl bg-primary/10 p-3 w-fit text-primary mb-4">
-                      <Icon className="h-6 w-6" />
-                    </div>
-                    <p className="text-sm text-muted-foreground mb-2">{metric.label}</p>
-                    <p className="text-3xl font-bold mb-2">{metric.value}</p>
-                    <p className="text-sm text-muted-foreground">{metric.description}</p>
                   </CardContent>
                 </Card>
               );

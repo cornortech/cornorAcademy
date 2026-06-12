@@ -19,11 +19,15 @@ export function CourseHeader({ course }: CourseHeaderProps) {
         {course.description}
       </p>
       <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
-        <div className="flex items-center gap-1">
-          <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-          <span className="font-medium text-foreground">{course.rating}</span>
-          <span>({course.reviews.toLocaleString()} reviews)</span>
-        </div>
+        {course.rating > 0 && (
+          <div className="flex items-center gap-1">
+            <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+            <span className="font-medium text-foreground">{course.rating}</span>
+            {course.reviews > 0 && (
+              <span>({course.reviews.toLocaleString()} reviews)</span>
+            )}
+          </div>
+        )}
         <div className="flex items-center gap-1">
           <Users className="h-4 w-4" />
           <span>{course.students.toLocaleString()} students</span>

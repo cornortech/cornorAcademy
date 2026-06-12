@@ -9,6 +9,7 @@ import swaggerUi from "swagger-ui-express";
 import { openApiDocument } from "./libs/swagger";
 import cors from "cors";
 import paymentRouter from "./routes/payment";
+import khaltiRouter from "./routes/khalti";
 import teacherRouter from "./routes/teacher";
 import lessonRouter from "./routes/lesson";
 import progressRouter from "./routes/progress";
@@ -41,6 +42,7 @@ const swaggerOptions = {
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(openApiDocument, swaggerOptions));
 
 app.use("/payment", paymentRouter);
+app.use("/payment", khaltiRouter);
 app.use("/api", teacherRouter);
 app.use("/api", lessonRouter);
 app.use("/api", progressRouter);

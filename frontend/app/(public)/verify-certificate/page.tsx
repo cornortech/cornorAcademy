@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Award, Search } from "lucide-react";
 import PublicHeader from "@/components/shared/public-header";
+import Footer from "@/components/shared/footer";
 import CertificateVerificationForm from "@/components/features/certificate/certificate-verification-form";
 import { CertificateDetails } from "@/components/features/certificate/certificate-details";
 import { VerificationError } from "@/components/features/certificate/verification-error";
@@ -74,7 +75,7 @@ export default function VerifyCertificatePage() {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background flex flex-col">
       <PublicHeader />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -165,6 +166,7 @@ export default function VerifyCertificatePage() {
           </Card>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }

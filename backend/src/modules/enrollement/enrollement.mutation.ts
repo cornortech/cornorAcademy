@@ -4,10 +4,17 @@ import prisma from "../../libs/db";
 
 const createEnrollementRequestForStudent: AppRouteMutationImplementation<
     typeof enrollementRequestContract.createEnrollementRequestForStudent
-> = async (req) => {
+> = async ({ req }) => {
     try {
+        if (req.user?.role !== "student") {
+            return {
+                status: 403,
+                body: { success: false, error: "Only students can enroll" },
+            };
+        }
 
-        const { studentId, courseId, paymentURL } = req.body;
+        const studentId = req.user.id;
+        const { courseId, paymentURL } = req.body;
 
         const enrolledExists = await prisma.enrolledCourses.findFirst({
             where: {
@@ -26,16 +33,12 @@ const createEnrollementRequestForStudent: AppRouteMutationImplementation<
             };
         }
 
-        const enrolledData = await prisma.enrolledCourses.create({
+        await prisma.enrolledCourses.create({
             data: {
                 studentId,
                 courseId,
                 paymentURL,
                 status: "requested",
-            },
-            include: {
-                student: true,
-                course: true,
             },
         });
 
@@ -43,7 +46,7 @@ const createEnrollementRequestForStudent: AppRouteMutationImplementation<
             status: 201,
             body: {
                 success: true,
-                message: "Enrollement Succefully",
+                message: "Enrollment submitted successfully",
             },
         };
 
@@ -63,6 +66,12 @@ const updateEnrollementRequestForAdmin: AppRouteMutationImplementation<
     typeof enrollementRequestContract.updateEnrollementRequestForAdmin
 > = async ({ req }) => {
     try {
+        if (!req.user || (req.user.role !== "admin" && req.user.role !== "teacher")) {
+            return {
+                status: 403,
+                body: { success: false, error: "Only admin or teacher can update enrollments" },
+            };
+        }
 
         const {
             studentId,
@@ -70,6 +79,19 @@ const updateEnrollementRequestForAdmin: AppRouteMutationImplementation<
             status,
             rejectionReason,
         } = req.body;
+
+        if (req.user.role === "teacher") {
+            const course = await prisma.course.findUnique({
+                where: { id: courseId },
+                select: { teacherId: true },
+            });
+            if (!course || course.teacherId !== req.user.id) {
+                return {
+                    status: 403,
+                    body: { success: false, error: "You can only manage enrollments for your own courses" },
+                };
+            }
+        }
 
         const existingEnrollment = await prisma.enrolledCourses.findFirst({
             where:
@@ -97,10 +119,6 @@ const updateEnrollementRequestForAdmin: AppRouteMutationImplementation<
             data: {
                 status,
                 rejectionReason: status === "rejected" ? rejectionReason : null,
-            },
-            include: {
-                student: true,
-                course: true,
             },
         });
 

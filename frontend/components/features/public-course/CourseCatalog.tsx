@@ -16,6 +16,8 @@ import { getCourseImage } from "@/lib/course-images";
 import { Course } from "@/types";
 import { Clock, Search, Star, Users } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
+import { useGetEnrolledCoursesByStudentId } from "@/api/course";
 
 interface CourseCatalogProps {
   courses: Course[];
@@ -26,6 +28,11 @@ type CourseTypeFilter = "all" | "live" | "video";
 export function CourseCatalog({ courses }: CourseCatalogProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [courseType, setCourseType] = useState<CourseTypeFilter>("all");
+  const { userData, userRole } = useAuth();
+  const isStudent = userRole === "student";
+  const { data: enrollments } = useGetEnrolledCoursesByStudentId(
+    isStudent ? userData?.id ?? "" : ""
+  );
 
   const filteredCourses = courses.filter((course) => {
     const matchesSearch = searchQuery
@@ -126,9 +133,33 @@ export function CourseCatalog({ courses }: CourseCatalogProps) {
                   <span className="text-lg font-semibold">
                     Rs {course.price}
                   </span>
-                  <Button asChild>
-                    <Link href={`/courses/${course.id}`}>View Details</Link>
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button variant="outline" asChild>
+                      <Link href={`/courses/${course.id}`}>View Details</Link>
+                    </Button>
+                    {(() => {
+                      const currentEnrollment = enrollments?.find(
+                        (e) => e.course.id === course.id
+                      );
+                      const hasPaid =
+                        !!currentEnrollment &&
+                        (currentEnrollment.status === "approved" ||
+                          currentEnrollment.status === "requested");
+                      return hasPaid ? (
+                        <Button asChild>
+                          <Link href={`/courses/${course.id}`}>
+                            Start Class
+                          </Link>
+                        </Button>
+                      ) : (
+                        <Button asChild>
+                          <Link href={`/enroll/${course.id}`}>
+                            Join Course
+                          </Link>
+                        </Button>
+                      );
+                    })()}
+                  </div>
                 </div>
               </CardContent>
             </Card>

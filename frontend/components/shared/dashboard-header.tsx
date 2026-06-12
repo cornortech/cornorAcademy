@@ -68,7 +68,7 @@ export function DashboardHeader({
         <div className="flex h-16 items-center justify-between">
 
           <div className="flex items-center space-x-4">
-            <Link href={userRole ? getDashboardPathForRole(userRole) : "/"} className="flex items-center space-x-2">
+            <Link href={userRole ? getDashboardPathForRole(userRole) as any : "/"} className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-lg flex items-center justify-center shadow-md">
                 <Image
                   src="/logo/logo.png"

@@ -32,7 +32,7 @@ export function ProtectedRoute({
 
     if (allowedRoles && userRole) {
       if (!allowedRoles.includes(userRole)) {
-        router.push(getDashboardPathForRole(userRole));
+        router.push(getDashboardPathForRole(userRole) as any);
       }
     }
   }, [user, loading, router, userRole, allowedRoles, pathname]);

@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { authService } from "@/lib/api/auth.service"
-import type { Teacher, Course, CourseAnnouncementItem } from "@/types"
+import axiosInstance from "@/lib/api/axios"
+import type { Teacher, Course, CourseAnnouncementItem, EnrolledCourseItem } from "@/types"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000"
 
@@ -10,6 +11,7 @@ interface TeacherDashboardData {
   teacher: Teacher | null
   courses: Course[]
   announcements: CourseAnnouncementItem[]
+  enrollments: EnrolledCourseItem[]
   loading: boolean
   error: string | null
 }
@@ -18,6 +20,7 @@ export function useTeacherDashboard(): TeacherDashboardData {
   const [teacher, setTeacher] = useState<Teacher | null>(null)
   const [courses, setCourses] = useState<Course[]>([])
   const [announcements, setAnnouncements] = useState<CourseAnnouncementItem[]>([])
+  const [enrollments, setEnrollments] = useState<EnrolledCourseItem[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -51,6 +54,14 @@ export function useTeacherDashboard(): TeacherDashboardData {
         const allAnnouncements = announcementResults.flat().filter(Boolean)
         setAnnouncements(allAnnouncements)
 
+        const enrollmentsRes = await axiosInstance.get("/enrollement/").then(r => r.data).catch(() => [] as any[])
+        if (cancelled) return
+
+        const allEnrollments = Array.isArray(enrollmentsRes) ? enrollmentsRes : []
+        const teacherCourseIds = new Set(courseList.map((c: any) => c.id))
+        const filteredEnrollments = allEnrollments.filter((e: any) => teacherCourseIds.has(e.course?.id))
+        setEnrollments(filteredEnrollments)
+
         setLoading(false)
       } catch (err: any) {
         if (!cancelled) {
@@ -65,5 +76,5 @@ export function useTeacherDashboard(): TeacherDashboardData {
     return () => { cancelled = true }
   }, [])
 
-  return { teacher, courses, announcements, loading, error }
+  return { teacher, courses, announcements, enrollments, loading, error }
 }

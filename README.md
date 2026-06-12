@@ -1,6 +1,8 @@
 # Cornor Academy
+### Modern Learning Management System For Students, Teachers and Administrators
 
-A Learning Management System (LMS) platform for managing courses, students, teachers, enrollments, and certificates.
+##Overview 
+Cornor Academy is a comprehensive Learning Management System (LMS) paltform designed to streamline educational experience for institution and individual educators. Our platform provides a complete ecosystem for managing courses, students, teachers, enrollments and certificates - all in one unnified interface.
 
 ## Tech Stack
 
@@ -12,7 +14,6 @@ A Learning Management System (LMS) platform for managing courses, students, teac
 - **Forms:** React Hook Form, Zod
 - **Auth:** Firebase
 - **Charts:** Recharts
-- **Other:** Lucide Icons, Sonner (toasts), date-fns
 
 ### Backend
 - **Runtime:** Node.js, TypeScript
@@ -58,7 +59,7 @@ PORT=4000
 # Database
 DATABASE_URL=postgresql://postgres:your_password@localhost:5432/cornor_academy?schema=public
  
-# CORS — comma-separated list of allowed origins
+# CORS
 WHITE_LISTED_ORIGINS=http://localhost:3000,https://yourdomain.com
  
 # Default Admin Credentials
@@ -71,7 +72,7 @@ FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@your-project-id.iam.gserviceaccoun
 FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\nYOUR_PRIVATE_KEY_HERE\n-----END PRIVATE KEY-----"
 FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
  
-# SMTP (Email) — example uses Gmail App Password
+# SMTP (Email)
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=587
 SMTP_SECURE=false

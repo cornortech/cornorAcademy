@@ -1,7 +1,6 @@
 import z from "zod";
 
 export const createEnrollementRequestForStudentSchema = z.object({
-    studentId: z.string().uuid(),
     courseId: z.string().uuid(),
     paymentURL: z.string(),
 });
@@ -41,5 +40,5 @@ export const getAllEnrollementRequestResponseSchema = z.array(
 );
 
 export const getEnrollementRequestByStatusSchema = z.object({
-    status: z.enum(['requested', 'approved', 'rejected']),
+    status: z.enum(['requested', 'approved', 'rejected']).optional(),
 });

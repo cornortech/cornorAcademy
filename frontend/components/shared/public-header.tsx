@@ -1,11 +1,11 @@
 "use client";
 import { ArrowLeft, BookOpen, LayoutDashboard, LogOut } from "lucide-react";
 import Link from "next/link";
+import type { Route } from "next";
 import Image from "next/image";
 import { Button } from "../ui/button";
 import { APP_NAME } from "@/lib/config";
 import { useAuth } from "@/contexts/AuthContext";
-import { usePathname } from "next/navigation";
 
 import {
   DropdownMenu,
@@ -29,8 +29,7 @@ const PublicHeader = ({
   const { user, logout, userRole, userData } = useAuth();
 
   const avatarSrc =
-    (userData as any)?.image ||
-    (userData as any)?.avatar ||
+    userData?.image ||
     user?.photoURL ||
     "";
   const displayName = userData?.name || user?.displayName || "User";
@@ -38,13 +37,12 @@ const PublicHeader = ({
 
   const navItems = [
     { label: "Courses", href: "/courses" },
-    { label: "Verify Certificate", href: "/#verify-certificate" },
+    { label: "Verify Certificate", href: "/verify-certificate" },
     { label: "About Us", href: "/about" },
     { label: "Contact", href: "/contact" },
-  ];
+  ] as const;
 
-  const pathname = usePathname();
-  const homeHref = user && userRole ? getDashboardPathForRole(userRole) : "/";
+  const homeHref = user && userRole && userRole !== "student" ? getDashboardPathForRole(userRole) : "/";
 
   return (
     <nav className="ice-nav border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
@@ -55,14 +53,14 @@ const PublicHeader = ({
           
             {showBackButton && (
               <Button variant="ghost" size="sm" asChild>
-                <Link href={homeHref}>
+                <Link href={homeHref as Route}>
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Home
                 </Link>
               </Button>
             )}
 
-            <Link href={homeHref} className="flex items-center space-x-2">
+            <Link href={homeHref as Route} className="flex items-center space-x-2">
               <div className="h-8 w-8 rounded-lg flex items-center justify-center">
                 <Image
                   src="/logo/logo.png"
@@ -84,7 +82,7 @@ const PublicHeader = ({
               {navItems.map((item) => (
                 <Link
                   key={item.label}
-                  href={item.href as any}
+                  href={item.href}
                   className="px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-accent/50 rounded-md transition-all"
                 >
                   {item.label}
@@ -130,7 +128,7 @@ const PublicHeader = ({
                   className="cursor-pointer rounded-md focus:bg-accent focus:text-accent-foreground"
                 >
                   <Link
-                    href={getDashboardPathForRole(userRole || "student")}
+                    href={getDashboardPathForRole(userRole || "student") as Route}
                     className="flex items-center px-2 py-2"
                   >
                     <LayoutDashboard className="h-4 w-4 mr-2 text-muted-foreground" />

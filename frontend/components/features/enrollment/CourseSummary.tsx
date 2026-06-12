@@ -2,9 +2,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import { Check, Clock } from "lucide-react";
+import type { Course } from "@/types";
 
 interface CourseSummaryProps {
-  course: any;
+  course: Course;
+}
+
+function formatDuration(minutes: number): string {
+  if (minutes >= 60) {
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return m > 0 ? `${h}h ${m}m` : `${h}h`;
+  }
+  return `${minutes}m`;
 }
 
 export function CourseSummary({ course }: CourseSummaryProps) {
@@ -21,34 +31,26 @@ export function CourseSummary({ course }: CourseSummaryProps) {
           </div>
           <h3 className="font-bold text-lg mb-2">{course.title}</h3>
           <p className="text-muted-foreground mb-4">
-            by {course.instructor.name}
+            by {course.teacher?.name || "Instructor"}
           </p>
 
           <div className="flex items-center space-x-2 mb-6">
             <Clock className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">{course.duration}</span>
+            <span className="text-sm">{formatDuration(course.duration)}</span>
           </div>
 
           <Separator className="my-4" />
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-muted-foreground line-through">
-                Rs {course.originalPrice}
-              </span>
-              <Badge variant="destructive">25% OFF</Badge>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold">Rs {course.price}</span>
-              <span className="text-sm text-muted-foreground">
-                one-time payment
-              </span>
-            </div>
+          <div className="flex items-center justify-between">
+            <span className="text-2xl font-bold">Rs {course.price}</span>
+            <span className="text-sm text-muted-foreground">
+              one-time payment
+            </span>
           </div>
           <Separator className="my-4" />
 
           <div className="space-y-2">
-            <h4 className="font-semibold">What's included:</h4>
-            {course.features.slice(0, 4).map((feature: string, index: number) => (
+            <h4 className="font-semibold">What&apos;s included:</h4>
+            {course.includes.slice(0, 4).map((feature: string, index: number) => (
               <div key={index} className="flex items-center text-sm">
                 <Check className="h-4 w-4 text-green-500 mr-2 shrink-0" />
                 {feature}
