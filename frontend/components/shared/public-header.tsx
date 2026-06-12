@@ -37,7 +37,7 @@ const PublicHeader = ({
   const email = userData?.email || user?.email || "";
 
   const navItems = [
-    { label: "Courses", href: "/#courses" },
+    { label: "Courses", href: "/courses" },
     { label: "Verify Certificate", href: "/#verify-certificate" },
     { label: "About Us", href: "/about" },
     { label: "Contact", href: "/contact" },

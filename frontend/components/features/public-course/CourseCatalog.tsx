@@ -1,0 +1,140 @@
+"use client";
+
+import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getCourseImage } from "@/lib/course-images";
+import { Course } from "@/types";
+import { Clock, Search, Star, Users } from "lucide-react";
+import Link from "next/link";
+
+interface CourseCatalogProps {
+  courses: Course[];
+}
+
+type CourseTypeFilter = "all" | "live" | "video";
+
+export function CourseCatalog({ courses }: CourseCatalogProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [courseType, setCourseType] = useState<CourseTypeFilter>("all");
+
+  const filteredCourses = courses.filter((course) => {
+    const matchesSearch = searchQuery
+      ? course.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        course.description.toLowerCase().includes(searchQuery.toLowerCase())
+      : true;
+
+    const matchesType =
+      courseType === "all"
+        ? true
+        : courseType === "live"
+        ? course.isOngoing
+        : !course.isOngoing;
+
+    return matchesSearch && matchesType;
+  });
+
+  return (
+    <div>
+      <div className="flex flex-col sm:flex-row gap-4 mb-8">
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search courses..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9"
+          />
+        </div>
+        <Tabs
+          value={courseType}
+          onValueChange={(v) => setCourseType(v as CourseTypeFilter)}
+        >
+          <TabsList>
+            <TabsTrigger value="all">All Courses</TabsTrigger>
+            <TabsTrigger value="live">Live Classes</TabsTrigger>
+            <TabsTrigger value="video">Video Courses</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
+      {filteredCourses.length === 0 ? (
+        <Card className="border-border/50 bg-card/50">
+          <CardContent className="p-10 text-center text-muted-foreground">
+            No courses found. Try adjusting your search or filter.
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+          {filteredCourses.map((course) => (
+            <Card
+              key={course.id}
+              className="overflow-hidden border-border/50 bg-card/50 backdrop-blur hover:bg-card/80 transition-colors"
+            >
+              <div className="aspect-video bg-muted overflow-hidden">
+                <img
+                  src={getCourseImage({
+                    thumbnail: course.thumbnail,
+                    category: course.category,
+                    title: course.title,
+                  })}
+                  alt={course.title}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+              <CardHeader>
+                <div className="mb-2 flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="secondary">{course.level}</Badge>
+                    <Badge variant={course.isOngoing ? "default" : "outline"}>
+                      {course.isOngoing ? "Live" : "Video"}
+                    </Badge>
+                  </div>
+                  <div className="flex items-center gap-1 text-sm">
+                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                    <span>4.5</span>
+                  </div>
+                </div>
+                <CardTitle className="line-clamp-2 text-xl">
+                  {course.title}
+                </CardTitle>
+                <CardDescription className="line-clamp-2">
+                  {course.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="mb-5 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                  <span className="flex items-center gap-1">
+                    <Clock className="h-4 w-4" />
+                    {course.duration} weeks
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Users className="h-4 w-4" />
+                    {course.enrolledStudentsCount || 0} students
+                  </span>
+                </div>
+                <div className="flex items-center justify-between gap-4">
+                  <span className="text-lg font-semibold">
+                    Rs {course.price}
+                  </span>
+                  <Button asChild>
+                    <Link href={`/courses/${course.id}`}>View Details</Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

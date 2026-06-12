@@ -4,8 +4,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { landingStats } from "@/lib/data";
+import { useAuth } from "@/contexts/AuthContext";
+import { getDashboardPathForRole } from "@/lib/dashboard-routes";
 
 const HeroSection = () => {
+  const { user, userRole } = useAuth();
+
+  const handleStartLearning = () => {
+    window.location.href = user ? getDashboardPathForRole(userRole || "student") : "/login";
+  };
   return (
     <section className="relative py-20 lg:py-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -27,11 +34,9 @@ const HeroSection = () => {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
-            <Button size="lg" className="text-lg px-8" asChild>
-              <Link href="/signup">
-                {"Start Learning Today"}
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
+            <Button size="lg" className="text-lg px-8" onClick={handleStartLearning}>
+              {"Start Learning Today"}
+              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
             <Button
               size="lg"
@@ -39,7 +44,7 @@ const HeroSection = () => {
               className="text-lg px-8 bg-transparent"
               asChild
             >
-              <Link href="#demo">
+              <Link href="/courses">
                 <Play className="mr-2 h-5 w-5" />
                 {"Watch Demo"}
               </Link>
