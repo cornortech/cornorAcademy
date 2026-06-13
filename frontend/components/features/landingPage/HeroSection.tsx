@@ -3,7 +3,6 @@ import { ArrowRight, Play, Zap } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { landingStats } from "@/lib/data";
 import { useAuth } from "@/contexts/AuthContext";
 import { getDashboardPathForRole } from "@/lib/dashboard-routes";
 
@@ -19,7 +18,7 @@ const HeroSection = () => {
         <div className="text-center max-w-4xl mx-auto">
           <Badge variant="secondary" className="mb-6">
             <Zap className="h-3 w-3 mr-1" />
-            {"Trusted by 1,000 Students Worldwide"}
+            {"Learn with Purpose, Grow with Confidence"}
           </Badge>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-balance mb-6">
@@ -51,15 +50,6 @@ const HeroSection = () => {
             </Button>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-2xl mx-auto">
-            {landingStats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-2xl font-bold text-primary">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-              
-            ))}
-          </div>
         </div>
       </div>
     </section>

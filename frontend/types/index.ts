@@ -1,5 +1,3 @@
-import type { LucideIcon } from "lucide-react";
-
 export type UserRole = "student" | "teacher" | "admin";
 export type UserStatus =
   | "registered"
@@ -412,12 +410,4 @@ export interface SocialLink {
 export interface CompanyInfo {
   email: string;
   socialLinks: SocialLink[];
-}
-
-export interface LandingStat {
-  icon: LucideIcon;
-  label: string;
-  value: string;
-  description: string;
-  trend: string;
 }

@@ -1,6 +1,14 @@
 # Cornor Academy
 ### Modern Learning Management System For Students, Teachers and Administrators
 
+## Live Demo
+
+**Application:**https://academy.cornortech.com
+
+# Demo Video
+
+**Project Walkthrough:** https://drive.google.com/file/d/11Cv6lB3LHNJm781id3JVgEqNG7daaNPj/view?usp=drive_link
+
 ## Overview 
 Cornor Academy is a full-stack Learning Management System (LMS) designed for students, teachers and administrators. the platform allows teachers to create and manage courses, students to enroll and track their learning progress and administrators to manage users, courses, payments and platform settings from a centralized dashboard.
 
@@ -238,6 +246,28 @@ http://localhost:4000/api-docs
 * Social Media Configuration
 * Payment Settings
 * Course Configuration
+
+## Screenshots
+
+### Landing Page
+
+![Landing Page](./frontend/public/screenshots/home.png)
+
+### Course Details
+
+![Course Details](./frontend/public/screenshots/course-details.png)
+
+### Student Dashboard
+
+![Student Dashboard](./frontend/public/screenshots/student-dashboard.png)
+
+### Teacher Dashboard
+
+![Teacher Dashboard](./frontend/public//screenshots//teacher-dashboard.png)
+
+### Admin Dashboard
+
+![Admin Dashboard](./frontend/public/screenshots/admin-dashboard.png)
 
 ## Conclusion
 

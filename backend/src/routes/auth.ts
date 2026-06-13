@@ -78,7 +78,11 @@ router.post("/register/teacher", async (req: Request, res: Response) => {
 
 router.post("/login", async (req: Request, res: Response) => {
   try {
-    const { email } = req.body;
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ success: false, error: "Email and password are required" });
+    }
 
     let user: any = await prisma.student.findUnique({ where: { email } });
     let role: "student" | "teacher" | "admin" | null = user ? "student" : null;
@@ -94,7 +98,7 @@ router.post("/login", async (req: Request, res: Response) => {
     }
 
     if (!user) {
-      return res.status(404).json({ success: false, error: "User not found" });
+      return res.status(401).json({ success: false, error: "Invalid credentials", code: "auth/user-not-found" });
     }
 
     if (role === "student") {

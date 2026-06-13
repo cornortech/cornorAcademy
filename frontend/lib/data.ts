@@ -1,4 +1,3 @@
-import { Award, BookOpen, Users, TrendingUp } from "lucide-react";
 import {
   Student,
   Teacher,
@@ -16,7 +15,6 @@ import {
   TeachingCourse,
   UpcomingClass,
   CompanyInfo,
-  LandingStat,
 } from "@/types";
 
 export const mockCourseImages = {
@@ -460,37 +458,6 @@ export const mockStudentProgress: StudentProgressRecord[] = [
     assignments: "8/10",
     image: "/student-avatar.png",
     avatar: "/student-avatar.png",
-  },
-];
-
-export const landingStats: LandingStat[] = [
-  {
-    icon: Users,
-    label: "Active Students",
-    value: "1000+",
-    description: "Worldwide community of dedicated learners",
-    trend: "+240% YoY",
-  },
-  {
-    icon: Award,
-    label: "Expert Teachers",
-    value: "12+",
-    description: "Experienced industry instructors",
-    trend: "Avg. 12+ years experience",
-  },
-  {
-    icon: BookOpen,
-    label: "Courses Available",
-    value: "15+",
-    description: "High-quality learning paths across domains",
-    trend: "New courses monthly",
-  },
-  {
-    icon: TrendingUp,
-    label: "Success Rate",
-    value: "98%",
-    description: "Strong learner outcomes and completion",
-    trend: "+5% from last year",
   },
 ];
 

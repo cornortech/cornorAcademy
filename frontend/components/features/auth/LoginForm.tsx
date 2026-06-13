@@ -21,6 +21,7 @@ import { LoginFormData, loginSchema } from "@/lib/validations/auth";
 import {
   signInWithEmailAndPassword,
   sendEmailVerification,
+  fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase/config";
 import { useRouter } from "next/navigation";
@@ -62,6 +63,7 @@ export function LoginForm() {
     handleSubmit,
     formState: { errors },
     getValues,
+    setError,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
   });
@@ -149,26 +151,36 @@ export function LoginForm() {
       console.error("Login error:", error);
 
       const loginError = error as LoginError;
-      let errorMessage = "Failed to login. Please try again.";
 
-      if (
+      if (loginError.code === "auth/user-not-found") {
+        setError("email", { message: "Invalid email address." });
+      } else if (
         loginError.code === "auth/wrong-password" ||
-        loginError.code === "auth/user-not-found"
+        loginError.code === "auth/invalid-credential"
       ) {
-        errorMessage = "Invalid email or password.";
+        try {
+          const methods = await fetchSignInMethodsForEmail(auth, data.email);
+          if (methods.length === 0) {
+            setError("email", { message: "User not found." });
+          } else {
+            setError("password", { message: "Incorrect password." });
+          }
+        } catch {
+          setError("password", { message: "Incorrect password." });
+        }
       } else if (loginError.code === "auth/too-many-requests") {
-        errorMessage = "Too many failed attempts. Please try again later.";
+        toast.error("Too many failed attempts. Please try again later.");
       } else if (loginError.code === "auth/network-request-failed") {
-        errorMessage = "Network error. Check your connection.";
+        toast.error("Network error. Check your connection.");
       } else if (loginError.response?.status === 404) {
-        errorMessage = "Account not found. Please sign up first.";
+        toast.error("Account not found. Please sign up first.");
       } else if (loginError.response?.status === 403) {
-        errorMessage = loginError.response.data?.error || errorMessage;
+        toast.error(loginError.response.data?.error || "Failed to login. Please try again.");
       } else if (loginError.response?.data?.error) {
-        errorMessage = loginError.response.data.error;
+        toast.error(loginError.response.data.error);
+      } else {
+        toast.error("Failed to login. Please try again.");
       }
-
-      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
