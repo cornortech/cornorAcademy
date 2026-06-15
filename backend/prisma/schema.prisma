@@ -145,6 +145,7 @@ model course {
   meetingUrl       String
   meetingTime      DateTime
   isOngoing        Boolean            @default(false)
+  reminderSent     Boolean            @default(false)
   language         language
   level            courseLevel
   thumbnail        String
@@ -189,17 +190,18 @@ model Lesson {
 }
 
 model enrolledCourses {
-  id              String             @id @default(uuid())
-  studentId       String
-  courseId        String
-  paymentURL      String
-  status          courseEnrollStatus @default(requested)
-  rejectionReason String?
-  student         Student            @relation(fields: [studentId], references: [id], onDelete: Cascade)
-  course          course             @relation(fields: [courseId], references: [id])
-  progresses      Progress[]
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  id                  String             @id @default(uuid())
+  studentId           String
+  courseId            String
+  paymentURL          String
+  status              courseEnrollStatus @default(requested)
+  rejectionReason     String?
+  lastWatchedLessonId String?
+  student             Student            @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  course              course             @relation(fields: [courseId], references: [id])
+  progresses          Progress[]
+  createdAt           DateTime           @default(now())
+  updatedAt           DateTime           @updatedAt
 }
 
 model Progress {

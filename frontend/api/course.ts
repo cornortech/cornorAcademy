@@ -9,7 +9,11 @@ import {
   CourseAnnouncementItem,
   CreateCourseAnnouncementInput,
   UpdateCourseAnnouncementInput,
+  Lesson,
+  CourseProgress,
+  MarkCompleteResponse,
 } from "@/types";
+import axiosInstance from "@/lib/api/axios";
 
 const createCourseSchema = z.object({
   title: z.string().min(3, "Course title is required"),
@@ -426,6 +430,70 @@ export const courseAnnouncementQueryKeys = {
   detail: (id: string) =>
     [...courseAnnouncementQueryKeys.details(), id] as const,
 };
+
+export const lessonQueryKeys = {
+  all: ["lessons"] as const,
+  list: (courseId: string) => [...lessonQueryKeys.all, courseId] as const,
+};
+
+export const progressQueryKeys = {
+  all: ["progress"] as const,
+  detail: (courseId: string) => [...progressQueryKeys.all, courseId] as const,
+};
+
+export function useGetLessonsByCourseId(courseId: string) {
+  return useQuery({
+    queryKey: lessonQueryKeys.list(courseId),
+    queryFn: async () => {
+      const res = await axiosInstance.get<Lesson[]>(`/api/lessons/${courseId}`);
+      return res.data;
+    },
+    enabled: !!courseId,
+  });
+}
+
+export function useGetProgressByCourseId(courseId: string) {
+  return useQuery({
+    queryKey: progressQueryKeys.detail(courseId),
+    queryFn: async () => {
+      const res = await axiosInstance.get<CourseProgress>(`/api/progress/${courseId}`);
+      return res.data;
+    },
+    enabled: !!courseId,
+  });
+}
+
+export function useMarkLessonComplete() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (lessonId: string) => {
+      const res = await axiosInstance.post<MarkCompleteResponse>("/api/progress/complete", { lessonId });
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: progressQueryKeys.all });
+    },
+  });
+}
+
+export function useUpdateLastWatched() {
+  return useMutation({
+    mutationFn: async ({ lessonId, courseId }: { lessonId: string; courseId: string }) => {
+      const res = await axiosInstance.post<{ success: boolean }>("/api/progress/last-watched", { lessonId, courseId });
+      return res.data;
+    },
+  });
+}
+
+export function useSendLiveClassReminder() {
+  return useMutation({
+    mutationFn: async (courseId: string) => {
+      const res = await axiosInstance.post<{ success: boolean }>(`/api/live-class/${courseId}/send-reminder`);
+      return res.data;
+    },
+  });
+}
 
 export function useGetCourseAnnouncementsByCourseId(courseId: string) {
   return useQuery({

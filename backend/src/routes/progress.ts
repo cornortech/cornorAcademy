@@ -43,6 +43,8 @@ router.post("/progress/complete", authenticate, async (req: Request, res: Respon
       where: { enrollmentId: enrollment.id, completed: true },
     });
 
+    let certificateUrl: string | null = null;
+
     if (completedLessons >= totalLessons && totalLessons > 0) {
       const student = await prisma.student.findUnique({ where: { id: studentId } });
       const course = await prisma.course.findUnique({ where: { id: lesson.courseId } });
@@ -59,12 +61,14 @@ router.post("/progress/complete", authenticate, async (req: Request, res: Respon
             data: { studentId, courseId: lesson.courseId, url: certUrl, certId },
           });
 
+          certificateUrl = `${process.env.FRONTEND_URL || "http://localhost:3000"}/verify-certificate?id=${certId}`;
+
           const { sendVerificationEmail } = await import("../libs/email.service");
           try {
             await sendVerificationEmail(
               student.email,
               student.name,
-              `${process.env.FRONTEND_URL || "http://localhost:3000"}/verify-certificate?id=${certId}`
+              certificateUrl
             );
           } catch (e) {
             console.error("Failed to send certificate email:", e);
@@ -73,7 +77,14 @@ router.post("/progress/complete", authenticate, async (req: Request, res: Respon
       }
     }
 
-    res.json({ success: true, message: "Progress updated" });
+    res.json({
+      success: true,
+      message: "Progress updated",
+      completedLessons,
+      totalLessons,
+      percentage: totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0,
+      certificateUrl,
+    });
   } catch (error) {
     console.error("Error updating progress:", error);
     res.status(500).json({ success: false, error: "Internal server error" });
@@ -107,10 +118,53 @@ router.get("/progress/:courseId", authenticate, async (req: Request, res: Respon
       totalLessons,
       completedLessons,
       percentage: totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0,
+      lastWatchedLessonId: enrollment.lastWatchedLessonId,
       progress,
     });
   } catch (error) {
     console.error("Error fetching progress:", error);
+    res.status(500).json({ success: false, error: "Internal server error" });
+  }
+});
+
+router.post("/progress/last-watched", authenticate, async (req: Request, res: Response) => {
+  try {
+    const { lessonId, courseId } = req.body;
+    const studentId = req.user!.id;
+
+    if (!lessonId || !courseId) {
+      return res.status(400).json({ success: false, error: "lessonId and courseId required" });
+    }
+
+    await prisma.enrolledCourses.updateMany({
+      where: { studentId, courseId, status: "approved" },
+      data: { lastWatchedLessonId: lessonId },
+    });
+
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error updating last watched:", error);
+    res.status(500).json({ success: false, error: "Internal server error" });
+  }
+});
+
+router.get("/progress/last-watched/:courseId", authenticate, async (req: Request, res: Response) => {
+  try {
+    const { courseId } = req.params;
+    const studentId = req.user!.id;
+
+    const enrollment = await prisma.enrolledCourses.findFirst({
+      where: { studentId, courseId, status: "approved" },
+      select: { lastWatchedLessonId: true },
+    });
+
+    if (!enrollment) {
+      return res.status(403).json({ success: false, error: "Not enrolled" });
+    }
+
+    res.json({ lastWatchedLessonId: enrollment.lastWatchedLessonId });
+  } catch (error) {
+    console.error("Error fetching last watched:", error);
     res.status(500).json({ success: false, error: "Internal server error" });
   }
 });

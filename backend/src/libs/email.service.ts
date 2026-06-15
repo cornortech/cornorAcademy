@@ -125,3 +125,76 @@ export const cleanupExpiredTokens = async (): Promise<number> => {
   console.log(`🧹 Cleaned up ${result.count} expired verification tokens`);
   return result.count;
 };
+
+export const sendLiveClassReminderEmail = async (
+  email: string,
+  name: string,
+  courseTitle: string,
+  meetingUrl: string,
+  meetingTime: Date
+): Promise<void> => {
+  const formattedTime = meetingTime.toLocaleString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  const htmlTemplate = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }
+          .content { background: #f9f9f9; padding: 20px; border-radius: 0 0 8px 8px; }
+          .button { background: #a855f7; color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; margin: 20px 0; font-size: 16px; }
+          .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #999; }
+          .details { background: #f0f0f0; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>🔔 Live Class Reminder</h1>
+          </div>
+          <div class="content">
+            <p>Hi <strong>${name}</strong>,</p>
+            <p>Your live class is starting soon!</p>
+            <div class="details">
+              <p><strong>Course:</strong> ${courseTitle}</p>
+              <p><strong>Start Time:</strong> ${formattedTime}</p>
+              <p><strong>Meeting Link:</strong> <a href="${meetingUrl}">${meetingUrl}</a></p>
+            </div>
+            <center>
+              <a href="${meetingUrl}" class="button">Join Class Now</a>
+            </center>
+            <p>Make sure you have a stable internet connection and join a few minutes early.</p>
+            <p>If you have any issues, please contact support at support@cornor.academy</p>
+          </div>
+          <div class="footer">
+            <p>&copy; 2026 CornorAcademy. All rights reserved.</p>
+            <p>This is an automated email. Please do not reply to this address.</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+
+  try {
+    await transporter.sendMail({
+      from: `"Cornor Academy" <${process.env.SMTP_USER}>`,
+      to: email,
+      subject: `🔔 Reminder: "${courseTitle}" starts soon!`,
+      html: htmlTemplate,
+      text: `Hi ${name},\n\n"${courseTitle}" starts at ${formattedTime}.\n\nJoin here: ${meetingUrl}\n\nHappy learning!`,
+    });
+    console.log(`✅ Live class reminder sent to ${email}`);
+  } catch (error) {
+    console.error(`❌ Failed to send live class reminder to ${email}:`, error);
+  }
+};

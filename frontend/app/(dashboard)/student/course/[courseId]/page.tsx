@@ -1,87 +1,65 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { StudentCourseHeader } from "@/components/features/student/course/StudentCourseHeader";
-import { CourseMaterialsList } from "@/components/features/student/course/CourseMaterialsList";
-import { CourseAnnouncementsList } from "@/components/features/student/course/CourseAnnouncementsList";
-import { CourseAttendanceStats } from "@/components/features/student/course/CourseAttendanceStats";
-import {
-  mockEnrolledCourses,
-  mockRecentAnnouncements,
-  getMaterialsForCourse,
-} from "@/lib/data";
-import { CourseDiscussionsPanel } from "@/components/features/student/course/CourseDiscussionsPanel";
+import { Loader2, AlertCircle } from "lucide-react";
+import { useGetCourseById, useGetLessonsByCourseId, useGetProgressByCourseId } from "@/api/course";
+import { VideoCourseView } from "@/components/features/student/course/VideoCourseView";
+import { LiveClassView } from "@/components/features/student/course/LiveClassView";
 
 export default function StudentCoursePage() {
   const params = useParams();
   const courseId = params.courseId as string;
 
-  const course = mockEnrolledCourses.find((c) => c.id === parseInt(courseId));
-  const materials = getMaterialsForCourse(courseId);
-  const announcements = mockRecentAnnouncements.filter(
-    (a) => a.courseId === courseId
-  );
+  const { data: course, isLoading: courseLoading, error: courseError } = useGetCourseById(courseId);
+  const { data: lessons, isLoading: lessonsLoading } = useGetLessonsByCourseId(courseId);
+  const { data: progress, isLoading: progressLoading } = useGetProgressByCourseId(courseId);
 
-  const attendanceData = {
-    totalClasses: 12,
-    attended: 11,
-    missed: 1,
-    percentage: 92,
-  };
+  const isLoading = courseLoading || lessonsLoading || progressLoading;
 
-  if (!course) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">Course not found</h1>
+        <div className="text-center space-y-3">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+          <p className="text-muted-foreground">Loading course...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (courseError || !course) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center space-y-3">
+          <AlertCircle className="h-12 w-12 mx-auto text-destructive" />
+          <h2 className="text-xl font-semibold">Course not found</h2>
           <p className="text-muted-foreground">
-            The course you're looking for doesn't exist.
+            The course you&apos;re looking for doesn&apos;t exist or you don&apos;t have access.
           </p>
         </div>
       </div>
     );
   }
 
+  if (course.isOngoing) {
+    return <LiveClassView course={course} />;
+  }
+
+  const safeLessons = lessons || [];
+  const safeProgress = progress || {
+    totalLessons: 0,
+    completedLessons: 0,
+    percentage: 0,
+    lastWatchedLessonId: null,
+    progress: [],
+  };
+
   return (
-    <div className="min-h-screen bg-background">
-      <StudentCourseHeader
-        courseId={courseId}
-        title={course.title}
-        instructor={course.instructor}
-        instructorAvatar="/instructor-avatar.png"
-        status={course.status}
-        progress={course.progress}
-        completedLessons={course.completedLessons}
-        totalLessons={course.totalLessons}
-      />
-
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Tabs defaultValue="materials" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="materials">Materials & Videos</TabsTrigger>
-            <TabsTrigger value="announcements">Announcements</TabsTrigger>
-            <TabsTrigger value="attendance">My Attendance</TabsTrigger>
-            <TabsTrigger value="discussions">Discussions</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="materials">
-            <CourseMaterialsList courseId={courseId} materials={materials} />
-          </TabsContent>
-
-          <TabsContent value="announcements">
-            <CourseAnnouncementsList announcements={announcements} />
-          </TabsContent>
-
-          <TabsContent value="attendance">
-            <CourseAttendanceStats {...attendanceData} />
-          </TabsContent>
-
-          <TabsContent value="discussions">
-            <CourseDiscussionsPanel />
-          </TabsContent>
-        </Tabs>
-      </div>
-    </div>
+    <VideoCourseView
+      courseId={courseId}
+      courseTitle={course.title}
+      lessons={safeLessons}
+      progress={safeProgress}
+    />
   );
 }

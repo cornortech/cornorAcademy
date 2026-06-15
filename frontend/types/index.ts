@@ -411,3 +411,39 @@ export interface CompanyInfo {
   email: string;
   socialLinks: SocialLink[];
 }
+
+export interface Lesson {
+  id: string;
+  courseId: string;
+  title: string;
+  videoUrl: string;
+  order: number;
+  duration: number;
+  createdAt: Date;
+}
+
+export interface ProgressItem {
+  id: string;
+  lessonId: string;
+  enrollmentId: string;
+  completed: boolean;
+  completedAt: string | null;
+  lesson: { id: string; title: string; order: number };
+}
+
+export interface CourseProgress {
+  totalLessons: number;
+  completedLessons: number;
+  percentage: number;
+  lastWatchedLessonId: string | null;
+  progress: ProgressItem[];
+}
+
+export interface MarkCompleteResponse {
+  success: boolean;
+  message: string;
+  completedLessons: number;
+  totalLessons: number;
+  percentage: number;
+  certificateUrl: string | null;
+}

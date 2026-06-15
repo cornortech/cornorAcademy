@@ -18,6 +18,7 @@ import authRouter from "./routes/auth";
 import enrollmentRouter from "./routes/enrollment";
 import settingsRouter from "./routes/settings";
 import mediaRouter from "./routes/media";
+import liveClassRouter from "./routes/live-class";
 
 const app = express();
 
@@ -48,6 +49,7 @@ app.use("/api", lessonRouter);
 app.use("/api", progressRouter);
 app.use("/api", certificateRouter);
 app.use("/api", mediaRouter);
+app.use("/api", liveClassRouter);
 app.use("/settings", settingsRouter);
 
 app.get("/", (req, res) => {

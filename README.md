@@ -1,18 +1,28 @@
 # Cornor Academy
 ### Modern Learning Management System For Students, Teachers and Administrators
 
+## Overview 
+Cornor Academy is a full-stack Learning Management System (LMS) designed to simplify online education management for institution, traininig centers, and individual educators. The platform provides a centralized digital ecosystem where teachers can create and manage courses, students can enroll and lern and administrators can oversee the entire platform from a single dashboard.
+
+The project supports live scheduled classes, recorded video courses with meeting integration and pre-recorded multi-part video courses, making it flexible enough for driving institutes and any education-based business. The project focuses heavily on scalability, type safety, securigy and user experience. Every module is designed independently so new features can easily be added without affecting existing functionality.
+
+### Project Vision 
+The main goal if Cornor Academy is to help educators and institution to digitilize their teaching operations without needing multiple disconnected tools. Many small and medium-sized educational institutions still rely on manual enrollment prodesses, paper-based attendance, scattered course materials and disconnected communication systems. This project solves this by offering an all in one platform that manages the complete learning lifecycle:
+**Teacher registration and appporval**
+**Course creation and publishing**
+**Student enrollment and payment**
+**Live class scheduling and attendance**
+**Video course delivery and progress tracking**
+**Certificate generation and verification**
+**Platform analytics and reporting**
+
 ## Live Demo
 
-**Application:**https://academy.cornortech.com
+**Application:** ttps://academy.cornortech.com
 
-# Demo Video
+## Demo Video
 
 **Project Walkthrough:** https://drive.google.com/file/d/11Cv6lB3LHNJm781id3JVgEqNG7daaNPj/view?usp=drive_link
-
-## Overview 
-Cornor Academy is a full-stack Learning Management System (LMS) designed for students, teachers and administrators. the platform allows teachers to create and manage courses, students to enroll and track their learning progress and administrators to manage users, courses, payments and platform settings from a centralized dashboard.
-
-The project supports live classes, recorded video courses, course enrollments, progress tracking, certificate generation, and Khalti payment integration.
 
 ## Tech Stack
 
