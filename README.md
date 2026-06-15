@@ -8,17 +8,17 @@ The project supports live scheduled classes, recorded video courses with meeting
 
 ### Project Vision 
 The main goal if Cornor Academy is to help educators and institution to digitilize their teaching operations without needing multiple disconnected tools. Many small and medium-sized educational institutions still rely on manual enrollment prodesses, paper-based attendance, scattered course materials and disconnected communication systems. This project solves this by offering an all in one platform that manages the complete learning lifecycle:
-**Teacher registration and appporval**
-**Course creation and publishing**
-**Student enrollment and payment**
-**Live class scheduling and attendance**
-**Video course delivery and progress tracking**
-**Certificate generation and verification**
-**Platform analytics and reporting**
+- **Teacher registration and appporval**
+- **Course creation and publishing**
+- **Student enrollment and payment**
+- **Live class scheduling and attendance**
+- **Video course delivery and progress tracking**
+- **Certificate generation and verification**
+- **Platform analytics and reporting**
 
 ## Live Demo
 
-**Application:** ttps://academy.cornortech.com
+**Application:** https://academy.cornortech.com
 
 ## Demo Video
 
@@ -281,4 +281,4 @@ http://localhost:4000/api-docs
 
 ## Conclusion
 
-Cornor Academy is a full-featured Learning Management System built with Next.js and Express.js. It provides end-to-end course management, student/teacher administration, enrollment workflows, payment processing, lesson tracking, progress monitoring, and automated certificate generation — all secured with Firebase authentication and backed by PostgreSQL and Cloudinary for scalable file storage.
+Cornor Academy is a full-featured Learning Management System built with Next.js and Express.js. It provides end-to-end course management, student/teacher administration, enrollment workflows, payment processing, lesson tracking, progress monitoring, and automated certificate generation. All secured with Firebase authentication and backed by PostgreSQL and Cloudinary for scalable file storage.
