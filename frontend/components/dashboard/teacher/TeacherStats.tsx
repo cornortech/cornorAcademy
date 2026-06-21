@@ -1,14 +1,18 @@
 import { StatsCard } from "@/components/shared/stats-card";
-import { Teacher, Course } from "@/types";
+import { Teacher, Course, EnrolledCourseItem } from "@/types";
 import { Users, BookOpen, Video, TrendingUp } from "lucide-react";
 
 interface TeacherStatsProps {
   teacher: Teacher | null;
   courses: Course[];
+  enrollments?: EnrolledCourseItem[];
 }
 
-export function TeacherStats({ teacher, courses }: TeacherStatsProps) {
-  const totalStudents = 0;
+export function TeacherStats({ teacher, courses, enrollments }: TeacherStatsProps) {
+  const studentIds = new Set(
+    (enrollments ?? []).map((e) => e.student?.id).filter(Boolean)
+  );
+  const totalStudents = studentIds.size;
   const totalVideos = courses.reduce((sum, c) => sum + (c.curriculum?.length || 0), 0);
 
   return (

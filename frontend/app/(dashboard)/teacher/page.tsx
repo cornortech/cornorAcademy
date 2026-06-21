@@ -8,6 +8,7 @@ import MyTeachingCourses from "@/components/dashboard/teacher/MyTeachingCourses"
 import { UpcomingClassesWidget } from "@/components/dashboard/teacher/UpcomingClassesWidget";
 import { TeacherProfileTab } from "@/components/dashboard/teacher/TeacherProfileTab";
 import { TeacherEnrollmentList } from "@/components/dashboard/teacher/TeacherEnrollmentList";
+import { TeacherCharts } from "@/components/dashboard/teacher/TeacherCharts";
 import { UnverifiedDialog } from "@/components/dashboard/teacher/UnverifiedDialog";
 import { useTeacherDashboard } from "@/hooks/use-teacher-dashboard";
 import { useSearchParams } from "next/navigation";
@@ -106,32 +107,9 @@ export default function TeacherDashboard() {
               </p>
             </div>
 
-            <TeacherStats teacher={teacher} courses={courses} />
+            <TeacherStats teacher={teacher} courses={courses} enrollments={enrollments} />
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2 space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold">My Courses</h2>
-                  <Button variant="outline" onClick={handleCreateCourse}>
-                    <BookOpen className="h-4 w-4 mr-1" />
-                    Create New Course
-                  </Button>
-                </div>
-
-                <MyTeachingCourses courses={courses.filter((c) => !c.isOngoing)} />
-              </div>
-
-              <aside className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-2xl font-bold">Upcoming Classes</h2>
-                  <Button variant="outline" size="sm" onClick={handleScheduleLiveClass}>
-                    <Calendar className="h-4 w-4 mr-1" />
-                    Schedule
-                  </Button>
-                </div>
-            <UpcomingClassesWidget courses={courses} />
-              </aside>
-            </div>
+            <TeacherCharts courses={courses} enrollments={enrollments} />
           </>
         );
     }
