@@ -13,9 +13,11 @@ import { SettingsPanel } from "@/components/dashboard/admin/settings/SettingsPan
 import { AdminSidebar } from "@/components/dashboard/admin/AdminSidebar";
 import { AdminCharts } from "@/components/dashboard/admin/AdminCharts";
 import { useAdminDashboard } from "@/hooks/use-admin-dashboard";
+import { useGetAllCourses } from "@/api/course";
 
 export default function AdminDashboard() {
   const { students, teachers, enrollments, loading, error } = useAdminDashboard();
+  const { data: courses = [] } = useGetAllCourses();
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
@@ -59,8 +61,8 @@ export default function AdminDashboard() {
     totalUsers: students.length + teachers.length,
     totalStudents: students.length,
     totalTeachers: teachers.length,
-    totalCourses: 0,
-    activeCourses: 0,
+    totalCourses: courses.length,
+    activeCourses: courses.filter((c) => !c.isOngoing || c.status !== "completed").length,
     totalRevenue,
     monthlyRevenue,
     completionRate: 0,
