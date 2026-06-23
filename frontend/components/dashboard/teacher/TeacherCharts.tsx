@@ -154,9 +154,6 @@ export function TeacherCharts({ courses, enrollments }: TeacherChartsProps) {
                 outerRadius={100}
                 paddingAngle={4}
                 dataKey="value"
-                label={({ name, percent }) =>
-                  percent > 0 ? `${name} ${(percent * 100).toFixed(0)}%` : ""
-                }
               >
                 {courseDistribution.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />

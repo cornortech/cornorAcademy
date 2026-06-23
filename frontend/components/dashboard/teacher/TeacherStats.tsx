@@ -13,7 +13,7 @@ export function TeacherStats({ teacher, courses, enrollments }: TeacherStatsProp
     (enrollments ?? []).map((e) => e.student?.id).filter(Boolean)
   );
   const totalStudents = studentIds.size;
-  const totalVideos = courses.reduce((sum, c) => sum + (c.curriculum?.length || 0), 0);
+  const totalVideos = courses.filter((c) => !c.isOngoing).length;
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
