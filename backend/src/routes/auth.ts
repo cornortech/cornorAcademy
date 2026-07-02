@@ -1,6 +1,5 @@
 import { Router, Request, Response } from "express";
 import prisma from "../libs/db";
-import transporter from "../libs/node.mailer";
 import { createVerificationToken, sendVerificationEmail, verifyToken, deleteVerificationToken } from "../libs/email.service";
 
 const router = Router();
@@ -22,16 +21,8 @@ router.post("/register", async (req: Request, res: Response) => {
       data: { uid, name, email, phoneNumber, gender: gender.toLowerCase(), image: image || "", dob: dob || "", address: address || "", city: city || "", district: district || "", pincode: pincode || "", country: country || "", about: about || "", educationInstitute: educationInstitute || "", qualification: qualification || "" },
     });
 
-    let verificationToken = "";
-    try {
-      verificationToken = await createVerificationToken(email);
-      const verificationLink = `${process.env.FRONTEND_URL || "http://localhost:3000"}/verify-email?token=${verificationToken}`;
-      await sendVerificationEmail(email, name, verificationLink);
-    } catch (emailError) {
-      console.error("Failed to send verification email:", emailError);
-    }
+    return res.status(201).json({ success: true, studentId: newStudent.id, message: "Account created." });
 
-    return res.status(201).json({ success: true, studentId: newStudent.id, verificationToken, message: "Account created." });
   } catch (error) {
     console.error("Error creating student:", error);
     return res.status(500).json({ success: false, error: "Internal server error" });
@@ -60,16 +51,8 @@ router.post("/register/teacher", async (req: Request, res: Response) => {
       data: { uid, name, email, image: image || "", bio, noOfYearsExperience: parseInt(noOfYearsExperience), expertise, dob, gender: gender.toLowerCase() },
     });
 
-    let verificationToken = "";
-    try {
-      verificationToken = await createVerificationToken(email);
-      const verificationLink = `${process.env.FRONTEND_URL || "http://localhost:3000"}/verify-email?token=${verificationToken}`;
-      await sendVerificationEmail(email, name, verificationLink);
-    } catch (emailError) {
-      console.error("Failed to send verification email:", emailError);
-    }
+    return res.status(201).json({ success: true, teacherId: newTeacher.id, message: "Account created." });
 
-    return res.status(201).json({ success: true, teacherId: newTeacher.id, verificationToken, message: "Account created." });
   } catch (error) {
     console.error("Error creating teacher:", error);
     return res.status(500).json({ success: false, error: "Internal server error" });
@@ -116,12 +99,9 @@ router.post("/login", async (req: Request, res: Response) => {
       }
     }
 
-    if (role !== "admin" && !user.isVerified) {
-      return res.status(403).json({ success: false, error: "Please verify your email before logging in" });
-    }
-
     const redirectUrl = role === "admin" ? "/admin" : role === "teacher" ? "/teacher" : "/student";
     return res.status(200).json({ uid: user.uid, id: user.id, name: user.name, email: user.email, role, status: user.status, redirectionUrl: redirectUrl });
+
   } catch (error) {
     console.error("Error Login:", error);
     return res.status(500).json({ success: false, error: "Login failed" });
@@ -181,22 +161,6 @@ router.post("/resend-verification", async (req: Request, res: Response) => {
   } catch (error) {
     console.error("Error resending verification:", error);
     return res.status(500).json({ success: false, error: "Internal server error" });
-  }
-});
-
-router.post("/test-email", async (_req: Request, res: Response) => {
-  try {
-    await transporter.verify();
-    const info = await transporter.sendMail({
-      from: `"Cornor Academy" <${process.env.SMTP_USER}>`,
-      to: process.env.SMTP_USER,
-      subject: "SMTP Test",
-      text: "If you receive this, SMTP is working.",
-    });
-    return res.status(200).json({ success: true, messageId: info.messageId });
-  } catch (error: any) {
-    console.error("SMTP test failed:", error);
-    return res.status(500).json({ success: false, error: error.message || "SMTP test failed" });
   }
 });
 

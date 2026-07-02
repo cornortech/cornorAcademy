@@ -151,9 +151,8 @@ export function SignupForm() {
           qualification: data.qualification || "",
         };
 
-        const registerResponse = await authService.registerStudent(registerPayload);
-        const tokenParam = registerResponse.verificationToken ? `&token=${registerResponse.verificationToken}` : "";
-        router.push(`/verify-email?email=${email}${tokenParam}`);
+        await authService.registerStudent(registerPayload);
+        router.push(`/verify-email?email=${email}`);
       } else {
         const registerPayload = {
           uid: cred.uid,
@@ -167,9 +166,8 @@ export function SignupForm() {
           gender: data.gender,
         };
 
-        const registerResponse = await authService.registerTeacher(registerPayload);
-        const tokenParam = registerResponse.verificationToken ? `&token=${registerResponse.verificationToken}` : "";
-        router.push(`/verify-email?email=${email}${tokenParam}`);
+        await authService.registerTeacher(registerPayload);
+        router.push(`/verify-email?email=${email}`);
       }
     } catch (error: any) {
       console.error("Signup Error:", error);
