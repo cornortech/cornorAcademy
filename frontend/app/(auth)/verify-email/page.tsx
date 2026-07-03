@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState } from "react";
+import { Suspense, useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,6 +13,8 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Mail, AlertCircle, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { auth } from "@/lib/firebase/config";
+import { sendEmailVerification } from "firebase/auth";
 
 function VerifyEmailContent() {
   const searchParams = useSearchParams();
@@ -20,10 +22,29 @@ function VerifyEmailContent() {
 
   const [error, setError] = useState("");
   const [isResending, setIsResending] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (cooldown > 0) {
+      intervalRef.current = setInterval(() => {
+        setCooldown((prev) => {
+          if (prev <= 1) {
+            if (intervalRef.current) clearInterval(intervalRef.current);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, [cooldown]);
 
   const handleResendEmail = async () => {
-    if (!email) {
-      setError("Email not found. Please sign up again.");
+    if (!auth.currentUser) {
+      setError("Session expired. Please sign up again.");
       return;
     }
 
@@ -31,22 +52,19 @@ function VerifyEmailContent() {
     setIsResending(true);
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000"}/auth/resend-verification`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+      await sendEmailVerification(auth.currentUser, {
+        url: `${window.location.origin}/login`,
+        handleCodeInApp: false,
       });
-
-      const data = await res.json();
-
-      if (data.success) {
-        alert("Verification email sent! Check your inbox.");
+      setCooldown(60);
+      alert("Verification email sent! Check your inbox.");
+    } catch (err: any) {
+      if (err.code === "auth/too-many-requests") {
+        setError("Please wait before requesting another email.");
+        setCooldown(60);
       } else {
-        setError(data.error || "Failed to resend verification email.");
+        setError(err.message || "Failed to resend verification email.");
       }
-    } catch (err) {
-      console.error("Resend error:", err);
-      setError("Cannot reach server. Make sure the backend is running on port 4000.");
     } finally {
       setIsResending(false);
     }
@@ -93,13 +111,15 @@ function VerifyEmailContent() {
                   onClick={handleResendEmail}
                   variant="outline"
                   className="w-full"
-                  disabled={isResending}
+                  disabled={isResending || cooldown > 0}
                 >
                   {isResending ? (
                     <>
                       <Loader2 className="h-4 w-4 mr-2 animate-spin" />
                       Sending...
                     </>
+                  ) : cooldown > 0 ? (
+                    `Resend in ${cooldown}s`
                   ) : (
                     "Resend Verification Email"
                   )}
@@ -107,7 +127,7 @@ function VerifyEmailContent() {
               )}
 
               <p className="text-xs text-muted-foreground text-center">
-                Didn't receive the email? Check your spam folder or try
+                Didn&apos;t receive the email? Check your spam folder or try
                 resending.
               </p>
             </div>
