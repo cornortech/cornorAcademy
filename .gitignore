@@ -14,6 +14,8 @@ pnpm-debug.log*
 # Ignore build output
 /build/
 /dist/
+**/dist/
+backend/dist/
 /.next/
 /out/
 
