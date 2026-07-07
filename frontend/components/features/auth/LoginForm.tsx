@@ -20,13 +20,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginFormData, loginSchema } from "@/lib/validations/auth";
 import {
   signInWithEmailAndPassword,
-  sendEmailVerification,
   fetchSignInMethodsForEmail,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase/config";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import axiosInstance from "@/lib/api/axios";
+import { authService } from "@/lib/api/auth.service";
 import {DEMO_CREDENTIALS} from "@/lib/config";
 
 const isDemoAccount = (email: string, password: string) =>
@@ -77,9 +77,7 @@ export function LoginForm() {
         getValues("password")
       );
 
-      await sendEmailVerification(tempUser.user, {
-        url: `${window.location.origin}/login`,
-      });
+      await authService.resendVerification(verificationEmail, tempUser.user.uid);
 
       await auth.signOut();
 

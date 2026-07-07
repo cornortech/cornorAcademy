@@ -8,13 +8,14 @@ export const generateVerificationToken = (): string => {
   return crypto.randomBytes(32).toString("hex");
 };
 
-export const createVerificationToken = async (email: string): Promise<string> => {
+export const createVerificationToken = async (email: string, uid?: string): Promise<string> => {
   const token = generateVerificationToken();
   const expiresAt = new Date(Date.now() + VERIFICATION_LINK_EXPIRY_HOURS * 60 * 60 * 1000);
 
   await prisma.verificationToken.create({
     data: {
       email,
+      uid,
       token,
       expiresAt,
     },
@@ -88,7 +89,7 @@ export const sendVerificationEmail = async (
   }
 };
 
-export const verifyToken = async (token: string): Promise<string | null> => {
+export const verifyToken = async (token: string): Promise<{ email: string; uid: string | null } | null> => {
   const verificationToken = await prisma.verificationToken.findUnique({
     where: { token },
   });
@@ -104,7 +105,7 @@ export const verifyToken = async (token: string): Promise<string | null> => {
     return null;
   }
 
-  return verificationToken.email;
+  return { email: verificationToken.email, uid: verificationToken.uid };
 };
 
 export const deleteVerificationToken = async (token: string): Promise<void> => {

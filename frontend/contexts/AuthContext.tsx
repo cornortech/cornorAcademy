@@ -3,7 +3,6 @@ import { LoginResponse, UserRole, UserStatus } from "@/types";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
-  sendEmailVerification,
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signOut,
@@ -134,18 +133,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (userCredentials.user) {
       await updateProfile(userCredentials.user, { displayName });
-      try {
-        await sendEmailVerification(userCredentials.user, {
-          url: `${window.location.origin}/login`,
-          handleCodeInApp: false,
-        });
-        console.log("✅ Verification email sent successfully");
-      } catch (error: any) {
-        console.error("❌ Email verification send failed:");
-        console.error("Code:", error.code);
-        console.error("Message:", error.message);
-        console.error("Full error:", error);
-      }
+
+      await authService.sendVerificationEmail(
+        userCredentials.user.uid,
+        email,
+        displayName
+      );
 
       return { uid: userCredentials.user.uid };
     }
@@ -204,10 +197,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const resendVerificationEmail = async () => {
     if (user && !user.emailVerified) {
       try {
-        await sendEmailVerification(user, {
-          url: `${window.location.origin}/login`,
-          handleCodeInApp: false,
-        });
+        await authService.resendVerification(user.email!, user.uid);
       } catch (error: any) {
         console.error("Resend verification email failed:", error.message);
         throw new Error("Failed to send verification email. Please try again.");

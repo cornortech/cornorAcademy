@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import prisma from "../libs/db";
+import admin from "../libs/admin";
 import { createVerificationToken, sendVerificationEmail, verifyToken, deleteVerificationToken } from "../libs/email.service";
 
 const router = Router();
@@ -115,13 +116,24 @@ router.post("/verify-email", async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, error: "Token is required" });
     }
 
-    const email = await verifyToken(token);
-    if (!email) {
+    const result = await verifyToken(token);
+    if (!result) {
       return res.status(400).json({ success: false, error: "Invalid or expired token" });
     }
 
+    const { email, uid } = result;
+
     await prisma.student.updateMany({ where: { email }, data: { isVerified: true } });
     await prisma.teacher.updateMany({ where: { email }, data: { isVerified: true } });
+
+    if (uid) {
+      try {
+        await admin.auth().updateUser(uid, { emailVerified: true });
+      } catch (firebaseError) {
+        console.error("Failed to update Firebase emailVerified:", firebaseError);
+      }
+    }
+
     await deleteVerificationToken(token);
 
     return res.status(200).json({ success: true, message: "Email verified successfully" });
@@ -131,9 +143,27 @@ router.post("/verify-email", async (req: Request, res: Response) => {
   }
 });
 
+router.post("/send-verification", async (req: Request, res: Response) => {
+  try {
+    const { uid, email, name } = req.body;
+    if (!uid || !email || !name) {
+      return res.status(400).json({ success: false, error: "uid, email, and name are required" });
+    }
+
+    const verificationToken = await createVerificationToken(email, uid);
+    const verificationLink = `${process.env.FRONTEND_URL || "http://localhost:3000"}/verify-email?token=${verificationToken}`;
+    await sendVerificationEmail(email, name, verificationLink);
+
+    return res.status(200).json({ success: true, message: "Verification email sent" });
+  } catch (error) {
+    console.error("Error sending verification email:", error);
+    return res.status(500).json({ success: false, error: "Failed to send verification email" });
+  }
+});
+
 router.post("/resend-verification", async (req: Request, res: Response) => {
   try {
-    const { email } = req.body;
+    const { email, uid } = req.body;
     if (!email) {
       return res.status(400).json({ success: false, error: "Email is required" });
     }
@@ -153,7 +183,7 @@ router.post("/resend-verification", async (req: Request, res: Response) => {
       return res.status(400).json({ success: false, error: "Email is already verified" });
     }
 
-    const verificationToken = await createVerificationToken(email);
+    const verificationToken = await createVerificationToken(email, uid);
     const verificationLink = `${process.env.FRONTEND_URL || "http://localhost:3000"}/verify-email?token=${verificationToken}`;
     await sendVerificationEmail(email, name || email, verificationLink);
 

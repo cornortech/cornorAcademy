@@ -170,6 +170,22 @@ class AuthService {
     const response = await axiosInstance.put("/update", data);
     return response.data;
   }
+
+  async sendVerificationEmail(uid: string, email: string, name: string): Promise<void> {
+    await axiosInstance.post("/auth/send-verification", { uid, email, name });
+  }
+
+  async verifyEmail(token: string): Promise<{ success: boolean; message: string }> {
+    const response = await axiosInstance.post<{ success: boolean; message: string }>(
+      "/auth/verify-email",
+      { token }
+    );
+    return response.data;
+  }
+
+  async resendVerification(email: string, uid?: string): Promise<void> {
+    await axiosInstance.post("/auth/resend-verification", { email, uid });
+  }
 }
 
 export const authService = new AuthService();
