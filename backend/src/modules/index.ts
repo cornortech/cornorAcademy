@@ -5,7 +5,8 @@ import { teacherRouter } from "./teacher/teacher.router";
 import { courseRouter } from "./course/course.router";
 import { enrollementRequestRouter } from "./enrollement/enrollement.router";
 import { courseMediaRouter } from "./media/media.router";
-import { announcementRouter } from "./announcement/announcement.router";
+import { courseAnnouncementRouter } from "./announcement/courseAnnouncement.router";
+import { platformAnnouncementRouter } from "./announcement/platformAnnouncement.router";
 import { authRouter } from "./auth/auth.router";
 
 const s = initServer();
@@ -16,6 +17,7 @@ export const router = s.router(contract, {
     course: courseRouter,
     enrollement: enrollementRequestRouter,
     courseMedia: courseMediaRouter,
-    announcement: announcementRouter,
+    courseAnnouncement: courseAnnouncementRouter,
+    platformAnnouncement: platformAnnouncementRouter,
     auth: authRouter,
 });

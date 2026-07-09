@@ -4,7 +4,8 @@ import { teacherContract } from "./teacher/teacher.contract";
 import { courseContract } from "./course/course.contract";
 import { enrollementRequestContract } from "./enrollement/enrollement.contract";
 import { courseMediaContract } from "./media/media.contract";
-import { announcementContract } from "./announcement/announcement.contract";
+import { courseAnnouncementContract } from "./announcement/courseAnnouncement.contract";
+import { platformAnnouncementContract } from "./announcement/platformAnnouncement.contract";
 import { authContract } from "./auth/auth.contract";
 
 const c = initContract();
@@ -15,6 +16,7 @@ export const contract = c.router({
     course: courseContract,
     enrollement: enrollementRequestContract,
     courseMedia: courseMediaContract,
-    announcement: announcementContract,
+    courseAnnouncement: courseAnnouncementContract,
+    platformAnnouncement: platformAnnouncementContract,
     auth: authContract,
 });

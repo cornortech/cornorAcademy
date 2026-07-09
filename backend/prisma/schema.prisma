@@ -158,7 +158,7 @@ model course {
   admin            Admin              @relation(fields: [adminId], references: [id])
   enrolledCourses  enrolledCourses[]
   courseMedia      courseMedia[]
-  announcements    announcement[]
+  announcements    Announcement[]
   courseCurriculum courseCurriculum[]
   lessons          Lesson[]
   payments         Payment[]
@@ -255,14 +255,32 @@ model courseMedia {
   updatedAt   DateTime     @updatedAt
 }
 
-model announcement {
-  id        String   @id @default(uuid())
-  courseId  String
-  title     String
-  message   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  course    course   @relation(fields: [courseId], references: [id])
+enum AnnouncementTarget {
+  EVERYONE
+  ALL_STUDENTS
+  ALL_TEACHERS
+  SPECIFIC_COURSE
+  INDIVIDUAL_USER
+  COURSE_STUDENTS
+}
+
+model Announcement {
+  id            String              @id @default(uuid())
+  title         String
+  message       String
+  attachments   Json?
+  externalLinks String[]
+  isPinned      Boolean             @default(false)
+  publishDate   DateTime            @default(now())
+  expiryDate    DateTime?
+  createdById   String
+  creatorRole   String
+  target        AnnouncementTarget
+  courseId      String?
+  targetUserId  String?
+  course        course?             @relation(fields: [courseId], references: [id])
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
 }
 
 model courseAgreement {

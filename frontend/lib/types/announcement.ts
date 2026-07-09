@@ -1,6 +1,6 @@
 export interface CreateAnnouncementRequest {
   title: string;
-  content: string;
+  message: string;
 }
 
 export interface UpdateAnnouncementRequest extends Partial<CreateAnnouncementRequest> {}
@@ -8,9 +8,8 @@ export interface UpdateAnnouncementRequest extends Partial<CreateAnnouncementReq
 export interface Announcement {
   id: string;
   courseId: string;
-  teacherId: string;
   title: string;
-  content: string;
+  message: string;
   createdAt: Date;
   updatedAt: Date;
 }
