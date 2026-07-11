@@ -12,9 +12,8 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getCourseImage } from "@/lib/course-images";
 import { Course } from "@/types";
-import { Clock, Search, Star, Users } from "lucide-react";
+import { Clock, Search, Users } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useGetEnrolledCoursesByStudentId } from "@/api/course";
@@ -89,11 +88,7 @@ export function CourseCatalog({ courses }: CourseCatalogProps) {
             >
               <div className="aspect-video bg-muted overflow-hidden">
                 <img
-                  src={getCourseImage({
-                    thumbnail: course.thumbnail,
-                    category: course.category,
-                    title: course.title,
-                  })}
+                  src={course.thumbnail}
                   alt={course.title}
                   className="h-full w-full object-cover"
                 />
@@ -106,10 +101,7 @@ export function CourseCatalog({ courses }: CourseCatalogProps) {
                       {course.isOngoing ? "Live" : "Video"}
                     </Badge>
                   </div>
-                  <div className="flex items-center gap-1 text-sm">
-                    <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                    <span>4.5</span>
-                  </div>
+
                 </div>
                 <CardTitle className="line-clamp-2 text-xl">
                   {course.title}
@@ -122,7 +114,7 @@ export function CourseCatalog({ courses }: CourseCatalogProps) {
                 <div className="mb-5 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
-                    {course.duration} weeks
+                    {course.isOngoing ? `${course.duration} weeks` : `${course.duration}h`}
                   </span>
                   <span className="flex items-center gap-1">
                     <Users className="h-4 w-4" />

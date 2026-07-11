@@ -17,7 +17,6 @@ import { InstructorTab } from "@/components/features/public-course/InstructorTab
 import { CourseSidebar } from "@/components/features/public-course/CourseSidebar";
 import { CourseDetailContent } from "@/components/features/public-course/CourseDetailContent";
 import { courseApi } from "@/lib/api/course";
-import { getCourseImage } from "@/lib/course-images";
 import type { Course, CourseCurriculumItem } from "@/types";
 
 interface InstructorInfo {
@@ -87,11 +86,7 @@ function transformCourseForFrontend(backendCourse: Course): FrontendCourse {
     reviews: 0,
     status: backendCourse.status === "active" ? "active" : "draft",
     certificate: true,
-    thumbnail: getCourseImage({
-      thumbnail: backendCourse.thumbnail,
-      category: backendCourse.category,
-      title: backendCourse.title,
-    }),
+    thumbnail: backendCourse.thumbnail || "",
     isOngoing: backendCourse.isOngoing ?? false,
     modules: backendCourse.curriculum.map((item: CourseCurriculumItem) => ({
       title: item.title,

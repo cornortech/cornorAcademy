@@ -9,141 +9,132 @@ import { MaterialsSidebar } from "@/components/features/student/materials/Materi
 import { VideoPlayer } from "@/components/features/student/materials/VideoPlayer";
 import { PDFViewer } from "@/components/features/student/materials/PDFViewer";
 import { CodeViewer } from "@/components/features/student/materials/CodeViewer";
-import { mockEnrolledCourses, getMaterialsForCourse } from "@/lib/data";
 import { MaterialInfoTabs } from "@/components/features/student/materials/MaterialInfoTable";
+import { useAuth } from "@/contexts/AuthContext";
+import { useGetEnrolledCoursesByStudentId } from "@/api/course";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function MaterialsViewerPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const courseId = params.courseId as string;
   const materialId = searchParams.get("material");
+  const { userData } = useAuth();
+  const { data: enrollments, isLoading } = useGetEnrolledCoursesByStudentId(
+    userData?.id ?? ""
+  );
 
   const [selectedMaterial, setSelectedMaterial] = useState(
     materialId ? parseInt(materialId) : 1
   );
 
-  const course = mockEnrolledCourses.find((c) => c.id === parseInt(courseId));
-  const materials = getMaterialsForCourse(courseId);
+  const enrolledCourse = enrollments?.find(
+    (e) => e.course.id === courseId
+  );
+  const courseTitle = enrolledCourse?.course.title || "Course";
+  const instructor = enrolledCourse?.course.teacher?.name || "Instructor";
+  const materials: any[] = [];
   const currentMaterial =
-    materials.find((m) => m.id === selectedMaterial) || materials[0];
+    materials.find((m) => m.id === selectedMaterial) || null;
 
   const handleMaterialSelect = (id: number) => {
     setSelectedMaterial(id);
   };
 
-  const markAsCompleted = (materialId: number) => {
-    console.log(`Marking material ${materialId} as completed`);
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Skeleton className="h-8 w-64 mb-8" />
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+            <Skeleton className="h-96 rounded-lg" />
+            <Skeleton className="h-96 col-span-3 rounded-lg" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  const nextMaterial = () => {
-    const currentIndex = materials.findIndex((m) => m.id === selectedMaterial);
-    if (currentIndex < materials.length - 1) {
-      setSelectedMaterial(materials[currentIndex + 1].id);
-    }
-  };
-
-  const previousMaterial = () => {
-    const currentIndex = materials.findIndex((m) => m.id === selectedMaterial);
-    if (currentIndex > 0) {
-      setSelectedMaterial(materials[currentIndex - 1].id);
-    }
-  };
-
-  const currentIndex = materials.findIndex((m) => m.id === selectedMaterial);
-  const hasPrevious = currentIndex > 0;
-  const hasNext = currentIndex < materials.length - 1;
-
-  if (!course || !currentMaterial) {
+  if (!enrolledCourse) {
     return <div>Course or material not found</div>;
   }
 
-  const renderMaterialContent = () => {
-    switch (currentMaterial.type) {
-      case "video":
-        return (
-          <VideoPlayer
-            title={currentMaterial.title}
-            duration={currentMaterial.duration || ""}
-            completed={currentMaterial.completed}
-            onMarkComplete={() => markAsCompleted(currentMaterial.id)}
-          />
-        );
-      case "pdf":
-        return (
-          <PDFViewer
-            title={currentMaterial.title}
-            description={currentMaterial.description}
-            size={currentMaterial.size || ""}
-            pages={currentMaterial.pages || 0}
-            completed={currentMaterial.completed}
-            onMarkComplete={() => markAsCompleted(currentMaterial.id)}
-          />
-        );
-      case "code":
-        return (
-          <CodeViewer
-            title={currentMaterial.title}
-            description={currentMaterial.description}
-            size={currentMaterial.size || ""}
-            completed={currentMaterial.completed}
-            onMarkComplete={() => markAsCompleted(currentMaterial.id)}
-          />
-        );
-      default:
-        return (
-          <div className="text-center py-8 text-muted-foreground">
-            Unsupported material type
-          </div>
-        );
-    }
-  };
-
   return (
     <div className="min-h-screen bg-background">
-      {/* Top Navigation Header */}
       <MaterialsNavHeader courseId={courseId} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-          {/* Sidebar */}
           <div className="lg:col-span-1">
             <MaterialsSidebar
-              courseTitle={course.title}
-              instructor={course.instructor}
-              progress={course.progress}
+              courseTitle={courseTitle}
+              instructor={instructor}
+              progress={0}
               materials={materials}
               selectedMaterialId={selectedMaterial}
               onMaterialSelect={handleMaterialSelect}
             />
           </div>
 
-          {/* Main Content */}
           <div className="lg:col-span-3 space-y-6">
-            {/* Material Title + Navigation */}
-            <MaterialContentHeader
-              title={currentMaterial.title}
-              description={currentMaterial.description}
-              onPrevious={previousMaterial}
-              onNext={nextMaterial}
-              hasPrevious={hasPrevious}
-              hasNext={hasNext}
-            />
+            {currentMaterial ? (
+              <>
+                <MaterialContentHeader
+                  title={currentMaterial.title}
+                  description={currentMaterial.description}
+                  onPrevious={() => {}}
+                  onNext={() => {}}
+                  hasPrevious={false}
+                  hasNext={false}
+                />
 
-            {/* Material Viewer */}
-            <Card className="border-border/50 bg-card/50 backdrop-blur">
-              <CardContent className="p-6">
-                {renderMaterialContent()}
-              </CardContent>
-            </Card>
+                <Card className="border-border/50 bg-card/50 backdrop-blur">
+                  <CardContent className="p-6">
+                    {currentMaterial.type === "video" && (
+                      <VideoPlayer
+                        title={currentMaterial.title}
+                        duration={currentMaterial.duration || ""}
+                        completed={currentMaterial.completed}
+                        onMarkComplete={() => {}}
+                      />
+                    )}
+                    {currentMaterial.type === "pdf" && (
+                      <PDFViewer
+                        title={currentMaterial.title}
+                        description={currentMaterial.description || ""}
+                        size={currentMaterial.size || ""}
+                        pages={currentMaterial.pages || 0}
+                        completed={currentMaterial.completed}
+                        onMarkComplete={() => {}}
+                      />
+                    )}
+                    {currentMaterial.type === "code" && (
+                      <CodeViewer
+                        title={currentMaterial.title}
+                        description={currentMaterial.description || ""}
+                        size={currentMaterial.size || ""}
+                        completed={currentMaterial.completed}
+                        onMarkComplete={() => {}}
+                      />
+                    )}
+                  </CardContent>
+                </Card>
 
-            {/* Info Tabs */}
-            <MaterialInfoTabs
-              materialType={currentMaterial.type}
-              description={currentMaterial.description}
-              duration={currentMaterial.duration}
-              size={currentMaterial.size}
-              transcript={currentMaterial.transcript}
-            />
+                <MaterialInfoTabs
+                  materialType={currentMaterial.type}
+                  description={currentMaterial.description}
+                  duration={currentMaterial.duration}
+                  size={currentMaterial.size}
+                  transcript={currentMaterial.transcript}
+                />
+              </>
+            ) : (
+              <Card className="border-border/50 bg-card/50 backdrop-blur">
+                <CardContent className="p-12 text-center text-muted-foreground">
+                  <p>No materials available for this course yet.</p>
+                </CardContent>
+              </Card>
+            )}
           </div>
         </div>
       </div>

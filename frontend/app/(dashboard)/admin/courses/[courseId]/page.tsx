@@ -1,19 +1,14 @@
 "use client";
 
-import { useState } from "react";
 import { useParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CoursePaymentStats } from "@/components/dashboard/admin/courses/detail/CoursePaymentStats";
 import { PaymentTable } from "@/components/dashboard/admin/courses/detail/PaymentTable";
 import { PaymentSummary } from "@/components/dashboard/admin/courses/detail/PaymentSummary";
-import { mockStudentPayments } from "@/lib/data";
 import { CourseDetailHeader } from "@/components/dashboard/admin/courses/detail/CourseDetailHeader";
-import { PaymentSearchFilter } from "@/components/dashboard/admin/courses/detail/PaymentSearchFilter";
 
 export default function AdminCourseDetailPage() {
   const params = useParams();
-  const [searchQuery, setSearchQuery] = useState("");
-  const [filterStatus, setFilterStatus] = useState("all");
 
   const course = {
     id: params.courseId,
@@ -27,27 +22,6 @@ export default function AdminCourseDetailPage() {
     status: "active",
   };
 
-  const studentPayments = mockStudentPayments;
-
-  const filteredPayments = studentPayments.filter((payment) => {
-    const matchesSearch =
-      payment.studentName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      payment.studentEmail.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus =
-      filterStatus === "all" || payment.status === filterStatus;
-    return matchesSearch && matchesStatus;
-  });
-
-  const completedPayments = studentPayments.filter(
-    (p) => p.status === "completed"
-  ).length;
-  const totalAmountReceived = studentPayments
-    .filter((p) => p.status === "completed")
-    .reduce((sum, p) => sum + p.amount, 0);
-  const pendingAmount = studentPayments.filter(
-    (p) => p.status === "pending"
-  ).length;
-
   return (
     <div className="min-h-screen bg-background">
       <CourseDetailHeader
@@ -59,8 +33,8 @@ export default function AdminCourseDetailPage() {
         <CoursePaymentStats
           totalRevenue={course.totalRevenue}
           totalStudents={course.totalStudents}
-          completedPayments={completedPayments}
-          pendingAmount={pendingAmount}
+          completedPayments={0}
+          pendingAmount={0}
         />
 
         <Tabs defaultValue="payments" className="space-y-6">
@@ -79,23 +53,16 @@ export default function AdminCourseDetailPage() {
               </div>
             </div>
 
-            <PaymentSearchFilter
-              searchQuery={searchQuery}
-              setSearchQuery={setSearchQuery}
-              filterStatus={filterStatus}
-              setFilterStatus={setFilterStatus}
-            />
-
-            <PaymentTable payments={filteredPayments} />
+            <PaymentTable payments={[]} />
           </TabsContent>
 
           <TabsContent value="summary" className="space-y-6">
             <PaymentSummary
               coursePrice={course.price}
-              completedPayments={completedPayments}
-              totalRevenue={totalAmountReceived}
+              completedPayments={0}
+              totalRevenue={0}
               totalStudents={course.totalStudents}
-              pendingAmount={pendingAmount}
+              pendingAmount={0}
             />
           </TabsContent>
         </Tabs>

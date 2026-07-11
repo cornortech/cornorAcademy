@@ -14,7 +14,6 @@ import {
   CreateCourseInput,
 } from "@/api/course";
 import { Course, CourseCategory } from "@/types";
-import { getCourseImage } from "@/lib/course-images";
 
 export function CourseManagement() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
@@ -77,11 +76,7 @@ export function CourseManagement() {
           : new Date(),
         language: "english",
         level: formData.level || "beginner",
-        thumbnail: getCourseImage({
-          thumbnail: formData.thumbnail,
-          category: formData.category || "WebDevelopment",
-          title: formData.title,
-        }),
+        thumbnail: formData.thumbnail || "",
         category: formData.category || ("WebDevelopment" as CourseCategory),
         startDate: formData.startDate
           ? new Date(formData.startDate)
@@ -153,11 +148,7 @@ export function CourseManagement() {
     isOngoing: course.isOngoing,
     startTime: new Date(course.startDate).toISOString(),
     description: course.description,
-    thumbnail: getCourseImage({
-      thumbnail: course.thumbnail,
-      category: course.category,
-      title: course.title,
-    }),
+    thumbnail: course.thumbnail || "",
   }));
 
   return (

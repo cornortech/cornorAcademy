@@ -148,6 +148,7 @@ export interface Course {
     id: string;
     name: string;
   } | null;
+  enrolledStudentsCount?: number;
   createdAt: Date;
   updatedAt: Date;
 }

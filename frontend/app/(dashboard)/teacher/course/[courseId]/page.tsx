@@ -2,23 +2,32 @@
 
 import { useParams } from "next/navigation";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Skeleton } from "@/components/ui/skeleton";
 import { TeacherCourseNavHeader } from "@/components/features/teacher/course/TeacherCourseNavHeader";
 import { TeacherCourseHeader } from "@/components/features/teacher/course/TeacherCourseHeader";
 import { StudentProgressList } from "@/components/features/teacher/course/StudentProgressList";
 import { ResourceManagement } from "@/components/features/teacher/course/ResourceManagement";
 import { AttendanceTracker } from "@/components/features/teacher/course/AttendanceTracker";
 import { AnnouncementManager } from "@/components/features/teacher/course/AnnouncementManager";
-import {
-  mockTeachingCourses,
-  mockStudentProgress,
-  mockUploadedResources,
-} from "@/lib/data";
+import { useGetCourseById } from "@/api/course";
 
 export default function TeacherCoursePage() {
   const params = useParams();
   const courseId = params.courseId as string;
 
-  const course = mockTeachingCourses.find((c) => c.id === parseInt(courseId));
+  const { data: course, isLoading } = useGetCourseById(courseId);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <Skeleton className="h-8 w-64 mb-8" />
+          <Skeleton className="h-32 w-full rounded-lg mb-8" />
+          <Skeleton className="h-64 w-full rounded-lg" />
+        </div>
+      </div>
+    );
+  }
 
   if (!course) {
     return <div>Course not found</div>;
@@ -31,12 +40,12 @@ export default function TeacherCoursePage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <TeacherCourseHeader
           title={course.title}
-          students={course.students}
+          students={course.enrolledStudentsCount || 0}
           status={course.status}
-          completedLessons={course.completedLessons}
-          totalLessons={course.totalLessons}
-          avgProgress={course.avgProgress}
-          nextClass={course.nextClass}
+          completedLessons={0}
+          totalLessons={0}
+          avgProgress={0}
+          nextClass=""
         />
 
         <Tabs defaultValue="students" className="space-y-6">
@@ -48,18 +57,18 @@ export default function TeacherCoursePage() {
           </TabsList>
 
           <TabsContent value="students">
-            <StudentProgressList students={mockStudentProgress} />
+            <StudentProgressList students={[]} />
           </TabsContent>
 
           <TabsContent value="resources">
-            <ResourceManagement resources={mockUploadedResources} />
+            <ResourceManagement resources={[]} />
           </TabsContent>
 
           <TabsContent value="attendance">
             <AttendanceTracker
               courseId={courseId}
               courseTitle={course.title}
-              students={mockStudentProgress}
+              students={[]}
             />
           </TabsContent>
 
