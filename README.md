@@ -2,13 +2,13 @@
 ### Modern Learning Management System For Students, Teachers and Administrators
 
 ## Overview 
-Cornor Academy is a full-stack Learning Management System (LMS) designed to simplify online education management for institution, traininig centers, and individual educators. The platform provides a centralized digital ecosystem where teachers can create and manage courses, students can enroll and lern and administrators can oversee the entire platform from a single dashboard.
+Cornor Academy is a full-stack Learning Management System (LMS) designed to simplify online education management for institutions, training centers, and individual educators. The platform provides a centralized digital ecosystem where teachers can create and manage courses, students can enroll and learn and administrators can oversee the entire platform from a single dashboard.
 
-The project supports live scheduled classes, recorded video courses with meeting integration and pre-recorded multi-part video courses, making it flexible enough for driving institutes and any education-based business. The project focuses heavily on scalability, type safety, securigy and user experience. Every module is designed independently so new features can easily be added without affecting existing functionality.
+The project supports live scheduled classes, recorded video courses with meeting integration and pre-recorded multi-part video courses, making it flexible enough for driving institutes and any education-based business. The project focuses heavily on scalability, type safety, security and user experience. Every module is designed independently so new features can easily be added without affecting existing functionality.
 
 ### Project Vision 
-The main goal if Cornor Academy is to help educators and institution to digitilize their teaching operations without needing multiple disconnected tools. Many small and medium-sized educational institutions still rely on manual enrollment prodesses, paper-based attendance, scattered course materials and disconnected communication systems. This project solves this by offering an all in one platform that manages the complete learning lifecycle:
-- **Teacher registration and appporval**
+The main goal of Cornor Academy is to help educators and institutions to digitize their teaching operations without needing multiple disconnected tools. Many small and medium-sized educational institutions still rely on manual enrollment processes, paper-based attendance, scattered course materials and disconnected communication systems. This project solves this by offering an all-in-one platform that manages the complete learning lifecycle:
+- **Teacher registration and approval**
 - **Course creation and publishing**
 - **Student enrollment and payment**
 - **Live class scheduling and attendance**
@@ -34,6 +34,7 @@ The main goal if Cornor Academy is to help educators and institution to digitili
 - **Forms:** React Hook Form, Zod
 - **Auth:** Firebase
 - **Charts:** Recharts
+- **Notifications:** Sonner
 
 ### Backend
 - **Runtime:** Node.js, TypeScript
@@ -45,6 +46,7 @@ The main goal if Cornor Academy is to help educators and institution to digitili
 - **Docs:** Swagger (swagger-jsdoc, swagger-ui-express)
 - **Email:** Nodemailer
 - **Certificates:** PDFKit
+- **API Layer:** TS-Rest (type-safe HTTP contracts)
 
 ## Run Commands
 
@@ -53,6 +55,7 @@ The main goal if Cornor Academy is to help educators and institution to digitili
 cd backend
 npm install
 npm run generate   # Generate Prisma client & Zod schemas
+npm run seed       # Bootstrap default admin from .env (first-time setup only)
 npm run dev        # Start dev server with hot-reload
 npm run build      # Compile TypeScript
 npm run start      # Start production server
@@ -136,33 +139,58 @@ NEXT_PUBLIC_KHALTI_PUBLIC_KEY=pk_test_xxxxxxxxx
 ```
 cornorAcademy/
 ├── backend/
-│   ├── prisma/              
+│   ├── prisma/
+│   │   └── schema.prisma
 │   ├── src/
-│   │   ├── contract/        
-│   │   ├── libs/            
-│   │   ├── middleware/       
-│   │   ├── modules/         
-│   │   ├── routes/          
-│   │   ├── services/        
-│   │   ├── app.ts           
-│   │   └── server.ts       
-│   └── package.json
+│   │   ├── app.ts
+│   │   ├── server.ts
+│   │   ├── contract/
+│   │   │   ├── announcement/
+│   │   │   ├── auth/
+│   │   │   ├── course/
+│   │   │   ├── enrollement/
+│   │   │   ├── media/
+│   │   │   ├── student/
+│   │   │   ├── teacher/
+│   │   │   ├── index.ts
+│   │   │   └── common.schema.ts
+│   │   ├── libs/
+│   │   ├── middleware/
+│   │   ├── modules/
+│   │   │   ├── announcement/
+│   │   │   ├── auth/
+│   │   │   ├── course/
+│   │   │   ├── enrollement/
+│   │   │   ├── media/
+│   │   │   ├── student/
+│   │   │   ├── teacher/
+│   │   │   └── index.ts
+│   │   ├── routes/
+│   │   └── services/
+│   ├── package.json
+│   └── tsconfig.json
 │
 ├── frontend/
-│   ├── app/                 
-│   │   ├── (auth)/          
-│   │   ├── (dashboard)/     
-│   │   └── (public)/       
-│   ├── components/         
-│   │   ├── ui/              
-│   │   ├── shared/         
-│   │   ├── features/        
-│   │   └── dashboard/       
-│   ├── contexts/            
-│   ├── hooks/               
-│   ├── lib/                
-│   └── types/               
+│   ├── api/
+│   ├── app/
+│   ├── components/
+│   │   ├── ui/
+│   │   ├── dashboard/
+│   │   ├── features/
+│   │   └── shared/
+│   ├── contexts/
+│   ├── hooks/
+│   ├── lib/
+│   │   ├── api/
+│   │   ├── firebase/
+│   │   ├── types/
+│   │   └── validations/
+│   ├── public/
+│   ├── types/
+│   ├── package.json
+│   └── tsconfig.json
 │
+├── .gitignore
 └── README.md
 ```
 
@@ -187,6 +215,7 @@ http://localhost:4000/api-docs
 - Progress Tracking
 - Certificates
 - Settings
+- Announcements
 
 ## Features
 
@@ -223,6 +252,7 @@ http://localhost:4000/api-docs
 * Structured Lessons
 * Video-Based Learning
 * Course Announcements
+* Platform Announcements
 * Progress Monitoring
 
 ### Payments
@@ -250,6 +280,12 @@ http://localhost:4000/api-docs
 * Learning Hours
 * Completion Statistics
 
+### Announcements
+
+* Role-Targeted Announcements (Everyone, Students, Teachers, Course)
+* Course-Level Announcements for Teachers
+* Email Notification Delivery via SMTP
+
 ### Platform Settings
 
 * Company Information Management
@@ -273,7 +309,7 @@ http://localhost:4000/api-docs
 
 ### Teacher Dashboard
 
-![Teacher Dashboard](./frontend/public//screenshots//teacher-dashboard.png)
+![Teacher Dashboard](./frontend/public/screenshots/teacher-dashboard.png)
 
 ### Admin Dashboard
 

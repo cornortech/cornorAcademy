@@ -1,16 +1,18 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CourseAnnouncementItem } from "@/types";
+import type { Announcement } from "@/types";
 
 interface Props {
-  announcements: CourseAnnouncementItem[];
+  announcements: Announcement[];
 }
 
 const RecentAnnouncementWidget = ({ announcements }: Props) => {
   return (
     <Card className="border-border/50 bg-card/50 backdrop-blur">
+
       <CardHeader>
         <CardTitle className="text-lg">Recent Announcements</CardTitle>
       </CardHeader>
+
       <CardContent className="space-y-4">
         {announcements.length > 0 ? (
           announcements.slice(0, 5).map((announcement) => (
@@ -26,6 +28,7 @@ const RecentAnnouncementWidget = ({ announcements }: Props) => {
           <p className="text-sm text-muted-foreground text-center py-4">No announcements yet</p>
         )}
       </CardContent>
+      
     </Card>
   );
 };

@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CourseAnnouncementItem } from "@/types";
+import type { Announcement } from "@/types";
 
 interface Props {
-  announcements: CourseAnnouncementItem[];
+  announcements: Announcement[];
 }
 
 const RecentAnnouncements = ({ announcements }: Props) => {

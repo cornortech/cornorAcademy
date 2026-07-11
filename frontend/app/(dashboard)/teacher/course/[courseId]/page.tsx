@@ -12,7 +12,6 @@ import {
   mockTeachingCourses,
   mockStudentProgress,
   mockUploadedResources,
-  mockRecentAnnouncements,
 } from "@/lib/data";
 
 export default function TeacherCoursePage() {
@@ -65,7 +64,7 @@ export default function TeacherCoursePage() {
           </TabsContent>
 
           <TabsContent value="announcements">
-            <AnnouncementManager announcements={mockRecentAnnouncements} />
+            <AnnouncementManager courseId={courseId} />
           </TabsContent>
         </Tabs>
       </div>

@@ -8,7 +8,7 @@ import { StudentManagement } from "@/components/dashboard/admin/students/Student
 import { TeacherManagement } from "@/components/dashboard/admin/teachers/TeacherManagement";
 import { CourseManagement } from "@/components/dashboard/admin/courses/CourseManagement";
 import { EnrollmentRequests } from "@/components/dashboard/admin/enrollment/EnrollmentRequests";
-import { AnnouncementsPanel } from "@/components/dashboard/admin/announcements/AnnouncementsPanel";
+import { AdminAnnouncementsTab } from "@/components/features/admin/announcements/AdminAnnouncementsTab";
 import { SettingsPanel } from "@/components/dashboard/admin/settings/SettingsPanel";
 import { AdminSidebar } from "@/components/dashboard/admin/AdminSidebar";
 import { AdminCharts } from "@/components/dashboard/admin/AdminCharts";
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
       case "enrollment-requests":
         return <EnrollmentRequests enrollments={enrollments} />;
       case "announcements":
-        return <AnnouncementsPanel />;
+        return <AdminAnnouncementsTab />;
       case "settings":
         return <SettingsPanel />;
       default:

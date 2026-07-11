@@ -38,6 +38,7 @@ export const createPlatformAnnouncementSchema = z.object({
   target: announcementTargetSchema,
   courseId: z.string().uuid().optional(),
   targetUserId: z.string().uuid().optional(),
+  sendEmail: z.boolean().optional(),
 });
 
 export const updatePlatformAnnouncementSchema = z.object({

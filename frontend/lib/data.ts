@@ -6,7 +6,6 @@ import {
   Certificate,
   StudentPayment,
   EnrolledCourse,
-  Announcement,
   StudentProgressRecord,
   UploadedResource,
   AdminManagedCourse,
@@ -622,63 +621,6 @@ export const mockSystemActivity = [
     severity: "info",
   },
 ];
-
-export const mockRecentAnnouncements: Announcement[] = [
-  {
-    id: 1,
-    type: "assignment",
-    title: "Assignment Deadline Extended",
-    course: "Web Development Fundamentals",
-    courseId: "1",
-    message:
-      "The JavaScript project deadline has been extended to next Monday.",
-    time: "2 hours ago",
-    date: "2025 Nov 11",
-    recipients: 67,
-  },
-  {
-    id: 2,
-    type: "update",
-    title: "New Learning Resources Added",
-    course: "Advanced JavaScript Concepts",
-    courseId: "2",
-    message: "I've added additional practice exercises for async programming.",
-    time: "1 day ago",
-    date: "2025 Nov 1",
-    recipients: 45,
-  },
-];
-
-export const mockCourseAnnouncements: Announcement[] = [
-  {
-    id: 1,
-    title: "New Assignment Posted",
-    message:
-      "Complete the JavaScript project by Friday. Check the resources section for guidelines.",
-    time: "2 hours ago",
-    type: "assignment",
-    date: "2024-01-20",
-    courseId: "1",
-    course: "Web Development Fundamentals",
-    recipients: 67,
-  },
-  {
-    id: 2,
-    title: "Live Session Tomorrow",
-    message:
-      "Join us tomorrow at 2 PM for a live coding session on JavaScript functions.",
-    time: "1 day ago",
-    type: "schedule",
-    date: "2024-01-19",
-    courseId: "1",
-    course: "Web Development Fundamentals",
-    recipients: 67,
-  },
-];
-
-export const getAnnouncementsForCourse = (courseId: string): Announcement[] => {
-  return mockCourseAnnouncements.filter((a) => a.courseId === courseId);
-};
 
 export const getCourseById = (id: string): LegacyCourse | undefined => {
   const course = mockCourses.find((course) => course.id === id);

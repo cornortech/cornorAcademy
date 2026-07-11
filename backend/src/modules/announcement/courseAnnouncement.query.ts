@@ -10,7 +10,7 @@ const getCourseAnnouncements: AppRouteQueryImplementation<
 
     const course = await prisma.course.findUnique({
       where: { id: courseId },
-      select: { id: true },
+      select: { id: true, title: true },
     });
 
     if (!course) {
@@ -26,9 +26,11 @@ const getCourseAnnouncements: AppRouteQueryImplementation<
           { courseId },
           { target: "EVERYONE" },
           { target: "ALL_STUDENTS" },
+          { target: "ALL_TEACHERS" },
           { target: "SPECIFIC_COURSE", courseId },
         ],
       },
+      include: { course: { select: { title: true } } },
       orderBy: [
         { isPinned: "desc" },
         { publishDate: "desc" },
@@ -40,6 +42,7 @@ const getCourseAnnouncements: AppRouteQueryImplementation<
       body: dbAnnouncements.map((a) => ({
         id: a.id,
         courseId: a.courseId ?? courseId,
+        courseName: course.title,
         title: a.title,
         message: a.message,
         attachments: a.attachments as any[] | null,
@@ -49,6 +52,7 @@ const getCourseAnnouncements: AppRouteQueryImplementation<
         expiryDate: a.expiryDate,
         createdById: a.createdById,
         creatorRole: a.creatorRole,
+        target: a.target as any,
         createdAt: a.createdAt,
         updatedAt: a.updatedAt,
       })),

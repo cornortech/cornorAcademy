@@ -114,6 +114,133 @@ export const deleteVerificationToken = async (token: string): Promise<void> => {
   });
 };
 
+interface AnnouncementEmailPayload {
+  title: string;
+  message: string;
+  creatorName: string;
+  creatorRole: string;
+  externalLinks?: string[];
+  courseName?: string;
+}
+
+async function getRecipients(
+  target: string,
+  courseId?: string | null,
+  targetUserId?: string | null
+): Promise<{ email: string; name: string }[]> {
+  switch (target) {
+    case "EVERYONE": {
+      const [students, teachers] = await Promise.all([
+        prisma.student.findMany({ select: { email: true, name: true } }),
+        prisma.teacher.findMany({ select: { email: true, name: true } }),
+      ]);
+      return [...students, ...teachers];
+    }
+    case "ALL_STUDENTS": {
+      const students = await prisma.student.findMany({ select: { email: true, name: true } });
+      return students;
+    }
+    case "ALL_TEACHERS": {
+      const teachers = await prisma.teacher.findMany({ select: { email: true, name: true } });
+      return teachers;
+    }
+    case "SPECIFIC_COURSE":
+    case "COURSE_STUDENTS": {
+      if (!courseId) return [];
+      const enrollments = await prisma.enrolledCourses.findMany({
+        where: { courseId, status: "approved" },
+        select: { student: { select: { email: true, name: true } } },
+      });
+      return enrollments.map((e) => e.student).filter(Boolean);
+    }
+    case "INDIVIDUAL_USER": {
+      if (!targetUserId) return [];
+      const [student, teacher] = await Promise.all([
+        prisma.student.findUnique({ where: { id: targetUserId }, select: { email: true, name: true } }),
+        prisma.teacher.findUnique({ where: { id: targetUserId }, select: { email: true, name: true } }),
+      ]);
+      const user = student || teacher;
+      return user ? [user] : [];
+    }
+    default:
+      return [];
+  }
+}
+
+export const sendAnnouncementEmail = async (
+  payload: AnnouncementEmailPayload,
+  target: string,
+  courseId?: string | null,
+  targetUserId?: string | null
+): Promise<number> => {
+  const recipients = await getRecipients(target, courseId, targetUserId);
+  if (recipients.length === 0) return 0;
+
+  const linksHtml = payload.externalLinks?.length
+    ? `<div style="margin-top:16px"><p><strong>Links:</strong></p>${payload.externalLinks.map((l) => `<p><a href="${l}" style="color:#a855f7">${l}</a></p>`).join("")}</div>`
+    : "";
+
+  const htmlTemplate = `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8">
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+          .header { background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%); color: white; padding: 20px; border-radius: 8px 8px 0 0; text-align: center; }
+          .content { background: #f9f9f9; padding: 20px; border-radius: 0 0 8px 8px; }
+          .footer { text-align: center; margin-top: 20px; font-size: 12px; color: #999; }
+          .announcement-box { background: white; border-left: 4px solid #a855f7; padding: 15px; margin: 15px 0; border-radius: 4px; }
+          .meta { font-size: 12px; color: #999; margin-top: 8px; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>📢 New Announcement</h1>
+          </div>
+          <div class="content">
+            <p>Hi there,</p>
+            ${payload.courseName ? `<p><strong>Course:</strong> ${payload.courseName}</p>` : ""}
+            <div class="announcement-box">
+              <h2 style="margin-top:0">${payload.title}</h2>
+              <p>${payload.message}</p>
+              ${linksHtml}
+            </div>
+            <div class="meta">
+              Posted by ${payload.creatorName} (${payload.creatorRole})
+            </div>
+            <p style="margin-top:20px">Log in to the platform to view more details.</p>
+          </div>
+          <div class="footer">
+            <p>&copy; 2026 CornorAcademy. All rights reserved.</p>
+            <p>This is an automated email. Please do not reply to this address.</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+
+  let sentCount = 0;
+  for (const r of recipients) {
+    try {
+      await transporter.sendMail({
+        from: `"Cornor Academy" <${process.env.SMTP_USER}>`,
+        to: r.email,
+        subject: `📢 ${payload.title}`,
+        html: htmlTemplate,
+        text: `${payload.title}\n\n${payload.message}\n\n— ${payload.creatorName} (${payload.creatorRole})`,
+      });
+      sentCount++;
+    } catch (error) {
+      console.error(`❌ Failed to send announcement email to ${r.email}:`, error);
+    }
+  }
+  console.log(`✅ Announcement email sent to ${sentCount}/${recipients.length} recipients`);
+  return sentCount;
+};
+
 export const cleanupExpiredTokens = async (): Promise<number> => {
   const result = await prisma.verificationToken.deleteMany({
     where: {

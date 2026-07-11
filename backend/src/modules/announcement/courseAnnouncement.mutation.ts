@@ -1,17 +1,18 @@
 import { AppRouteMutationImplementation } from "@ts-rest/express";
 import { courseAnnouncementContract } from "../../contract/announcement/courseAnnouncement.contract";
 import prisma from "../../libs/db";
+import { sendAnnouncementEmail } from "../../libs/email.service";
 
 const createCourseAnnouncement: AppRouteMutationImplementation<
   typeof courseAnnouncementContract.createCourseAnnouncement
 > = async ({ req }) => {
   try {
     const { teacherId, courseId } = req.params;
-    const { title, message, attachments, externalLinks, isPinned, publishDate, expiryDate } = req.body;
+    const { title, message, attachments, externalLinks, isPinned, publishDate, expiryDate, sendEmail } = req.body;
 
     const course = await prisma.course.findUnique({
       where: { id: courseId },
-      select: { teacherId: true },
+      select: { teacherId: true, title: true },
     });
 
     if (!course) {
@@ -37,6 +38,26 @@ const createCourseAnnouncement: AppRouteMutationImplementation<
         target: "COURSE_STUDENTS",
       },
     });
+
+    if (sendEmail) {
+      prisma.teacher.findUnique({
+        where: { id: teacherId },
+        select: { name: true },
+      }).then((teacher) => {
+        sendAnnouncementEmail(
+          {
+            title,
+            message,
+            creatorName: teacher?.name || "Teacher",
+            creatorRole: "teacher",
+            externalLinks: externalLinks ?? undefined,
+            courseName: course.title,
+          },
+          "COURSE_STUDENTS",
+          courseId
+        ).catch((err) => console.error("Failed to send announcement emails:", err));
+      });
+    }
 
     return { status: 201, body: { success: true, message: "Announcement created successfully" } };
   } catch (error) {

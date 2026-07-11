@@ -9,6 +9,7 @@ import { VideoLessonPlayer } from "./VideoLessonPlayer";
 import { CompletionCelebration } from "./CompletionCelebration";
 import { useVideoShortcuts } from "@/hooks/use-video-shortcuts";
 import { useUpdateLastWatched, useMarkLessonComplete } from "@/api/course";
+import { CourseAnnouncementsList } from "./CourseAnnouncementsList";
 import type { Lesson, CourseProgress } from "@/types";
 
 interface VideoCourseViewProps {
@@ -120,6 +121,7 @@ export function VideoCourseView({
   return (
     <>
       <div className="min-h-screen bg-background">
+        
         <header className="border-b border-border/40 bg-background/95 backdrop-blur">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex h-14 items-center justify-between">
             <div className="flex items-center gap-3">
@@ -168,6 +170,7 @@ export function VideoCourseView({
                   isCompleting={isCompleting}
                 />
               </div>
+              <CourseAnnouncementsList courseId={courseId} />
             </div>
           </div>
         </div>

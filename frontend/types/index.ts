@@ -261,26 +261,38 @@ export interface UploadedResource {
   description: string;
 }
 
-export type AnnouncementType =
-  | "important"
-  | "update"
-  | "maintenance"
-  | "event"
-  | "general"
-  | "assignment"
-  | "schedule";
+export type AnnouncementTarget =
+  | "EVERYONE"
+  | "ALL_STUDENTS"
+  | "ALL_TEACHERS"
+  | "SPECIFIC_COURSE"
+  | "INDIVIDUAL_USER"
+  | "COURSE_STUDENTS";
+
+export interface AnnouncementAttachment {
+  name: string;
+  url: string;
+  type: string;
+  size?: number;
+}
 
 export interface Announcement {
-  id: number;
+  id: string;
   title: string;
   message: string;
-  time: string;
-  type: AnnouncementType;
-  date: string;
-  course?: string;
-  courseId?: string;
-  courseName?: string;
-  recipients?: number;
+  attachments: AnnouncementAttachment[] | null;
+  externalLinks: string[];
+  isPinned: boolean;
+  publishDate: string;
+  expiryDate: string | null;
+  createdById: string;
+  creatorRole: string;
+  target: AnnouncementTarget;
+  courseId: string | null;
+  courseName: string | null;
+  targetUserId: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface EnrollmentRequest {
@@ -382,23 +394,31 @@ export interface UpdateCourseMediaInput {
   pathURL?: string;
 }
 
-export interface CourseAnnouncementItem {
-  id: string;
-  courseId: string;
+export interface CreateAnnouncementInput {
   title: string;
   message: string;
-  createdAt: Date;
-  updatedAt: Date;
+  attachments?: AnnouncementAttachment[];
+  externalLinks?: string[];
+  isPinned?: boolean;
+  publishDate?: string;
+  expiryDate?: string;
+  target?: AnnouncementTarget;
+  courseId?: string;
+  targetUserId?: string;
+  sendEmail?: boolean;
 }
 
-export interface CreateCourseAnnouncementInput {
-  title: string;
-  message: string;
-}
-
-export interface UpdateCourseAnnouncementInput {
+export interface UpdateAnnouncementInput {
   title?: string;
   message?: string;
+  attachments?: AnnouncementAttachment[];
+  externalLinks?: string[];
+  isPinned?: boolean;
+  publishDate?: string;
+  expiryDate?: string | null;
+  target?: AnnouncementTarget;
+  courseId?: string | null;
+  targetUserId?: string | null;
 }
 
 export interface SocialLink {

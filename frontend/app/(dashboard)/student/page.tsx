@@ -4,7 +4,7 @@ import StudentStatsCard from "@/components/dashboard/student/student-stats-card"
 import { UpcomingClassesWidget } from "@/components/features/student/dashboard/UpcomingClassesWidget";
 import { MyCoursesList } from "@/components/features/student/dashboard/MyCourseList";
 import RecentAnnouncementWidget from "@/components/features/student/dashboard/RecentAnnouncementsWidget";
-import { AnnouncementsTab } from "@/components/features/student/dashboard/AnnouncementsTab";
+import { StudentAnnouncementsTab } from "@/components/features/student/announcements/StudentAnnouncementsTab";
 import { StudentProfileTab } from "@/components/dashboard/student/StudentProfileTab";
 import { useStudentDashboard } from "@/hooks/use-student-dashboard";
 import { useSearchParams } from "next/navigation";
@@ -57,7 +57,7 @@ export default function StudentDashboard() {
         );
 
       case "announcements":
-        return <AnnouncementsTab announcements={announcements} />;
+        return <StudentAnnouncementsTab />;
 
       case "profile":
         return <StudentProfileTab />;

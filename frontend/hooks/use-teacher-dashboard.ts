@@ -1,80 +1,115 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useMemo } from "react"
+import { useQuery } from "@tanstack/react-query"
 import { authService } from "@/lib/api/auth.service"
 import axiosInstance from "@/lib/api/axios"
-import type { Teacher, Course, CourseAnnouncementItem, EnrolledCourseItem } from "@/types"
+import { useAuth } from "@/contexts/AuthContext"
+import { useGetCoursesByTeacher } from "@/api/course"
+import { announcementQueryKeys } from "@/api/announcement"
+import type { Teacher, Course, Announcement, EnrolledCourseItem } from "@/types"
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:4000"
 
 interface TeacherDashboardData {
   teacher: Teacher | null
   courses: Course[]
-  announcements: CourseAnnouncementItem[]
+  announcements: Announcement[]
   enrollments: EnrolledCourseItem[]
   loading: boolean
   error: string | null
 }
 
 export function useTeacherDashboard(): TeacherDashboardData {
-  const [teacher, setTeacher] = useState<Teacher | null>(null)
-  const [courses, setCourses] = useState<Course[]>([])
-  const [announcements, setAnnouncements] = useState<CourseAnnouncementItem[]>([])
-  const [enrollments, setEnrollments] = useState<EnrolledCourseItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const { userData } = useAuth()
+  const teacherId = userData?.id ?? ""
 
-  useEffect(() => {
-    let cancelled = false
+  const teacherQuery = useQuery({
+    queryKey: ["teacher-profile", teacherId],
+    queryFn: () => authService.getUserDetails("teacher") as Promise<Teacher | null>,
+    enabled: !!teacherId,
+  })
 
-    async function fetchData() {
-      try {
-        const teacherData = await authService.getUserDetails("teacher") as Teacher | null
-        if (cancelled) return
-        if (!teacherData) {
-          setLoading(false)
-          return
-        }
-        setTeacher(teacherData)
+  const coursesQuery = useGetCoursesByTeacher(teacherId)
 
-        const coursesRes = await fetch(`${API_BASE_URL}/course/teacher/${teacherData.id}`).then(r => r.json()).catch(() => [] as Course[])
-        if (cancelled) return
+  const courseIds = useMemo(
+    () => (coursesQuery.data ?? []).map((c: any) => c.id).filter(Boolean) as string[],
+    [coursesQuery.data]
+  )
 
-        const courseList = Array.isArray(coursesRes) ? coursesRes : []
-        setCourses(courseList)
+  const platformAnnouncementsQuery = useQuery({
+    queryKey: [...announcementQueryKeys.all, "platform", "teacher"],
+    queryFn: async () => {
+      const res = await fetch(`${API_BASE_URL}/announcements`)
+      if (!res.ok) return [] as Announcement[]
+      return res.json() as Promise<Announcement[]>
+    },
+    enabled: !!teacherId,
+  })
 
-        const announcementPromises = courseList.map((c: any) =>
-          fetch(`${API_BASE_URL}/course/${c.id}/announcement`)
-            .then(r => r.json())
-            .catch(() => [] as CourseAnnouncementItem[])
+  const courseAnnouncementsQuery = useQuery({
+    queryKey: [...announcementQueryKeys.all, "teacher-dashboard", ...courseIds],
+    queryFn: async () => {
+      const results = await Promise.all(
+        courseIds.map((id) =>
+          fetch(`${API_BASE_URL}/course/${id}/announcement`)
+            .then((r) => r.json())
+            .catch(() => [] as Announcement[])
         )
-        const announcementResults = await Promise.all(announcementPromises)
-        if (cancelled) return
+      )
+      return results.flat().filter(Boolean) as Announcement[]
+    },
+    enabled: courseIds.length > 0,
+  })
 
-        const allAnnouncements = announcementResults.flat().filter(Boolean)
-        setAnnouncements(allAnnouncements)
+  const enrollmentsQuery = useQuery({
+    queryKey: ["teacher-enrollments", teacherId],
+    queryFn: async () => {
+      const all = await axiosInstance
+        .get("/enrollement/")
+        .then((r) => r.data)
+        .catch(() => [] as any[])
+      const list = Array.isArray(all) ? all : []
+      const teacherCourseIds = new Set(courseIds)
+      return list.filter((e: any) => teacherCourseIds.has(e.course?.id)) as EnrolledCourseItem[]
+    },
+    enabled: !!teacherId && courseIds.length > 0,
+  })
 
-        const enrollmentsRes = await axiosInstance.get("/enrollement/").then(r => r.data).catch(() => [] as any[])
-        if (cancelled) return
+  const platformAnnouncements = (platformAnnouncementsQuery.data ?? [])
+    .filter((a) => a.target === "EVERYONE" || a.target === "ALL_TEACHERS" || (a.target === "INDIVIDUAL_USER" && a.targetUserId === teacherId))
 
-        const allEnrollments = Array.isArray(enrollmentsRes) ? enrollmentsRes : []
-        const teacherCourseIds = new Set(courseList.map((c: any) => c.id))
-        const filteredEnrollments = allEnrollments.filter((e: any) => teacherCourseIds.has(e.course?.id))
-        setEnrollments(filteredEnrollments)
+  const courseAnnouncements = courseAnnouncementsQuery.data ?? []
 
-        setLoading(false)
-      } catch (err: any) {
-        if (!cancelled) {
-          setError(err.message || "Failed to load dashboard data")
-          setLoading(false)
-        }
-      }
-    }
+  const seen = new Set(platformAnnouncements.map((a) => a.id))
+  const announcements = [
+    ...platformAnnouncements,
+    ...courseAnnouncements.filter((a) => !seen.has(a.id)),
+  ]
 
-    fetchData()
+  const enrollments = enrollmentsQuery.data ?? []
 
-    return () => { cancelled = true }
-  }, [])
+  const loading =
+    teacherQuery.isLoading ||
+    coursesQuery.isLoading ||
+    platformAnnouncementsQuery.isLoading ||
+    (courseIds.length > 0 && courseAnnouncementsQuery.isLoading) ||
+    (courseIds.length > 0 && enrollmentsQuery.isLoading)
 
-  return { teacher, courses, announcements, enrollments, loading, error }
+  const error =
+    teacherQuery.error?.message ??
+    coursesQuery.error?.message ??
+    platformAnnouncementsQuery.error?.message ??
+    courseAnnouncementsQuery.error?.message ??
+    enrollmentsQuery.error?.message ??
+    null
+
+  return {
+    teacher: (teacherQuery.data as Teacher) ?? null,
+    courses: (coursesQuery.data as Course[]) ?? [],
+    announcements,
+    enrollments,
+    loading,
+    error,
+  }
 }

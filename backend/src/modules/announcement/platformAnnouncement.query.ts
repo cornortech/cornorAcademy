@@ -23,6 +23,7 @@ const getAllAnnouncements: AppRouteQueryImplementation<
 
     const dbAnnouncements = await prisma.announcement.findMany({
       where,
+      include: { course: { select: { title: true } } },
       orderBy: [
         { isPinned: "desc" },
         { publishDate: "desc" },
@@ -44,6 +45,7 @@ const getAllAnnouncements: AppRouteQueryImplementation<
         creatorRole: a.creatorRole,
         target: a.target as any,
         courseId: a.courseId,
+        courseName: a.course?.title ?? null,
         targetUserId: a.targetUserId,
         createdAt: a.createdAt,
         updatedAt: a.updatedAt,
@@ -66,6 +68,7 @@ const getAnnouncementById: AppRouteQueryImplementation<
 
     const announcement = await prisma.announcement.findUnique({
       where: { id },
+      include: { course: { select: { title: true } } },
     });
 
     if (!announcement) {
@@ -90,6 +93,7 @@ const getAnnouncementById: AppRouteQueryImplementation<
         creatorRole: announcement.creatorRole,
         target: announcement.target as any,
         courseId: announcement.courseId,
+        courseName: announcement.course?.title ?? null,
         targetUserId: announcement.targetUserId,
         createdAt: announcement.createdAt,
         updatedAt: announcement.updatedAt,

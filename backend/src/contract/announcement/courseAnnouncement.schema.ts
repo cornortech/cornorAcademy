@@ -28,6 +28,7 @@ export const createCourseAnnouncementSchema = z.object({
   isPinned: z.boolean().optional(),
   publishDate: z.string().datetime().optional(),
   expiryDate: z.string().datetime().optional(),
+  sendEmail: z.boolean().optional(),
 });
 
 export const updateCourseAnnouncementSchema = z.object({

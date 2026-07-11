@@ -6,9 +6,6 @@ import {
   CourseMediaItem,
   CreateCourseMediaInput,
   UpdateCourseMediaInput,
-  CourseAnnouncementItem,
-  CreateCourseAnnouncementInput,
-  UpdateCourseAnnouncementInput,
   Lesson,
   CourseProgress,
   MarkCompleteResponse,
@@ -421,16 +418,6 @@ export function useDeleteCourseMedia() {
   });
 }
 
-export const courseAnnouncementQueryKeys = {
-  all: ["courseAnnouncements"] as const,
-  lists: () => [...courseAnnouncementQueryKeys.all, "list"] as const,
-  list: (courseId: string) =>
-    [...courseAnnouncementQueryKeys.lists(), courseId] as const,
-  details: () => [...courseAnnouncementQueryKeys.all, "detail"] as const,
-  detail: (id: string) =>
-    [...courseAnnouncementQueryKeys.details(), id] as const,
-};
-
 export const lessonQueryKeys = {
   all: ["lessons"] as const,
   list: (courseId: string) => [...lessonQueryKeys.all, courseId] as const,
@@ -491,91 +478,6 @@ export function useSendLiveClassReminder() {
     mutationFn: async (courseId: string) => {
       const res = await axiosInstance.post<{ success: boolean }>(`/api/live-class/${courseId}/send-reminder`);
       return res.data;
-    },
-  });
-}
-
-export function useGetCourseAnnouncementsByCourseId(courseId: string) {
-  return useQuery({
-    queryKey: courseAnnouncementQueryKeys.list(courseId),
-    queryFn: () =>
-      apiRequest<CourseAnnouncementItem[]>(`/course/${courseId}/announcement`),
-    enabled: !!courseId,
-  });
-}
-
-export function useCreateCourseAnnouncement() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      teacherId,
-      courseId,
-      data,
-    }: {
-      teacherId: string;
-      courseId: string;
-      data: CreateCourseAnnouncementInput;
-    }) =>
-      apiRequest<ApiResponse<CourseAnnouncementItem>>(
-        `/${teacherId}/courses/${courseId}/announcement`,
-        {
-          method: "POST",
-          body: JSON.stringify(data),
-        }
-      ),
-    onSuccess: (_, { courseId }) => {
-      queryClient.invalidateQueries({
-        queryKey: courseAnnouncementQueryKeys.list(courseId),
-      });
-    },
-  });
-}
-
-export function useUpdateCourseAnnouncement() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({
-      announcementId,
-      data,
-    }: {
-      announcementId: string;
-      data: UpdateCourseAnnouncementInput;
-    }) =>
-      apiRequest<ApiResponse<CourseAnnouncementItem>>(
-        `/course/${announcementId}`,
-        {
-          method: "PUT",
-          body: JSON.stringify(data),
-        }
-      ),
-    onSuccess: (_, { announcementId }) => {
-      queryClient.invalidateQueries({
-        queryKey: courseAnnouncementQueryKeys.detail(announcementId),
-      });
-      queryClient.invalidateQueries({
-        queryKey: courseAnnouncementQueryKeys.lists(),
-      });
-    },
-  });
-}
-
-export function useDeleteCourseAnnouncement() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: (announcementId: string) =>
-      apiRequest<ApiResponse<CourseAnnouncementItem>>(
-        `/course/${announcementId}`,
-        {
-          method: "DELETE",
-        }
-      ),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: courseAnnouncementQueryKeys.lists(),
-      });
     },
   });
 }

@@ -25,7 +25,8 @@ async function main() {
   try {
     const userRecord = await admin.auth().getUserByEmail(adminEmail);
     uid = userRecord.uid;
-    console.log(`Admin Firebase user exists: ${uid}`);
+    await admin.auth().updateUser(uid, { password: adminPassword });
+    console.log(`Updated admin Firebase user password: ${uid}`);
   } catch {
     const userRecord = await admin.auth().createUser({
       email: adminEmail,

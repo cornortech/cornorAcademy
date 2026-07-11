@@ -9,6 +9,7 @@ import { UpcomingClassesWidget } from "@/components/dashboard/teacher/UpcomingCl
 import { TeacherProfileTab } from "@/components/dashboard/teacher/TeacherProfileTab";
 import { TeacherEnrollmentList } from "@/components/dashboard/teacher/TeacherEnrollmentList";
 import { TeacherCharts } from "@/components/dashboard/teacher/TeacherCharts";
+import { TeacherAnnouncementsTab } from "@/components/features/teacher/announcements/TeacherAnnouncementsTab";
 import { UnverifiedDialog } from "@/components/dashboard/teacher/UnverifiedDialog";
 import { useTeacherDashboard } from "@/hooks/use-teacher-dashboard";
 import { useSearchParams } from "next/navigation";
@@ -94,6 +95,9 @@ export default function TeacherDashboard() {
 
       case "enrollments":
         return <TeacherEnrollmentList enrollments={enrollments} teacherId={teacher?.id} />;
+
+      case "announcements":
+        return <TeacherAnnouncementsTab />;
 
       default:
         return (
