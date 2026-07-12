@@ -1,3 +1,6 @@
+"use client";
+
+import { motion } from "framer-motion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,10 +15,24 @@ import Link from "next/link";
 
 const CertificateVerficationSection = () => {
   return (
-    <section id="verify-certificate" className="py-20 bg-muted/30">
+    <section
+      id="verify-certificate"
+      className="py-20 bg-muted/30"
+      aria-labelledby="certificate-heading"
+      role="region"
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-balance mb-4">
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h2
+            id="certificate-heading"
+            className="text-3xl lg:text-4xl font-bold text-balance mb-4"
+          >
             {"Verify Certificate"}
           </h2>
           <p className="text-xl text-muted-foreground text-balance max-w-2xl mx-auto">
@@ -23,9 +40,15 @@ const CertificateVerficationSection = () => {
               "Verify the authenticity of Cornor Academy certificates using the unique certificate ID."
             }
           </p>
-        </div>
+        </motion.div>
 
-        <div className="max-w-2xl mx-auto">
+        <motion.div
+          className="max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView="visible"
+          viewport={{ once: true, margin: "-80px" }}
+          animate={{ opacity: 1, y: 0 }}
+        >
           <Card className="border-border/50 bg-card/50 backdrop-blur">
             <CardHeader className="text-center">
               <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
@@ -56,7 +79,7 @@ const CertificateVerficationSection = () => {
                       placeholder="Enter certificate ID (e.g., CA-2024-WD-001234)"
                       className="flex-1 px-3 py-2 border border-border rounded-md bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
                     />
-                    <Button asChild>
+                    <Button asChild aria-label="Verify certificate">
                       <Link href="/verify-certificate">{"Verify"}</Link>
                     </Button>
                   </div>
@@ -78,9 +101,9 @@ const CertificateVerficationSection = () => {
               </div>
 
               <div className="border-t border-border pt-6">
-                <h4 className="font-medium mb-3">
+                <h3 className="font-medium mb-3">
                   {"Sample Certificate Verification"}
-                </h4>
+                </h3>
                 <div className="bg-muted/50 rounded-lg p-4 space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">
@@ -124,13 +147,13 @@ const CertificateVerficationSection = () => {
                     "Need help finding your certificate ID? Contact our support team."
                   }
                 </p>
-                <Button variant="outline" asChild>
+                <Button variant="outline" asChild aria-label="Contact support">
                   <Link href="/contact">{"Contact Support"}</Link>
                 </Button>
               </div>
             </CardContent>
           </Card>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

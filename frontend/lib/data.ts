@@ -7,6 +7,7 @@ export interface LandingTestimonial {
   role: string;
   feedback: string;
   image?: string;
+  rating: number;
 }
 
 export const landingTestimonials: LandingTestimonial[] = [
@@ -15,18 +16,21 @@ export const landingTestimonials: LandingTestimonial[] = [
     role: "Frontend Development",
     feedback:
       "Cornor Academy helped me level up my front-end skills with practical projects and a focused curriculum.",
+    rating: 5,
   },
   {
     name: "Sagar Sharma",
     role: "Fullstack Development",
     feedback:
       "The full-stack training was very practical and industry-aligned. I learned both frontend and backend confidently.",
+    rating: 5,
   },
   {
     name: "Avishek Goutam",
     role: "Fullstack Development",
     feedback:
       "Great mentorship and real-world support made learning fullstack development smooth and effective.",
+    rating: 4,
   },
 ];
 
