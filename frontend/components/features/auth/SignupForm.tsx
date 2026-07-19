@@ -201,24 +201,24 @@ export function SignupForm() {
         description="Join thousands of learners worldwide"
       />
 
-      <div className="flex items-center justify-center mb-8 gap-2">
+      <div className="flex items-center justify-center mb-5 gap-2">
         {[1, 2, 3].map((s) => (
           <div
             key={s}
-            className={`h-2 w-8 rounded-full ${step >= s ? "bg-primary" : "bg-muted"
+            className={`h-1.5 w-8 rounded-full ${step >= s ? "bg-primary" : "bg-muted"
               }`}
           />
         ))}
       </div>
 
       <Card className="border-border/50 bg-card/50 backdrop-blur">
-        <CardHeader>
-          <CardTitle className="text-xl">{stepTitles[step - 1]}</CardTitle>
-          <CardDescription>{stepDescriptions[step - 1]}</CardDescription>
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg">{stepTitles[step - 1]}</CardTitle>
+          <CardDescription className="text-sm">{stepDescriptions[step - 1]}</CardDescription>
         </CardHeader>
         <CardContent>
           {submitError && (
-            <Alert variant="destructive" className="mb-4">
+            <Alert variant="destructive" className="mb-3">
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>{submitError}</AlertDescription>
             </Alert>
@@ -228,7 +228,7 @@ export function SignupForm() {
             <form
               onSubmit={form.handleSubmit(onSubmit)}
               onKeyDown={handleKeyDown}
-              className="space-y-4"
+              className="space-y-3"
             >
               {step === 1 && <AccountStep control={form.control} />}
               {step === 2 && <PersonalStep control={form.control} />}
@@ -240,7 +240,7 @@ export function SignupForm() {
                 )
               )}
 
-              <div className="flex gap-3 mt-6">
+              <div className="flex gap-3 mt-4">
                 {step > 1 && (
                   <Button
                     type="button"
@@ -272,6 +272,13 @@ export function SignupForm() {
               </div>
             </form>
           </Form>
+
+          <p className="text-center text-sm text-muted-foreground mt-3">
+            Already have an account?{" "}
+            <a href="/login" className="text-primary hover:underline font-medium">
+              Sign in
+            </a>
+          </p>
         </CardContent>
       </Card>
     </>

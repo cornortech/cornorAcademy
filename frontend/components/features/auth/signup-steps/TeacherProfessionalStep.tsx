@@ -24,7 +24,7 @@ export const TeacherProfessionalStep = ({ control }: StepProps) => {
   const [imagePreview, setImagePreview] = useState<string>("");
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <FormField
         control={control}
         name="image"
@@ -33,23 +33,23 @@ export const TeacherProfessionalStep = ({ control }: StepProps) => {
             <FormLabel>
               Profile Image <span className="text-destructive">*</span>
             </FormLabel>
-            <div className="flex items-center gap-4">
-              <Avatar className="h-24 w-24 border-2 border-border">
+            <div className="flex items-center gap-3">
+              <Avatar className="h-16 w-16 border-2 border-border shrink-0">
                 <AvatarImage
                   src={imagePreview}
                   alt="Profile preview"
                   className="object-cover"
                 />
                 <AvatarFallback className="bg-muted flex items-center justify-center">
-                  <User className="h-12 w-12 text-muted-foreground" />
+                  <User className="h-8 w-8 text-muted-foreground" />
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1">
                 <FormLabel
                   htmlFor="image-upload"
-                  className="cursor-pointer inline-flex items-center gap-2 px-4 py-2 border border-input rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
+                  className="cursor-pointer inline-flex items-center gap-2 px-3 py-1.5 text-sm border border-input rounded-md hover:bg-accent hover:text-accent-foreground transition-colors"
                 >
-                  <Upload className="h-4 w-4" />
+                  <Upload className="h-3.5 w-3.5" />
                   {imagePreview ? "Change Image" : "Upload Image"}
                 </FormLabel>
                 <FormControl>
@@ -76,7 +76,7 @@ export const TeacherProfessionalStep = ({ control }: StepProps) => {
                     }}
                   />
                 </FormControl>
-                <p className="text-xs text-muted-foreground mt-2">
+                <p className="text-xs text-muted-foreground mt-1">
                   JPG or PNG (Max 5MB)
                 </p>
                 <FormMessage />
@@ -97,7 +97,7 @@ export const TeacherProfessionalStep = ({ control }: StepProps) => {
             <FormControl>
               <Textarea
                 placeholder="Tell us about your teaching experience and background..."
-                rows={4}
+                rows={3}
                 {...field}
               />
             </FormControl>

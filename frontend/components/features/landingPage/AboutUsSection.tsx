@@ -10,13 +10,11 @@ import {
   Lightbulb,
   Heart,
   Briefcase,
-  MapPin,
-  Building2,
-  Calendar,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSettings } from "@/contexts/SettingsContext";
+import CEOmessage from "./CEOmessage";
 
 export function AboutUsSection() {
   const { settings } = useSettings();
@@ -54,54 +52,17 @@ export function AboutUsSection() {
         <div className="mb-12 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-3">About Us</h2>
           <p className="text-muted-foreground text-lg">
-            Practical tech education, built for ambitious learners
+            Learning built around you, not the other way around
           </p>
         </div>
 
-        <div className="rounded-2xl border border-border/50 bg-card/50 p-6 mb-6">
-          <div className="space-y-4 text-muted-foreground leading-8">
-            <p>
-              {settings?.platformName || "Cornor Academy"} started with a clear goal: make technology education useful,
-              easy to follow, and aligned with the needs of modern learners and employers.
-            </p>
-            <p>
-              Today we deliver practical learning experiences, strong instructor support,
-              and a community that helps students grow with confidence around CornorTech
-              products CornorTech POS, CornorTech AI, and ChatWithLead.
-            </p>
-            <p>
-              We keep our approach straightforward: teach the skills that matter, show how
-              to use them, and help learners make real progress.
-            </p>
-          </div>
-        </div>
-
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          {[
-            { icon: MapPin, label: "Location", value: "Tilottama-3, Janakinagar" },
-            { icon: Building2, label: "District", value: "Rupandehi, Nepal" },
-            { icon: Calendar, label: "Established", value: "2024" },
-            { icon: Target, label: "Focus", value: "Practical tech learning" },
-          ].map((item, i) => {
-            const Icon = item.icon;
-            return (
-              <Card key={i} className="border-border/50 bg-card/50 backdrop-blur hover:bg-card/70 transition-colors">
-                <CardContent className="pt-6">
-                  <div className="rounded-2xl bg-primary/10 p-3 w-fit text-primary mb-4">
-                    <Icon className="h-6 w-6" />
-                  </div>
-                  <p className="text-sm text-muted-foreground mb-1">{item.label}</p>
-                  <p className="text-lg font-semibold">{item.value}</p>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+        <CEOmessage />
+        
       </section>
 
       <section id="values" className="py-16">
-        <div className="mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">Our Mission & Values</h2>
+        <div className="mb-12 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-3">Our Values</h2>
           <p className="text-muted-foreground text-lg">
             We&apos;re dedicated to excellence in education and student success
           </p>

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 import { APP_NAME } from "@/lib/config";
 
 interface AuthHeaderProps {
@@ -10,31 +9,26 @@ interface AuthHeaderProps {
 
 export function AuthHeader({ title, description }: AuthHeaderProps) {
   return (
-    <div className="text-center mb-8">
+    <div className="text-center mb-5">
+      
       <Link
         href="/"
-        className="inline-flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors mb-6"
+        className="inline-flex items-center space-x-2 mb-3 hover:opacity-80 transition-opacity"
       >
-        <ArrowLeft className="h-4 w-4" />
-        <span>Back to Home</span>
-      </Link>
-
-
-      <div className="flex items-center justify-center space-x-2 mb-4">
-        <div className="h-10 w-10 rounded-lg flex items-center justify-center">
+        <div className="h-8 w-8 rounded-lg flex items-center justify-center">
           <Image
             src="/logo/logo.png"
             alt={`${APP_NAME} Logo`}
-            width={43}
-            height={43}
+            width={34}
+            height={34}
             className="object-contain"
           />
         </div>
-        <span className="text-2xl font-bold">{APP_NAME}</span>
-      </div>
+        <span className="text-xl font-bold">{APP_NAME}</span>
+      </Link>
 
-      <h1 className="text-2xl font-bold text-balance">{title}</h1>
-      <p className="text-muted-foreground">{description}</p>
+      <h1 className="text-xl font-bold text-balance">{title}</h1>
+      <p className="text-sm text-muted-foreground">{description}</p>
     </div>
   );
 }

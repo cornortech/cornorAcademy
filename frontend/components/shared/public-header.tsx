@@ -39,7 +39,7 @@ const PublicHeader = ({
     { label: "Courses", href: "/courses" },
     { label: "Verify Certificate", href: "/verify-certificate" },
     { label: "About Us", href: "/about" },
-    { label: "Contact", href: "/contact" },
+    { label: "Contact Us", href: "/contact" },
   ] as const;
 
   const homeHref = user && userRole && userRole !== "student" ? getDashboardPathForRole(userRole) : "/";

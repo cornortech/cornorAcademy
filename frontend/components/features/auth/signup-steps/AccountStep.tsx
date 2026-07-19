@@ -39,48 +39,52 @@ export const AccountStep = ({ control }: StepProps) => {
     });
   }, [password]);
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <FormField
         control={control}
         name="role"
         render={({ field }) => (
-          <FormItem className="pb-2">
+          <FormItem className="pb-1">
             <FormLabel className="text-base font-semibold">
               I want to join as
             </FormLabel>
             <FormControl>
-              <div className="grid grid-cols-2 gap-3 pt-1">
+              <div className="grid grid-cols-2 gap-2 pt-1">
                 <button
                   type="button"
                   onClick={() => field.onChange("student")}
-                  className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-all ${field.value === "student"
+                  className={`flex items-center gap-2 rounded-lg border-2 p-3 transition-all ${field.value === "student"
                     ? "border-primary bg-primary/5 shadow-sm"
                     : "border-border hover:border-muted-foreground/30 hover:bg-muted/50"
                     }`}
                 >
-                  <BookOpen className={`h-6 w-6 ${field.value === "student" ? "text-primary" : "text-muted-foreground"}`} />
-                  <span className={`text-sm font-medium ${field.value === "student" ? "text-primary" : "text-foreground"}`}>
-                    Student
-                  </span>
-                  <span className="text-xs text-muted-foreground text-center leading-tight">
-                    I want to learn
-                  </span>
+                  <BookOpen className={`h-5 w-5 shrink-0 ${field.value === "student" ? "text-primary" : "text-muted-foreground"}`} />
+                  <div className="text-left">
+                    <span className={`text-sm font-medium block ${field.value === "student" ? "text-primary" : "text-foreground"}`}>
+                      Student
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      I want to learn
+                    </span>
+                  </div>
                 </button>
                 <button
                   type="button"
                   onClick={() => field.onChange("teacher")}
-                  className={`flex flex-col items-center gap-2 rounded-lg border-2 p-4 transition-all ${field.value === "teacher"
+                  className={`flex items-center gap-2 rounded-lg border-2 p-3 transition-all ${field.value === "teacher"
                     ? "border-primary bg-primary/5 shadow-sm"
                     : "border-border hover:border-muted-foreground/30 hover:bg-muted/50"
                     }`}
                 >
-                  <GraduationCap className={`h-6 w-6 ${field.value === "teacher" ? "text-primary" : "text-muted-foreground"}`} />
-                  <span className={`text-sm font-medium ${field.value === "teacher" ? "text-primary" : "text-foreground"}`}>
-                    Teacher
-                  </span>
-                  <span className="text-xs text-muted-foreground text-center leading-tight">
-                    I want to teach
-                  </span>
+                  <GraduationCap className={`h-5 w-5 shrink-0 ${field.value === "teacher" ? "text-primary" : "text-muted-foreground"}`} />
+                  <div className="text-left">
+                    <span className={`text-sm font-medium block ${field.value === "teacher" ? "text-primary" : "text-foreground"}`}>
+                      Teacher
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      I want to teach
+                    </span>
+                  </div>
                 </button>
               </div>
             </FormControl>
@@ -139,26 +143,23 @@ export const AccountStep = ({ control }: StepProps) => {
                 {...field}
               />
             </FormControl>
-            <div className="mt-3 space-y-2">
-              <p className="text-sm font-medium text-muted-foreground">
-                Password must contain:
-              </p>
-              <div className="space-y-1">
+            <div className="mt-2">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1">
                 <PasswordRequirement
                   met={passwordStrength.minLength}
-                  text="At least 8 characters"
+                  text="8+ characters"
                 />
                 <PasswordRequirement
                   met={passwordStrength.hasUppercase}
-                  text="One uppercase letter"
+                  text="Uppercase"
                 />
                 <PasswordRequirement
                   met={passwordStrength.hasLowercase}
-                  text="One lowercase letter"
+                  text="Lowercase"
                 />
                 <PasswordRequirement
                   met={passwordStrength.hasNumber}
-                  text="One number"
+                  text="Number"
                 />
               </div>
             </div>

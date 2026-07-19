@@ -22,7 +22,7 @@ interface StepProps {
 }
 
 export const PersonalStep = ({ control }: StepProps) => (
-  <div className="space-y-4">
+  <div className="space-y-3">
     <FormField
       control={control}
       name="phoneNumber"
@@ -38,7 +38,7 @@ export const PersonalStep = ({ control }: StepProps) => (
         </FormItem>
       )}
     />
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-3">
       <FormField
         control={control}
         name="gender"
@@ -101,7 +101,7 @@ export const PersonalStep = ({ control }: StepProps) => (
       )}
     />
 
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-3">
       <FormField
         control={control}
         name="city"
@@ -135,7 +135,7 @@ export const PersonalStep = ({ control }: StepProps) => (
       />
     </div>
 
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-3">
       <FormField
         control={control}
         name="pincode"
