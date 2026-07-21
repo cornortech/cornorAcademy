@@ -44,7 +44,7 @@ router.post("/teacher/course", authenticate, async (req: Request, res: Response)
         thumbnail: thumbnail || "",
         category: category || "WebDevelopment",
         startDate: startDate ? new Date(startDate) : new Date(),
-        duration: duration || 1,
+        duration: isLive ? (duration || 1) : (parts?.reduce((sum: number, p: any) => sum + (p.duration || 0), 0) || 0),
         price: price || 0,
         teacherId,
         adminId: admin.id,

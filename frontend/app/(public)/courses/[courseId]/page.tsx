@@ -17,6 +17,7 @@ import { InstructorTab } from "@/components/features/public-course/InstructorTab
 import { CourseSidebar } from "@/components/features/public-course/CourseSidebar";
 import { CourseDetailContent } from "@/components/features/public-course/CourseDetailContent";
 import { courseApi } from "@/lib/api/course";
+import { formatDuration } from "@/lib/utils";
 import type { Course, CourseCurriculumItem } from "@/types";
 
 interface InstructorInfo {
@@ -91,7 +92,7 @@ function transformCourseForFrontend(backendCourse: Course): FrontendCourse {
     modules: backendCourse.curriculum.map((item: CourseCurriculumItem) => ({
       title: item.title,
       lessons: item.noOfLesson,
-      duration: `${item.duration} hours`,
+      duration: formatDuration(item.duration),
       content: item.content || [],
     })),
     features: backendCourse.includes,

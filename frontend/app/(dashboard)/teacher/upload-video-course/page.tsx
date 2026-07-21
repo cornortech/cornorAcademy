@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { CreateVideoCourseForm } from "@/components/features/courses/video/CreateVideoCourseForm"
+import { UploadVideoCourseForm } from "@/components/features/courses/video/UploadVideoCourseForm"
 import { UnverifiedDialog } from "@/components/dashboard/teacher/UnverifiedDialog"
 import { useTeacherDashboard } from "@/hooks/use-teacher-dashboard"
 import Link from "next/link"
 
-export default function CreateVideoCoursePage() {
+export default function UploadVideoCoursePage() {
   const { teacher, loading } = useTeacherDashboard()
   const [showVerifyDialog, setShowVerifyDialog] = useState(false)
 
@@ -52,7 +52,7 @@ export default function CreateVideoCoursePage() {
           </Link>
         </Button>
       </div>
-      <CreateVideoCourseForm />
+      <UploadVideoCourseForm />
     </div>
   )
 }

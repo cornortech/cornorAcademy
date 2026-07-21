@@ -14,7 +14,7 @@ export { cloudinary };
 export const uploadBuffer = (buffer: Buffer, folder: string, filename: string) =>
   new Promise<any>((resolve, reject) => {
     const upload = cloudinary.uploader.upload_stream(
-      { folder, public_id: filename },
+      { folder, public_id: filename, resource_type: "auto" },
       (error, result) => (error ? reject(error) : resolve(result))
     );
     upload.end(buffer);

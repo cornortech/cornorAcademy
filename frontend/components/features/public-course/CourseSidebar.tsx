@@ -8,6 +8,7 @@ import { CheckCircle, Clock, Globe, GraduationCap, Radio } from "lucide-react";
 import Link from "next/link";
 import { useSettings } from "@/contexts/SettingsContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { formatDuration } from "@/lib/utils";
 import { useGetEnrolledCoursesByStudentId } from "@/api/course";
 
 interface CourseSidebarProps {
@@ -52,7 +53,7 @@ export function CourseSidebar({ course }: CourseSidebarProps) {
             </div>
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 shrink-0" />
-              <span className="text-sm">{course.isOngoing ? `${course.duration} weeks` : `${course.duration}h`}</span>
+              <span className="text-sm">{course.isOngoing ? `${course.duration} weeks` : formatDuration(course.duration)}</span>
             </div>
           </div>
 

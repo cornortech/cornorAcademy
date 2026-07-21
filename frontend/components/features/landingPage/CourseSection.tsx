@@ -16,6 +16,7 @@ import { useGetAllCourses } from "@/api/course";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useSettings } from "@/contexts/SettingsContext";
+import { formatDuration } from "@/lib/utils";
 
 const cardVariants = {
   hidden: { opacity: 0, y: 40 },
@@ -110,7 +111,7 @@ const CourseSection = () => {
                       <span>
                         {course.isOngoing
                           ? `${course.duration} weeks`
-                          : `${course.duration}h`}
+                          : formatDuration(course.duration)}
                       </span>
                       <span className="font-semibold text-foreground">
                         {formatPrice(course.price)}

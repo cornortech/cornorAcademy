@@ -21,6 +21,7 @@ export function BasicInfoStep({ title, onTitleChange, thumbnail, onThumbnailChan
       <FileUpload
         accept="image/*"
         label="Thumbnail"
+        value={thumbnail}
         onUploadComplete={onThumbnailChange}
       />
     </div>

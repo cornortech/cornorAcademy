@@ -6,6 +6,7 @@ import { Edit, Eye, Play, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Course } from "@/types";
+import { formatDuration } from "@/lib/utils";
 
 interface Props {
   courses: Course[];
@@ -35,7 +36,7 @@ const MyTeachingCourses = ({ courses }: Props) => {
                     <div className="flex items-start justify-between">
                       <div>
                         <h3 className="text-xl font-semibold mb-1">{course.title}</h3>
-                        <p className="text-muted-foreground">{course.duration} weeks</p>
+                        <p className="text-muted-foreground">{course.isOngoing ? `${course.duration} weeks` : formatDuration(course.duration)}</p>
                       </div>
                       <Badge variant="secondary">Active</Badge>
                     </div>

@@ -1,5 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { Clock, Star, Users, Calendar } from "lucide-react";
+import { formatDuration } from "@/lib/utils";
 
 interface CourseHeaderProps {
   course: any;
@@ -34,7 +35,7 @@ export function CourseHeader({ course }: CourseHeaderProps) {
         </div>
         <div className="flex items-center gap-1">
           <Clock className="h-4 w-4" />
-          <span>{course.isOngoing ? `${course.duration} weeks` : `${course.duration}h`}</span>
+          <span>{course.isOngoing ? `${course.duration} weeks` : formatDuration(course.duration)}</span>
         </div>
       </div>
     </div>

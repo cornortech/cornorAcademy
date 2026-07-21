@@ -18,7 +18,7 @@ export interface Part {
   duration: number
 }
 
-export function CreateVideoCourseForm() {
+export function UploadVideoCourseForm() {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [loading, setLoading] = useState(false)
@@ -27,7 +27,6 @@ export function CreateVideoCourseForm() {
   const [thumbnail, setThumbnail] = useState("")
   const [parts, setParts] = useState<Part[]>([{ title: "", videoUrl: "", duration: 0 }])
   const [price, setPrice] = useState("")
-  const [duration, setDuration] = useState("")
 
   const validateStep = () => {
     if (step === 1) {
@@ -40,7 +39,8 @@ export function CreateVideoCourseForm() {
       return true
     }
     if (step === 3) {
-      if (!price || !duration) { toast.error("Price and duration are required"); return false }
+      if (!price) { toast.error("Price is required"); return false }
+      if (Number(price) < 0) { toast.error("Price cannot be negative"); return false }
       return true
     }
     return true
@@ -62,7 +62,6 @@ export function CreateVideoCourseForm() {
         thumbnail,
         parts: parts.map((p) => ({ title: p.title, videoUrl: p.videoUrl, duration: p.duration })),
         price: Number(price),
-        duration: Number(duration),
       })
       toast.success("Video course created successfully")
       router.push("/teacher?tab=courses")
@@ -77,7 +76,7 @@ export function CreateVideoCourseForm() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-bold">Create Video Course</h1>
+      <h1 className="text-3xl font-bold">Upload Video Course</h1>
 
       <StepIndicator steps={3} current={step} labels={stepLabels} />
 
@@ -101,8 +100,6 @@ export function CreateVideoCourseForm() {
             <PricingStep
               price={price}
               onPriceChange={setPrice}
-              duration={duration}
-              onDurationChange={setDuration}
             />
           )}
 

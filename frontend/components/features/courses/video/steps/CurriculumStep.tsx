@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { FileUpload } from "@/components/shared/FileUpload"
-import type { Part } from "../CreateVideoCourseForm"
+import { DurationPicker } from "@/components/shared/DurationPicker"
+import type { Part } from "../UploadVideoCourseForm"
 
 interface CurriculumStepProps {
   parts: Part[]
@@ -56,18 +57,14 @@ export function CurriculumStep({ parts, onPartsChange }: CurriculumStepProps) {
           <FileUpload
             accept="video/*"
             label="Video"
+            value={part.videoUrl}
             onUploadComplete={(url) => updatePart(index, "videoUrl", url)}
           />
 
-          <div className="space-y-2">
-            <Label>Duration (minutes)</Label>
-            <Input
-              type="number"
-              value={part.duration || ""}
-              onChange={(e) => updatePart(index, "duration", Number(e.target.value))}
-              placeholder="30"
-            />
-          </div>
+          <DurationPicker
+            value={part.duration}
+            onChange={(seconds) => updatePart(index, "duration", seconds)}
+          />
         </div>
       ))}
     </div>

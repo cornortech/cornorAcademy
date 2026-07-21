@@ -6,29 +6,24 @@ import { Label } from "@/components/ui/label"
 interface PricingStepProps {
   price: string
   onPriceChange: (v: string) => void
-  duration: string
-  onDurationChange: (v: string) => void
 }
 
-export function PricingStep({ price, onPriceChange, duration, onDurationChange }: PricingStepProps) {
+export function PricingStep({ price, onPriceChange }: PricingStepProps) {
   return (
     <div className="space-y-4">
       <div className="space-y-2">
         <Label>Price (Rs) *</Label>
         <Input
           type="number"
+          min="0"
+          step="1"
           value={price}
-          onChange={(e) => onPriceChange(e.target.value)}
+          onChange={(e) => {
+            const val = e.target.value
+            if (val === "" || Number(val) >= 0) onPriceChange(val)
+          }}
           placeholder="0"
-        />
-      </div>
-      <div className="space-y-2">
-        <Label>Course Duration (weeks) *</Label>
-        <Input
-          type="number"
-          value={duration}
-          onChange={(e) => onDurationChange(e.target.value)}
-          placeholder="8"
+          className="[appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
         />
       </div>
     </div>

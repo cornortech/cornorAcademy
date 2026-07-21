@@ -2,6 +2,7 @@
 
 import { useCallback, useRef, useState } from "react"
 import { Upload, X, FileVideo, Image } from "lucide-react"
+import { toast } from "sonner"
 import { useCloudinary } from "@/hooks/use-cloudinary"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
@@ -10,15 +11,15 @@ import { cn } from "@/lib/utils"
 interface FileUploadProps {
   accept?: string
   label?: string
+  value?: string
   onUploadComplete: (url: string) => void
   className?: string
 }
 
-export function FileUpload({ accept = "image/*", label = "Upload file", onUploadComplete, className }: FileUploadProps) {
+export function FileUpload({ accept = "image/*", label = "Upload file", value, onUploadComplete, className }: FileUploadProps) {
   const inputRef = useRef<HTMLInputElement>(null)
-  const [preview, setPreview] = useState<string | null>(null)
-  const [progress, setProgress] = useState(0)
-  const { uploadFile, uploading } = useCloudinary()
+  const [preview, setPreview] = useState<string | null>(value ?? null)
+  const { uploadFile, uploading, progress, cancelUpload } = useCloudinary()
 
   const isVideo = accept.includes("video")
 
@@ -26,9 +27,13 @@ export function FileUpload({ accept = "image/*", label = "Upload file", onUpload
     const objectUrl = URL.createObjectURL(file)
     setPreview(objectUrl)
 
-    const result = await uploadFile(file)
-    setProgress(100)
-    onUploadComplete(result.url)
+    try {
+      const result = await uploadFile(file)
+      onUploadComplete(result.url)
+    } catch (err: any) {
+      toast.error(err.message || "Upload failed")
+      setPreview(null)
+    }
   }, [uploadFile, onUploadComplete])
 
   const handleDrop = useCallback((e: React.DragEvent) => {
@@ -43,8 +48,9 @@ export function FileUpload({ accept = "image/*", label = "Upload file", onUpload
   }, [handleFile])
 
   const clear = () => {
+    if (uploading) cancelUpload()
     setPreview(null)
-    setProgress(0)
+    onUploadComplete("")
     if (inputRef.current) inputRef.current.value = ""
   }
 
@@ -52,12 +58,12 @@ export function FileUpload({ accept = "image/*", label = "Upload file", onUpload
     <div className={cn("space-y-2", className)}>
       {label && <p className="text-sm font-medium">{label}</p>}
 
-      {preview ? (
+      {(preview || value) ? (
         <div className="relative rounded-lg overflow-hidden border bg-muted">
           {isVideo ? (
-            <video src={preview} className="w-full h-40 object-cover" controls />
+            <video src={preview || value} className="w-full h-40 object-cover" controls />
           ) : (
-            <img src={preview} alt="Preview" className="w-full h-40 object-cover" />
+            <img src={preview || value} alt="Preview" className="w-full h-40 object-cover" />
           )}
           <Button
             type="button"
@@ -79,7 +85,7 @@ export function FileUpload({ accept = "image/*", label = "Upload file", onUpload
         >
           {isVideo ? <FileVideo className="h-8 w-8 mx-auto mb-2 text-muted-foreground" /> : <Image className="h-8 w-8 mx-auto mb-2 text-muted-foreground" />}
           <p className="text-sm text-muted-foreground">
-            {uploading ? "Uploading..." : `Drop or click to upload ${isVideo ? "video" : "image"}`}
+            {uploading ? `Uploading... ${progress}%` : `Drop or click to upload ${isVideo ? "video" : "image"}`}
           </p>
         </div>
       )}

@@ -22,7 +22,7 @@ export default function TeacherDashboard() {
 
   const handleCreateCourse = () => {
     if (teacher?.isApproved) {
-      window.location.href = "/teacher/create-video-course";
+      window.location.href = "/teacher/upload-video-course";
     } else {
       setShowVerifyDialog(true);
     }
@@ -65,7 +65,7 @@ export default function TeacherDashboard() {
               <div />
               <Button variant="outline" onClick={handleCreateCourse}>
                 <BookOpen className="h-4 w-4 mr-1" />
-                Create New Course
+                Upload Video Course
               </Button>
             </div>
             <MyTeachingCourses courses={courses.filter((c) => !c.isOngoing)} />
