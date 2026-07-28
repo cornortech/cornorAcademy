@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { TeacherDialog } from "./TeacherDialog";
 import { DeleteConfirmDialog } from "../shared/DeleteConfirmDialog";
 import {
@@ -77,80 +78,102 @@ export function TeacherList({
                   </p>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[500px]">
-                      <DialogHeader>
-                        <DialogTitle>{teacher.name} - Details</DialogTitle>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              Name
-                            </p>
-                            <p className="font-medium">{teacher.name}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              Email
-                            </p>
-                            <p className="font-medium">{teacher.email}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              Experience
-                            </p>
-                            <p className="font-medium">
-                              {teacher.noOfYearsExperience} years
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              Status
-                            </p>
-                            <Badge>{teacher.status}</Badge>
-                          </div>
-                          <div className="col-span-2">
-                            <p className="text-sm text-muted-foreground">Bio</p>
-                            <p className="font-medium">{teacher.bio}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </DialogContent>
-                  </Dialog>
 
-                  <TeacherDialog
-                    open={editingId === teacher.id}
-                    onOpenChange={(open) => !open && setEditingId(null)}
-                    onSubmit={(data) => {
-                      onUpdate(teacher.id, data);
-                      setEditingId(null);
-                    }}
-                    initialData={teacher}
-                    mode="edit"
-                    trigger={
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="inline-flex">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="sm" className="cursor-pointer">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[500px]">
+                            <DialogHeader>
+                              <DialogTitle>{teacher.name} - Details</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <p className="text-sm text-muted-foreground">
+                                    Name
+                                  </p>
+                                  <p className="font-medium">{teacher.name}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-muted-foreground">
+                                    Email
+                                  </p>
+                                  <p className="font-medium">{teacher.email}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-muted-foreground">
+                                    Experience
+                                  </p>
+                                  <p className="font-medium">
+                                    {teacher.noOfYearsExperience} years
+                                  </p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-muted-foreground">
+                                    Status
+                                  </p>
+                                  <Badge>{teacher.status}</Badge>
+                                </div>
+                                <div className="col-span-2">
+                                  <p className="text-sm text-muted-foreground">Bio</p>
+                                  <p className="font-medium">{teacher.bio}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>View</TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="inline-flex">
+                        <TeacherDialog
+                          open={editingId === teacher.id}
+                          onOpenChange={(open) => !open && setEditingId(null)}
+                          onSubmit={(data) => {
+                            onUpdate(teacher.id, data);
+                            setEditingId(null);
+                          }}
+                          initialData={teacher}
+                          mode="edit"
+                          trigger={
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="cursor-pointer"
+                              onClick={() => setEditingId(teacher.id)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          }
+                        />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>Edit</TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => setEditingId(teacher.id)}
+                        className="cursor-pointer"
+                        onClick={() => setDeletingId(teacher.id)}
                       >
-                        <Edit className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
-                    }
-                  />
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setDeletingId(teacher.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Delete</TooltipContent>
+                  </Tooltip>
 
                   <DeleteConfirmDialog
                     open={deletingId === teacher.id}
@@ -163,18 +186,24 @@ export function TeacherList({
                     }}
                   />
 
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => onToggleApproval(teacher.id, teacher.isApproved)}
-                    title={teacher.isApproved ? "Revoke verification" : "Verify teacher"}
-                  >
-                    {teacher.isApproved ? (
-                      <ShieldCheck className="h-4 w-4 text-green-500" />
-                    ) : (
-                      <ShieldX className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </Button>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="cursor-pointer"
+                        onClick={() => onToggleApproval(teacher.id, teacher.isApproved)}
+                      >
+                        {teacher.isApproved ? (
+                          <ShieldCheck className="h-4 w-4 text-green-500" />
+                        ) : (
+                          <ShieldX className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>{teacher.isApproved ? "Revoke Verification" : "Verify Teacher"}</TooltipContent>
+                  </Tooltip>
+                  
                 </div>
               </div>
             </div>

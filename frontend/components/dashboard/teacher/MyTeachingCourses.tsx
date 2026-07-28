@@ -59,15 +59,17 @@ const MyTeachingCourses = ({ courses }: Props) => {
                     </div>
 
                     <div className="flex gap-2 flex-wrap">
-                      <Button variant="default" size="sm" asChild>
+                      <Button variant="default" size="sm" className="cursor-pointer" asChild>
                         <Link href={`/teacher/course/${course.id}`}>
                           <Eye className="h-4 w-4 mr-1" />
                           Manage Course
                         </Link>
                       </Button>
-                      <Button variant="outline" size="sm">
-                        <Edit className="h-4 w-4 mr-1" />
-                        Edit Content
+                      <Button variant="outline" size="sm" className="cursor-pointer" asChild>
+                        <Link href={`/teacher/edit-video-course/${course.id}`}>
+                          <Edit className="h-4 w-4 mr-1" />
+                          Edit Course
+                        </Link>
                       </Button>
                     </div>
                   </div>

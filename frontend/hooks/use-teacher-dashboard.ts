@@ -21,16 +21,17 @@ interface TeacherDashboardData {
 }
 
 export function useTeacherDashboard(): TeacherDashboardData {
-  const { userData } = useAuth()
+  const { userData, userRole } = useAuth()
   const teacherId = userData?.id ?? ""
+  const isTeacher = userRole === "teacher"
 
   const teacherQuery = useQuery({
     queryKey: ["teacher-profile", teacherId],
     queryFn: () => authService.getUserDetails("teacher") as Promise<Teacher | null>,
-    enabled: !!teacherId,
+    enabled: !!teacherId && isTeacher,
   })
 
-  const coursesQuery = useGetCoursesByTeacher(teacherId)
+  const coursesQuery = useGetCoursesByTeacher(teacherId, isTeacher)
 
   const courseIds = useMemo(
     () => (coursesQuery.data ?? []).map((c: any) => c.id).filter(Boolean) as string[],
@@ -44,7 +45,7 @@ export function useTeacherDashboard(): TeacherDashboardData {
       if (!res.ok) return [] as Announcement[]
       return res.json() as Promise<Announcement[]>
     },
-    enabled: !!teacherId,
+    enabled: !!teacherId && isTeacher,
   })
 
   const courseAnnouncementsQuery = useQuery({
@@ -73,7 +74,7 @@ export function useTeacherDashboard(): TeacherDashboardData {
       const teacherCourseIds = new Set(courseIds)
       return list.filter((e: any) => teacherCourseIds.has(e.course?.id)) as EnrolledCourseItem[]
     },
-    enabled: !!teacherId && courseIds.length > 0,
+    enabled: !!teacherId && isTeacher && courseIds.length > 0,
   })
 
   const platformAnnouncements = (platformAnnouncementsQuery.data ?? [])

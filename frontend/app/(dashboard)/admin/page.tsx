@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Menu } from "lucide-react";
 import { StatsOverview } from "@/components/dashboard/admin/stats-overview";
@@ -16,9 +17,10 @@ import { useAdminDashboard } from "@/hooks/use-admin-dashboard";
 import { useGetAllCourses } from "@/api/course";
 
 export default function AdminDashboard() {
+  const searchParams = useSearchParams();
   const { students, teachers, enrollments, loading, error } = useAdminDashboard();
   const { data: courses = [] } = useGetAllCourses();
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeTab, setActiveTab] = useState(searchParams.get("tab") || "overview");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
@@ -120,7 +122,7 @@ export default function AdminDashboard() {
       )}>
         <button
           onClick={() => setMobileSidebarOpen(true)}
-          className="lg:hidden mb-4 p-2 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+          className="lg:hidden mb-4 p-2 rounded-md cursor-pointer text-muted-foreground hover:bg-accent hover:text-accent-foreground"
           aria-label="Open sidebar"
         >
           <Menu className="h-6 w-6" />

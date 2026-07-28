@@ -1,29 +1,31 @@
 import { useState } from "react";
-import { Eye, Edit, Trash2, BarChart3 } from "lucide-react";
+import { Eye, Trash2, BarChart3, FileEdit } from "lucide-react";
 import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { CourseDialog } from "./CourseDialog";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { DeleteConfirmDialog } from "../shared/DeleteConfirmDialog";
+import { CourseViewDialog } from "./CourseViewDialog";
+import { CourseStatsDialog } from "./CourseStatsDialog";
 
 interface CourseTableProps {
   courses: any[];
-  onUpdate: (id: string, data: any) => void;
   onDelete: (id: string) => void;
-  teachers?: any[];
+  isFetching?: boolean;
 }
 
 export function CourseTable({
   courses,
-  onUpdate,
   onDelete,
-  teachers = [],
+  isFetching = false,
 }: CourseTableProps) {
-  const [editingId, setEditingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [viewingCourse, setViewingCourse] = useState<any | null>(null);
+  const [statsCourse, setStatsCourse] = useState<any | null>(null);
 
   return (
+    <div style={{ opacity: isFetching ? 0.6 : 1, transition: "opacity 300ms" }}>
     <Card className="border-border/50 bg-card/50 backdrop-blur overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
@@ -78,45 +80,74 @@ export function CourseTable({
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex items-center space-x-1">
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href={("/dashboard/admin/courses/" + course.id) as any}>
-                        <Eye className="h-4 w-4" />
-                      </Link>
-                    </Button>
-
-                    <CourseDialog
-                      open={editingId === course.id}
-                      onOpenChange={(open) => !open && setEditingId(null)}
-                      onSubmit={(data) => {
-                        onUpdate(course.id, data);
-                        setEditingId(null);
-                      }}
-                      initialData={course}
-                      mode="edit"
-                      trigger={
+                    <Tooltip>
+                      <TooltipTrigger asChild>
                         <Button
                           variant="outline"
                           size="sm"
-                          onClick={() => setEditingId(course.id)}
+                          className="cursor-pointer"
+                          onClick={() => setViewingCourse(course)}
                         >
-                          <Edit className="h-4 w-4" />
+                          <Eye className="h-4 w-4" />
                         </Button>
-                      }
-                    />
+                      </TooltipTrigger>
+                      <TooltipContent>View</TooltipContent>
+                    </Tooltip>
 
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href={("/dashboard/admin/courses/" + course.id) as any}>
-                        <BarChart3 className="h-4 w-4" />
-                      </Link>
-                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="outline" size="sm" className="cursor-pointer" asChild>
+                          <Link href={`/teacher/edit-video-course/${course.id}`}>
+                            <FileEdit className="h-4 w-4" />
+                          </Link>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Edit Course</TooltipContent>
+                    </Tooltip>
 
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setDeletingId(course.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="cursor-pointer"
+                          onClick={() => setStatsCourse(course)}
+                        >
+                          <BarChart3 className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Stats</TooltipContent>
+                    </Tooltip>
+
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="cursor-pointer"
+                          onClick={() => setDeletingId(course.id)}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent>Delete</TooltipContent>
+                    </Tooltip>
+
+                    {viewingCourse?.id === course.id && (
+                      <CourseViewDialog
+                        open={true}
+                        onOpenChange={(open) => !open && setViewingCourse(null)}
+                        course={viewingCourse}
+                      />
+                    )}
+
+                    {statsCourse?.id === course.id && (
+                      <CourseStatsDialog
+                        open={true}
+                        onOpenChange={(open) => !open && setStatsCourse(null)}
+                        course={statsCourse}
+                      />
+                    )}
 
                     <DeleteConfirmDialog
                       open={deletingId === course.id}
@@ -136,5 +167,6 @@ export function CourseTable({
         </table>
       </div>
     </Card>
+    </div>
   );
 }

@@ -144,6 +144,13 @@ export interface Course {
     noOfLesson: number;
     content: string[];
   }[];
+  lessons?: {
+    id: string;
+    title: string;
+    videoUrl: string;
+    order: number;
+    duration: number;
+  }[];
   teacher: {
     id: string;
     name: string;
@@ -219,11 +226,11 @@ export function useGetCoursesByCategory(
   });
 }
 
-export function useGetCoursesByTeacher(teacherId: string) {
+export function useGetCoursesByTeacher(teacherId: string, enabled = true) {
   return useQuery({
     queryKey: courseQueryKeys.teachers(teacherId),
     queryFn: () => apiRequest<Course[]>(`/course/teacher/${teacherId}`),
-    enabled: !!teacherId,
+    enabled: !!teacherId && enabled,
   });
 }
 

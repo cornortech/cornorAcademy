@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { StudentDialog } from "./StudentDialog";
 import { DeleteConfirmDialog } from "../shared/DeleteConfirmDialog";
 import {
@@ -77,86 +78,108 @@ export function StudentList({
                   </p>
                 </div>
                 <div className="flex items-center space-x-1">
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[600px]">
-                      <DialogHeader>
-                        <DialogTitle>{student.name} - Details</DialogTitle>
-                      </DialogHeader>
-                      <div className="grid gap-4 py-4">
-                        <div className="grid grid-cols-2 gap-4">
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              Name
-                            </p>
-                            <p className="font-medium">{student.name}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              Email
-                            </p>
-                            <p className="font-medium">{student.email}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              phoneNumber
-                            </p>
-                            <p className="font-medium">{student.phoneNumber}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              status
-                            </p>
-                            <Badge>{student.status}</Badge>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              City
-                            </p>
-                            <p className="font-medium">{student.city}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              Country
-                            </p>
-                            <p className="font-medium">{student.country}</p>
-                          </div>
-                        </div>
+                  
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="inline-flex">
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="outline" size="sm" className="cursor-pointer">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="sm:max-w-[600px]">
+                            <DialogHeader>
+                              <DialogTitle>{student.name} - Details</DialogTitle>
+                            </DialogHeader>
+                            <div className="grid gap-4 py-4">
+                              <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                  <p className="text-sm text-muted-foreground">
+                                    Name
+                                  </p>
+                                  <p className="font-medium">{student.name}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-muted-foreground">
+                                    Email
+                                  </p>
+                                  <p className="font-medium">{student.email}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-muted-foreground">
+                                    phoneNumber
+                                  </p>
+                                  <p className="font-medium">{student.phoneNumber}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-muted-foreground">
+                                    status
+                                  </p>
+                                  <Badge>{student.status}</Badge>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-muted-foreground">
+                                    City
+                                  </p>
+                                  <p className="font-medium">{student.city}</p>
+                                </div>
+                                <div>
+                                  <p className="text-sm text-muted-foreground">
+                                    Country
+                                  </p>
+                                  <p className="font-medium">{student.country}</p>
+                                </div>
+                              </div>
+                            </div>
+                          </DialogContent>
+                        </Dialog>
                       </div>
-                    </DialogContent>
-                  </Dialog>
+                    </TooltipTrigger>
+                    <TooltipContent>View</TooltipContent>
+                  </Tooltip>
 
-                  <StudentDialog
-                    open={editingId === student.id}
-                    onOpenChange={(open) => !open && setEditingId(null)}
-                    onSubmit={(data) => {
-                      onUpdate(student.id, data);
-                      setEditingId(null);
-                    }}
-                    initialData={student}
-                    mode="edit"
-                    trigger={
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <div className="inline-flex">
+                        <StudentDialog
+                          open={editingId === student.id}
+                          onOpenChange={(open) => !open && setEditingId(null)}
+                          onSubmit={(data) => {
+                            onUpdate(student.id, data);
+                            setEditingId(null);
+                          }}
+                          initialData={student}
+                          mode="edit"
+                          trigger={
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              className="cursor-pointer"
+                              onClick={() => setEditingId(student.id)}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                          }
+                        />
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>Edit</TooltipContent>
+                  </Tooltip>
+
+                  <Tooltip>
+                    <TooltipTrigger asChild>
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={() => setEditingId(student.id)}
+                        className="cursor-pointer"
+                        onClick={() => setDeletingId(student.id)}
                       >
-                        <Edit className="h-4 w-4" />
+                        <Trash2 className="h-4 w-4" />
                       </Button>
-                    }
-                  />
-
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setDeletingId(student.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Delete</TooltipContent>
+                  </Tooltip>
 
                   <DeleteConfirmDialog
                     open={deletingId === student.id}

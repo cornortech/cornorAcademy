@@ -2,8 +2,10 @@ import { Users, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import Link from "next/link";
 
 interface TeacherCourseHeaderProps {
+  courseId: string;
   title: string;
   students: number;
   status: string;
@@ -14,6 +16,7 @@ interface TeacherCourseHeaderProps {
 }
 
 export function TeacherCourseHeader({
+  courseId,
   title,
   students,
   status,
@@ -37,9 +40,11 @@ export function TeacherCourseHeader({
             </Badge>
           </div>
         </div>
-        <Button variant="outline">
-          <Edit className="h-4 w-4 mr-1" />
-          Edit Course
+        <Button variant="outline" className="cursor-pointer" asChild>
+          <Link href={`/teacher/edit-video-course/${courseId}`}>
+            <Edit className="h-4 w-4 mr-1" />
+            Edit Course
+          </Link>
         </Button>
       </div>
 

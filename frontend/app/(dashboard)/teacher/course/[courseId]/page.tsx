@@ -39,6 +39,7 @@ export default function TeacherCoursePage() {
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <TeacherCourseHeader
+          courseId={courseId}
           title={course.title}
           students={course.enrolledStudentsCount || 0}
           status={course.status}

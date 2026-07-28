@@ -9,7 +9,6 @@ import { CourseTable } from "./CourseTable";
 import {
   useGetAllCourses,
   useCreateCourse,
-  useUpdateCourse,
   useDeleteCourse,
   CreateCourseInput,
 } from "@/api/course";
@@ -43,8 +42,8 @@ export function CourseManagement() {
     refetch,
   } = useGetAllCourses();
   const createCourseMutation = useCreateCourse();
-  const updateCourseMutation = useUpdateCourse();
   const deleteCourseMutation = useDeleteCourse();
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const error = queryError?.message || null;
 
@@ -96,29 +95,6 @@ export function CourseManagement() {
     }
   };
 
-  const handleUpdateCourse = async (id: string, formData: any) => {
-    try {
-      const updateData = {
-        title: formData.title,
-        description: formData.description,
-        price: parseInt(formData.price),
-        startDate: formData.startDate
-          ? new Date(formData.startDate)
-          : undefined,
-        duration: parseInt(formData.duration),
-        level: formData.level,
-        category: formData.category,
-        curriculum: [],
-      };
-
-      await updateCourseMutation.mutateAsync({ id, data: updateData });
-      alert("Course updated successfully!");
-    } catch (err) {
-      console.error("Failed to update course:", err);
-      alert("Failed to update course");
-    }
-  };
-
   const handleDeleteCourse = async (id: string) => {
     if (!confirm("Are you sure you want to delete this course?")) {
       return;
@@ -143,8 +119,7 @@ export function CourseManagement() {
     status: "active",
     created: new Date(course.createdAt).toLocaleDateString(),
     completion: 0,
-    rating: 4.5,
-    enrolled: 0,
+    enrolled: course.enrolledStudentsCount || 0,
     isOngoing: course.isOngoing,
     startTime: new Date(course.startDate).toISOString(),
     description: course.description,
@@ -162,13 +137,17 @@ export function CourseManagement() {
         </div>
         <div className="flex gap-2">
           <Button
-            onClick={() => refetch()}
-            disabled={loading}
+            onClick={async () => {
+              setIsRefreshing(true);
+              await refetch();
+              setIsRefreshing(false);
+            }}
+            disabled={isRefreshing}
             variant="outline"
             size="sm"
           >
             <RefreshCw
-              className={`h-4 w-4 mr-1 ${loading ? "animate-spin" : ""}`}
+              className={`h-4 w-4 mr-1 ${isRefreshing ? "animate-spin" : ""}`}
             />
             Refresh
           </Button>
@@ -198,7 +177,7 @@ export function CourseManagement() {
           <button
             key={type}
             onClick={() => setCourseType(type)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors cursor-pointer ${
               courseType === type
                 ? "border-primary text-primary"
                 : "border-transparent text-muted-foreground hover:text-foreground"
@@ -231,11 +210,8 @@ export function CourseManagement() {
       ) : (
         <CourseTable
           courses={transformedCourses}
-          onUpdate={(id: string, formData: any) =>
-            handleUpdateCourse(id, formData)
-          }
           onDelete={(id: string) => handleDeleteCourse(id)}
-          teachers={teachers}
+          isFetching={isRefreshing}
         />
       )}
     </div>

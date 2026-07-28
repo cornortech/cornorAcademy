@@ -41,7 +41,7 @@ export default function StudentDashboardLayout({
           )}>
             <button
               onClick={() => setMobileSidebarOpen(true)}
-              className="lg:hidden mb-4 p-2 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              className="lg:hidden mb-4 p-2 rounded-md cursor-pointer text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               aria-label="Open sidebar"
             >
               <Menu className="h-6 w-6" />

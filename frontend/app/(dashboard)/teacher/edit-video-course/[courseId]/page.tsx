@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useParams } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { UploadVideoCourseForm } from "@/components/features/courses/video/UploadVideoCourseForm"
@@ -9,7 +10,9 @@ import { useTeacherDashboard } from "@/hooks/use-teacher-dashboard"
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
 
-export default function UploadVideoCoursePage() {
+export default function EditCoursePage() {
+  const params = useParams()
+  const courseId = params.courseId as string
   const { userRole } = useAuth()
   const isTeacher = userRole === "teacher"
   const { teacher, loading } = useTeacherDashboard()
@@ -50,16 +53,14 @@ export default function UploadVideoCoursePage() {
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">
       <div className="mb-8">
-
         <Button variant="ghost" asChild>
           <Link href={backHref}>
             <ArrowLeft className="h-4 w-4 mr-2" />
             {isTeacher ? "Back to My Courses" : "Back to Courses"}
           </Link>
         </Button>
-        
       </div>
-      <UploadVideoCourseForm />
+      <UploadVideoCourseForm courseId={courseId} />
     </div>
   )
 }

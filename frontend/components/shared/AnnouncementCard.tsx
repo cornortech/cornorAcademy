@@ -3,6 +3,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipTrigger, TooltipContent } from "@/components/ui/tooltip";
 import { Globe, GraduationCap, Book, User, BookOpen, Pin, Edit, Trash2, Target } from "lucide-react";
 import type { Announcement } from "@/types";
 
@@ -133,14 +134,24 @@ export function AnnouncementCard({ announcement, onEdit, onDelete }: Announcemen
           {(onEdit || onDelete) && (
             <div className="flex items-center gap-1 ml-4 shrink-0">
               {onEdit && (
-                <Button variant="ghost" size="sm" onClick={onEdit}>
-                  <Edit className="h-4 w-4" />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="sm" className="cursor-pointer" onClick={onEdit}>
+                      <Edit className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Edit</TooltipContent>
+                </Tooltip>
               )}
               {onDelete && (
-                <Button variant="ghost" size="sm" onClick={onDelete}>
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="ghost" size="sm" className="cursor-pointer" onClick={onDelete}>
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Delete</TooltipContent>
+                </Tooltip>
               )}
             </div>
           )}

@@ -83,6 +83,7 @@ const getCourseById: AppRouteQueryImplementation<
             include: {
                 teacher: true,
                 courseCurriculum: true,
+                lessons: { orderBy: { order: "asc" } },
             },
         });
 
@@ -122,6 +123,13 @@ const getCourseById: AppRouteQueryImplementation<
                     noOfLesson: c.noOfLesson,
                     duration: c.duration,
                     content: c.content,
+                })),
+                lessons: (courseById.lessons || []).map((l) => ({
+                    id: l.id,
+                    title: l.title,
+                    videoUrl: l.videoUrl,
+                    order: l.order,
+                    duration: l.duration,
                 })),
                 teacher: courseById.teacher
                     ? {

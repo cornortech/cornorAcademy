@@ -109,6 +109,14 @@ export interface TeacherInfo {
   name: string;
 }
 
+export interface CourseLesson {
+  id: string;
+  title: string;
+  videoUrl: string;
+  order: number;
+  duration: number;
+}
+
 export interface Course {
   id: string;
   title: string;
@@ -128,6 +136,7 @@ export interface Course {
   isOngoing: boolean;
   status: CourseStatus;
   curriculum: CourseCurriculumItem[];
+  lessons?: CourseLesson[];
   teacher: TeacherInfo | null;
   enrolledStudentsCount?: number;
   createdAt: Date;

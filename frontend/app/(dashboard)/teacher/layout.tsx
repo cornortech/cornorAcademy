@@ -17,11 +17,11 @@ export default function TeacherDashboardLayout({
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  const hideSidebar = pathname.includes("/course/");
+  const hideSidebar = pathname.includes("/course/") || pathname.includes("/edit-video-course/");
 
   return (
     <ProtectedRoute
-      allowedRoles={["teacher"]}
+      allowedRoles={["teacher", "admin"]}
       fallback={<TeacherDashboardLoading />}
     >
       {hideSidebar ? (
@@ -40,7 +40,7 @@ export default function TeacherDashboardLayout({
           )}>
             <button
               onClick={() => setMobileSidebarOpen(true)}
-              className="lg:hidden mb-4 p-2 rounded-md text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+              className="lg:hidden mb-4 p-2 rounded-md cursor-pointer text-muted-foreground hover:bg-accent hover:text-accent-foreground"
               aria-label="Open sidebar"
             >
               <Menu className="h-6 w-6" />

@@ -70,4 +70,64 @@ router.post("/teacher/course", authenticate, async (req: Request, res: Response)
   }
 });
 
+router.put("/teacher/course/:courseId", authenticate, async (req: Request, res: Response) => {
+  try {
+    const teacherId = req.user!.id;
+    if (req.user!.role !== "teacher") {
+      return res.status(403).json({ success: false, error: "Only teachers can edit courses" });
+    }
+
+    const teacher = await prisma.teacher.findUnique({ where: { id: teacherId } });
+    if (!teacher || !teacher.isApproved) {
+      return res.status(403).json({ success: false, error: "CONTACT ADMINISTRATION TO VERIFY YOUR ACCOUNT CORNOR ACADEMY" });
+    }
+
+    const { courseId } = req.params;
+    const existing = await prisma.course.findUnique({ where: { id: courseId } });
+    if (!existing) {
+      return res.status(404).json({ success: false, error: "Course not found" });
+    }
+    if (existing.teacherId !== teacherId) {
+      return res.status(403).json({ success: false, error: "You can only edit your own courses" });
+    }
+
+    const { title, thumbnail, parts, price } = req.body;
+
+    if (!title) {
+      return res.status(400).json({ success: false, error: "Title is required" });
+    }
+
+    const newDuration = parts?.reduce((sum: number, p: any) => sum + (p.duration || 0), 0) || 0;
+
+    const course = await prisma.course.update({
+      where: { id: courseId },
+      data: {
+        title,
+        thumbnail: thumbnail || "",
+        price: price || 0,
+        duration: newDuration,
+      },
+    });
+
+    await prisma.lesson.deleteMany({ where: { courseId } });
+
+    if (parts?.length > 0) {
+      await prisma.lesson.createMany({
+        data: parts.map((part: any, index: number) => ({
+          courseId: course.id,
+          title: part.title,
+          videoUrl: part.videoUrl || "",
+          order: index + 1,
+          duration: part.duration || 0,
+        })),
+      });
+    }
+
+    res.status(200).json({ success: true, courseId: course.id });
+  } catch (error) {
+    console.error("Error updating course:", error);
+    res.status(500).json({ success: false, error: "Internal server error" });
+  }
+});
+
 export default router;
