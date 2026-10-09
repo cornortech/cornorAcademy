@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { toast } from "sonner"
 import { Loader2 } from "lucide-react"
@@ -11,11 +11,36 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { FileUpload } from "@/components/shared/FileUpload"
 import { ArrayField } from "@/components/shared/ArrayField"
+import { Skeleton } from "@/components/ui/skeleton"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { useGetCourseById } from "@/api/course"
 import axiosInstance from "@/lib/api/axios"
 
-export function LiveCourseForm() {
+interface TeacherInfo {
+  id: string
+  name: string
+}
+
+interface LiveCourseFormProps {
+  courseId?: string
+  isAdmin?: boolean
+  teachers?: TeacherInfo[]
+  onSuccess?: () => void
+}
+
+export function LiveCourseForm({ courseId, isAdmin, teachers = [], onSuccess }: LiveCourseFormProps) {
   const router = useRouter()
+  const isEditMode = !!courseId
+  const { data: courseData, isLoading: courseLoading } = useGetCourseById(courseId || "")
+
   const [loading, setLoading] = useState(false)
+  const [initialized, setInitialized] = useState(false)
   const [title, setTitle] = useState("")
   const [thumbnail, setThumbnail] = useState("")
   const [startDate, setStartDate] = useState("")
@@ -24,6 +49,30 @@ export function LiveCourseForm() {
   const [description, setDescription] = useState("")
   const [whatYoullLearn, setWhatYoullLearn] = useState<string[]>([""])
   const [meetingUrl, setMeetingUrl] = useState("")
+  const [selectedTeacherId, setSelectedTeacherId] = useState("")
+
+  useEffect(() => {
+    if (isEditMode && courseData && !initialized) {
+      setTitle(courseData.title || "")
+      setThumbnail(courseData.thumbnail || "")
+      setPrice(courseData.price?.toString() || "")
+      setDescription(courseData.description || "")
+      setWhatYoullLearn(
+        courseData.whatYouWillLearn?.length > 0
+          ? courseData.whatYouWillLearn
+          : [""]
+      )
+      setMeetingUrl(courseData.meetingUrl || "")
+      if (courseData.startDate) {
+        const d = new Date(courseData.startDate)
+        setStartDate(d.toISOString().split("T")[0])
+        setStartTime(
+          `${String(d.getHours()).padStart(2, "0")}:${String(d.getMinutes()).padStart(2, "0")}`
+        )
+      }
+      setInitialized(true)
+    }
+  }, [isEditMode, courseData, initialized])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,12 +80,15 @@ export function LiveCourseForm() {
       toast.error("Please fill in all required fields")
       return
     }
+    if (isAdmin && !selectedTeacherId) {
+      toast.error("Please select a teacher")
+      return
+    }
 
     setLoading(true)
     try {
       const startDateTime = new Date(`${startDate}T${startTime}`)
-      await axiosInstance.post("/api/teacher/course", {
-        type: "live",
+      const payload: Record<string, any> = {
         title,
         thumbnail,
         startDate: startDateTime.toISOString(),
@@ -44,11 +96,26 @@ export function LiveCourseForm() {
         description,
         whatYouWillLearn: whatYoullLearn.filter(Boolean),
         meetingUrl,
-      })
-      toast.success("Live class created successfully")
-      router.push("/teacher?tab=upcoming")
+      }
+
+      if (isAdmin && selectedTeacherId) {
+        payload.teacherId = selectedTeacherId
+      }
+
+      if (isEditMode) {
+        await axiosInstance.put(`/api/teacher/course/${courseId}`, payload)
+        toast.success("Live class updated successfully")
+      } else {
+        await axiosInstance.post("/api/teacher/course", { type: "live", ...payload })
+        toast.success("Live class created successfully")
+      }
+      if (onSuccess) {
+        onSuccess()
+      } else {
+        router.push(isAdmin ? "/admin?tab=courses" : "/teacher?tab=upcoming")
+      }
     } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to create course")
+      toast.error(err.response?.data?.error || `Failed to ${isEditMode ? "update" : "create"} course`)
     } finally {
       setLoading(false)
     }
@@ -62,9 +129,25 @@ export function LiveCourseForm() {
     setWhatYoullLearn(next)
   }
 
+  if (isEditMode && courseLoading) {
+    return (
+      <div className="space-y-6">
+        <Skeleton className="h-8 w-64" />
+        <Skeleton className="h-10 w-full" />
+        <Card>
+          <CardContent className="pt-6 space-y-4">
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+        </Card>
+      </div>
+    )
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <h1 className="text-3xl font-bold">Schedule Live Class</h1>
+      <h1 className="text-3xl font-bold">{isEditMode ? "Edit Live Class" : "Schedule Live Class"}</h1>
 
       <Card>
         <CardHeader>
@@ -75,6 +158,23 @@ export function LiveCourseForm() {
             <Label>Title *</Label>
             <Input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Course title" />
           </div>
+          {isAdmin && teachers.length > 0 && (
+            <div className="space-y-2">
+              <Label>Assign Teacher *</Label>
+              <Select value={selectedTeacherId} onValueChange={setSelectedTeacherId}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a teacher" />
+                </SelectTrigger>
+                <SelectContent>
+                  {teachers.map((teacher) => (
+                    <SelectItem key={teacher.id} value={teacher.id}>
+                      {teacher.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          )}
           <FileUpload
             accept="image/*"
             label="Thumbnail"
@@ -135,7 +235,7 @@ export function LiveCourseForm() {
       </Card>
 
       <Button type="submit" className="w-full" disabled={loading}>
-        {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Creating...</> : "Create Live Class"}
+        {loading ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" /> {isEditMode ? "Updating..." : "Creating..."}</> : isEditMode ? "Update Live Class" : "Create Live Class"}
       </Button>
     </form>
   )

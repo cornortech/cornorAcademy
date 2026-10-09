@@ -97,7 +97,7 @@ export function CourseTable({
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <Button variant="outline" size="sm" className="cursor-pointer" asChild>
-                          <Link href={`/teacher/edit-video-course/${course.id}`}>
+                          <Link href={course.isOngoing ? `/admin/edit-live-class/${course.id}` : `/teacher/edit-video-course/${course.id}`}>
                             <FileEdit className="h-4 w-4" />
                           </Link>
                         </Button>

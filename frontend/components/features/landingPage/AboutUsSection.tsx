@@ -50,7 +50,7 @@ export function AboutUsSection() {
     <div className="container mx-auto px-4 sm:px-6 lg:px-8">
       <section className="py-20">
         <div className="mb-12 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">About Us</h2>
+          <h2 className="text-3xl md:text-4xl font-serif font-semibold mb-3">About Us</h2>
           <p className="text-muted-foreground text-lg">
             Learning built around you, not the other way around
           </p>
@@ -62,7 +62,7 @@ export function AboutUsSection() {
 
       <section id="values" className="py-16">
         <div className="mb-12 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">Our Values</h2>
+          <h2 className="text-3xl md:text-4xl font-serif font-semibold mb-3">Our Values</h2>
           <p className="text-muted-foreground text-lg">
             We&apos;re dedicated to excellence in education and student success
           </p>
@@ -94,7 +94,7 @@ export function AboutUsSection() {
 
       <section className="py-16">
         <div className="mb-12 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">Why Choose {settings?.platformName || "Cornor Academy"}?</h2>
+          <h2 className="text-3xl md:text-4xl font-serif font-semibold mb-3">Why Choose {settings?.platformName || "Cornor Academy"}?</h2>
           <p className="text-muted-foreground text-lg">
             Stand out with skills that matter
           </p>
@@ -122,7 +122,7 @@ export function AboutUsSection() {
 
       <section className="py-16">
         <div className="mb-12 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">What You&apos;ll Achieve</h2>
+          <h2 className="text-3xl md:text-4xl font-serif font-semibold mb-3">What You&apos;ll Achieve</h2>
           <p className="text-muted-foreground text-lg">
             Real skills for real-world opportunities
           </p>
@@ -175,7 +175,7 @@ export function AboutUsSection() {
 
       <section className="py-16 md:py-24">
         <div className="max-w-2xl mx-auto text-center rounded-3xl border border-border/70 bg-primary/5 p-10 md:p-16 shadow-sm backdrop-blur-sm">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to get started?</h2>
+          <h2 className="text-3xl md:text-4xl font-serif font-semibold mb-6">Ready to get started?</h2>
           <p className="text-lg text-muted-foreground mb-8">
             Join thousands of learners already transforming their careers at {settings?.platformName || "Cornor Academy"}.
             Choose a course and begin your learning journey today.

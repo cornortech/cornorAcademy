@@ -291,6 +291,7 @@ export function useDeleteCourse() {
     mutationFn: (id: string) =>
       apiRequest<ApiResponse<Course>>(`/course/${id}`, {
         method: "DELETE",
+        body: JSON.stringify({ id }),
       }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: courseQueryKeys.lists() });

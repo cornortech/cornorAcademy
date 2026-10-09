@@ -13,6 +13,14 @@ import { CurriculumStep } from "./steps/CurriculumStep"
 import { PricingStep } from "./steps/PricingStep"
 import { useGetCourseById } from "@/api/course"
 import axiosInstance from "@/lib/api/axios"
+import { Label } from "@/components/ui/label"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 export interface Part {
   title: string
@@ -20,11 +28,19 @@ export interface Part {
   duration: number
 }
 
-interface UploadVideoCourseFormProps {
-  courseId?: string
+interface TeacherInfo {
+  id: string
+  name: string
 }
 
-export function UploadVideoCourseForm({ courseId }: UploadVideoCourseFormProps) {
+interface UploadVideoCourseFormProps {
+  courseId?: string
+  isAdmin?: boolean
+  teachers?: TeacherInfo[]
+  onSuccess?: () => void
+}
+
+export function UploadVideoCourseForm({ courseId, isAdmin, teachers = [], onSuccess }: UploadVideoCourseFormProps) {
   const router = useRouter()
   const isEditMode = !!courseId
   const { data: courseData, isLoading: courseLoading } = useGetCourseById(courseId || "")
@@ -37,6 +53,7 @@ export function UploadVideoCourseForm({ courseId }: UploadVideoCourseFormProps) 
   const [thumbnail, setThumbnail] = useState("")
   const [parts, setParts] = useState<Part[]>([{ title: "", videoUrl: "", duration: 0 }])
   const [price, setPrice] = useState("")
+  const [selectedTeacherId, setSelectedTeacherId] = useState("")
 
   useEffect(() => {
     if (isEditMode && courseData && !initialized) {
@@ -57,6 +74,7 @@ export function UploadVideoCourseForm({ courseId }: UploadVideoCourseFormProps) 
   const validateStep = () => {
     if (step === 1) {
       if (!title.trim()) { toast.error("Title is required"); return false }
+      if (isAdmin && !selectedTeacherId) { toast.error("Please select a teacher"); return false }
       return true
     }
     if (step === 2) {
@@ -82,11 +100,15 @@ export function UploadVideoCourseForm({ courseId }: UploadVideoCourseFormProps) 
     if (!validateStep()) return
     setLoading(true)
     try {
-      const payload = {
+      const payload: Record<string, any> = {
         title,
         thumbnail,
         parts: parts.map((p) => ({ title: p.title, videoUrl: p.videoUrl, duration: p.duration })),
         price: Number(price),
+      }
+
+      if (isAdmin && selectedTeacherId) {
+        payload.teacherId = selectedTeacherId
       }
 
       if (isEditMode) {
@@ -96,7 +118,11 @@ export function UploadVideoCourseForm({ courseId }: UploadVideoCourseFormProps) 
         await axiosInstance.post("/api/teacher/course", { type: "video", ...payload })
         toast.success("Video course created successfully")
       }
-      router.push("/teacher?tab=courses")
+      if (onSuccess) {
+        onSuccess()
+      } else {
+        router.push(isAdmin ? "/admin?tab=courses" : "/teacher?tab=courses")
+      }
     } catch (err: any) {
       toast.error(err.response?.data?.error || `Failed to ${isEditMode ? "update" : "create"} course`)
     } finally {
@@ -131,12 +157,31 @@ export function UploadVideoCourseForm({ courseId }: UploadVideoCourseFormProps) 
       <Card>
         <CardContent className="pt-6">
           {step === 1 && (
-            <BasicInfoStep
-              title={title}
-              onTitleChange={setTitle}
-              thumbnail={thumbnail}
-              onThumbnailChange={setThumbnail}
-            />
+            <>
+              <BasicInfoStep
+                title={title}
+                onTitleChange={setTitle}
+                thumbnail={thumbnail}
+                onThumbnailChange={setThumbnail}
+              />
+              {isAdmin && teachers.length > 0 && (
+                <div className="space-y-2 mt-4">
+                  <Label>Assign Teacher *</Label>
+                  <Select value={selectedTeacherId} onValueChange={setSelectedTeacherId}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a teacher" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {teachers.map((teacher) => (
+                        <SelectItem key={teacher.id} value={teacher.id}>
+                          {teacher.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              )}
+            </>
           )}
           {step === 2 && (
             <CurriculumStep

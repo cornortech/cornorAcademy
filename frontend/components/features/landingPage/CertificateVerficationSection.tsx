@@ -31,7 +31,7 @@ const CertificateVerficationSection = () => {
         >
           <h2
             id="certificate-heading"
-            className="text-3xl lg:text-4xl font-bold text-balance mb-4"
+            className="text-3xl lg:text-4xl font-serif font-semibold text-balance mb-4"
           >
             {"Verify Certificate"}
           </h2>

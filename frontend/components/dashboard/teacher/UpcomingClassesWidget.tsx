@@ -4,10 +4,10 @@ import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Calendar, Users, Clock, Pencil, Trash2, BookOpen } from "lucide-react"
+import Link from "next/link"
 import { toast } from "sonner"
-import { useUpdateCourse, useDeleteCourse, type UpdateCourseInput } from "@/api/course"
+import { useDeleteCourse } from "@/api/course"
 import { DeleteConfirmDialog } from "@/components/dashboard/admin/shared/DeleteConfirmDialog"
-import { TeacherCourseDialog } from "./TeacherCourseDialog"
 import type { Course } from "@/types"
 
 interface UpcomingClassesWidgetProps {
@@ -17,33 +17,14 @@ interface UpcomingClassesWidgetProps {
 export function UpcomingClassesWidget({ courses }: UpcomingClassesWidgetProps) {
   const liveClasses = courses.filter((c) => c.isOngoing && c.status === "upcoming")
 
-  const [editDialogOpen, setEditDialogOpen] = useState(false)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [selectedCourse, setSelectedCourse] = useState<Course | null>(null)
 
-  const updateCourse = useUpdateCourse()
   const deleteCourse = useDeleteCourse()
-
-  const handleEdit = (course: Course) => {
-    setSelectedCourse(course)
-    setEditDialogOpen(true)
-  }
 
   const handleDelete = (course: Course) => {
     setSelectedCourse(course)
     setDeleteDialogOpen(true)
-  }
-
-  const handleEditSubmit = async (data: UpdateCourseInput) => {
-    if (!selectedCourse) return
-    try {
-      await updateCourse.mutateAsync({ id: selectedCourse.id, data })
-      toast.success("Course updated successfully")
-      setEditDialogOpen(false)
-      setSelectedCourse(null)
-    } catch {
-      toast.error("Failed to update course")
-    }
   }
 
   const handleDeleteConfirm = async () => {
@@ -139,10 +120,12 @@ export function UpcomingClassesWidget({ courses }: UpcomingClassesWidgetProps) {
                     variant="ghost"
                     size="sm"
                     className="h-7 px-2"
-                    onClick={() => handleEdit(class_)}
+                    asChild
                   >
-                    <Pencil className="h-3 w-3 mr-1" />
-                    Edit
+                    <Link href={`/teacher/edit-live-class/${class_.id}`}>
+                      <Pencil className="h-3 w-3 mr-1" />
+                      Edit
+                    </Link>
                   </Button>
                   <Button
                     variant="ghost"
@@ -159,16 +142,6 @@ export function UpcomingClassesWidget({ courses }: UpcomingClassesWidgetProps) {
           })}
         </CardContent>
       </Card>
-
-      {selectedCourse && (
-        <TeacherCourseDialog
-          open={editDialogOpen}
-          onOpenChange={setEditDialogOpen}
-          course={selectedCourse}
-          onSubmit={handleEditSubmit}
-          isLoading={updateCourse.isPending}
-        />
-      )}
 
       <DeleteConfirmDialog
         open={deleteDialogOpen}

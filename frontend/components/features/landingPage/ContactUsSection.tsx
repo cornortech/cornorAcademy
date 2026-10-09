@@ -56,7 +56,7 @@ export function ContactUsSection() {
                 <p className="text-xl font-bold text-foreground">{settings?.platformName || "Cornor Academy"}</p>
               </div>
             </div>
-            <h1 className="text-4xl font-bold tracking-tight mb-4">Talk to a learning advisor</h1>
+            <h1 className="text-4xl font-serif font-semibold tracking-tight mb-4">Talk to a learning advisor</h1>
             <p className="text-lg text-muted-foreground leading-8">
               Need help choosing the right course, onboarding your team, or learning about pricing? Our {settings?.platformName || "Cornor Academy"} specialists are ready to match you with the best path.
             </p>

@@ -48,7 +48,7 @@ const CourseSection = () => {
         >
           <h2
             id="courses-heading"
-            className="text-3xl lg:text-4xl font-bold text-balance mb-4"
+            className="text-3xl lg:text-4xl font-serif font-semibold text-balance mb-4"
           >
             Popular Courses
           </h2>

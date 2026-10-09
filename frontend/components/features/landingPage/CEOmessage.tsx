@@ -34,8 +34,8 @@ export default function CEOmessage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <h2 className="text-3xl lg:text-4xl font-bold text-balance mb-6">
-              Our Mission & Vision
+            <h2 className="text-3xl lg:text-4xl font-serif font-semibold text-balance mb-6">
+              Our Mission &amp; Vision
             </h2>
             
             <blockquote className="text-lg text-muted-foreground text-balance italic border-l-4 border-primary pl-4 mb-2">

@@ -18,7 +18,7 @@ const CTASection = () => {
         >
           <h2
             id="cta-heading"
-            className="text-3xl lg:text-4xl font-bold text-balance mb-6"
+            className="text-3xl lg:text-4xl font-serif font-semibold text-balance mb-6"
           >
             {"Ready to start your learning journey?"}
           </h2>

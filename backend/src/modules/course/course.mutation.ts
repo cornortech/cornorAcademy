@@ -282,6 +282,14 @@ const deleteCourse: AppRouteMutationImplementation<
             };
         }
 
+        await prisma.progress.deleteMany({ where: { enrollment: { courseId } } });
+        await prisma.lesson.deleteMany({ where: { courseId } });
+        await prisma.enrolledCourses.deleteMany({ where: { courseId } });
+        await prisma.payment.deleteMany({ where: { courseId } });
+        await prisma.certificate.deleteMany({ where: { courseId } });
+        await prisma.courseCurriculum.deleteMany({ where: { courseId } });
+        await prisma.announcement.deleteMany({ where: { courseId } });
+
         await prisma.course.delete({
             where: {
                 id: courseId,

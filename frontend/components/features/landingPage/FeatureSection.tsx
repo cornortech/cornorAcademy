@@ -75,7 +75,7 @@ const FeatureSection = () => {
         >
           <h2
             id="features-heading"
-            className="text-3xl lg:text-4xl font-bold text-balance mb-4"
+            className="text-3xl lg:text-4xl font-serif font-semibold text-balance mb-4"
           >
             {"Everything you need to succeed"}
           </h2>

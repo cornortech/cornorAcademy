@@ -1,39 +1,21 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Plus, RefreshCw } from "lucide-react";
+import { useState } from "react";
+import { RefreshCw, Video, Radio } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { SearchAndFilter } from "../shared/SearchAndFilter";
-import { CourseDialog } from "./CourseDialog";
 import { CourseTable } from "./CourseTable";
 import {
   useGetAllCourses,
-  useCreateCourse,
   useDeleteCourse,
-  CreateCourseInput,
 } from "@/api/course";
-import { Course, CourseCategory } from "@/types";
 
 export function CourseManagement() {
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [courseType, setCourseType] = useState<"all" | "live" | "video">("all");
-
-  const teachers = [
-    {
-      id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      uid: "TCH001",
-      name: "Dr. Sarah Johnson",
-      email: "sarah.johnson@Cornoracademy.com",
-    },
-    {
-      id: "3fa85f64-5717-4562-b3fc-2c963f66afa7",
-      uid: "TCH002",
-      name: "Dr. Michael Chen",
-      email: "michael.chen@Cornoracademy.com",
-    },
-  ];
 
   const {
     data: courses = [],
@@ -41,7 +23,6 @@ export function CourseManagement() {
     error: queryError,
     refetch,
   } = useGetAllCourses();
-  const createCourseMutation = useCreateCourse();
   const deleteCourseMutation = useDeleteCourse();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
@@ -60,40 +41,6 @@ export function CourseManagement() {
 
     return matchesSearch && matchesType;
   });
-
-  const handleCreateCourse = async (formData: any) => {
-    try {
-      const courseData: CreateCourseInput = {
-        title: formData.title,
-        description: formData.description,
-        requirements: formData.requirements || [],
-        includes: formData.includes || [],
-        whatYouWillLearn: formData.outcomes || [],
-        meetingUrl: formData.meetingUrl || "",
-        meetingTime: formData.startTime
-          ? new Date(formData.startTime)
-          : new Date(),
-        language: "english",
-        level: formData.level || "beginner",
-        thumbnail: formData.thumbnail || "",
-        category: formData.category || ("WebDevelopment" as CourseCategory),
-        startDate: formData.startDate
-          ? new Date(formData.startDate)
-          : new Date(),
-        duration: parseInt(formData.duration) || 12,
-        price: parseInt(formData.price) || 299,
-        curriculum: [],
-        teacherId: formData.instructorId,
-      };
-
-      await createCourseMutation.mutateAsync(courseData);
-      setIsCreateDialogOpen(false);
-      alert("Course created successfully!");
-    } catch (err) {
-      console.error("Failed to create course:", err);
-      alert("Failed to create course");
-    }
-  };
 
   const handleDeleteCourse = async (id: string) => {
     if (!confirm("Are you sure you want to delete this course?")) {
@@ -151,18 +98,21 @@ export function CourseManagement() {
             />
             Refresh
           </Button>
-          <CourseDialog
-            open={isCreateDialogOpen}
-            onOpenChange={setIsCreateDialogOpen}
-            onSubmit={handleCreateCourse}
-            teachers={teachers}
-            trigger={
-              <Button>
-                <Plus className="h-4 w-4 mr-1" />
-                Create Course
-              </Button>
-            }
-          />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => router.push("/admin/upload-video-course")}
+          >
+            <Video className="h-4 w-4 mr-1" />
+            Upload Video Course
+          </Button>
+          <Button
+            size="sm"
+            onClick={() => router.push("/admin/schedule-live-class")}
+          >
+            <Radio className="h-4 w-4 mr-1" />
+            Schedule Live Class
+          </Button>
         </div>
       </div>
 

@@ -60,7 +60,7 @@ const HeroSection = () => {
   };
 
   return (
-    <section className="relative pt-12 pb-12 overflow-hidden bg-primary sm:pt-20 sm:pb-16 lg:pb-20 xl:pb-24">
+    <section className="relative flex flex-col justify-center min-h-[calc(100vh-4rem)] pt-12 pb-12 overflow-hidden bg-primary sm:pt-20 sm:pb-16 lg:pb-20 xl:pb-24">
       {/* Background images — three round shapes on right side */}
       {/* Circle 1: largest, back layer */}
       <motion.div
@@ -129,9 +129,9 @@ const HeroSection = () => {
               className="mt-6 tracking-tighter text-white"
               variants={itemVariants}
             >
-              <span className="font-sans font-normal text-4xl sm:text-5xl lg:text-7xl">Master</span>
+              <span className="font-sans font-medium text-4xl sm:text-5xl lg:text-7xl">Master</span>
               <br />
-              <span className="font-serif italic font-normal text-5xl sm:text-6xl lg:text-8xl">
+              <span className="font-serif italic text-4xl sm:text-5xl lg:text-7xl">
                 the tools behind
               </span>
             </motion.h1>

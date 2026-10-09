@@ -6,9 +6,17 @@ const router = Router();
 
 router.post("/teacher/course", authenticate, async (req: Request, res: Response) => {
   try {
-    const teacherId = req.user!.id;
-    if (req.user!.role !== "teacher") {
-      return res.status(403).json({ success: false, error: "Only teachers can create courses" });
+    const isAdmin = req.user!.role === "admin";
+    const isTeacher = req.user!.role === "teacher";
+
+    if (!isAdmin && !isTeacher) {
+      return res.status(403).json({ success: false, error: "Only teachers and admins can create courses" });
+    }
+
+    const teacherId = isTeacher ? req.user!.id : req.body.teacherId;
+
+    if (!teacherId) {
+      return res.status(400).json({ success: false, error: "Teacher ID is required" });
     }
 
     const teacher = await prisma.teacher.findUnique({ where: { id: teacherId } });
@@ -72,14 +80,20 @@ router.post("/teacher/course", authenticate, async (req: Request, res: Response)
 
 router.put("/teacher/course/:courseId", authenticate, async (req: Request, res: Response) => {
   try {
-    const teacherId = req.user!.id;
-    if (req.user!.role !== "teacher") {
-      return res.status(403).json({ success: false, error: "Only teachers can edit courses" });
+    const isAdmin = req.user!.role === "admin";
+    const isTeacher = req.user!.role === "teacher";
+
+    if (!isAdmin && !isTeacher) {
+      return res.status(403).json({ success: false, error: "Only teachers and admins can edit courses" });
     }
 
-    const teacher = await prisma.teacher.findUnique({ where: { id: teacherId } });
-    if (!teacher || !teacher.isApproved) {
-      return res.status(403).json({ success: false, error: "CONTACT ADMINISTRATION TO VERIFY YOUR ACCOUNT CORNOR ACADEMY" });
+    const userId = req.user!.id;
+
+    if (isTeacher) {
+      const teacher = await prisma.teacher.findUnique({ where: { id: userId } });
+      if (!teacher || !teacher.isApproved) {
+        return res.status(403).json({ success: false, error: "CONTACT ADMINISTRATION TO VERIFY YOUR ACCOUNT CORNOR ACADEMY" });
+      }
     }
 
     const { courseId } = req.params;
@@ -87,40 +101,56 @@ router.put("/teacher/course/:courseId", authenticate, async (req: Request, res: 
     if (!existing) {
       return res.status(404).json({ success: false, error: "Course not found" });
     }
-    if (existing.teacherId !== teacherId) {
+    if (isTeacher && existing.teacherId !== userId) {
       return res.status(403).json({ success: false, error: "You can only edit your own courses" });
     }
 
-    const { title, thumbnail, parts, price } = req.body;
+    const { title, thumbnail, parts, price, startDate, description, whatYouWillLearn, meetingUrl } = req.body;
 
     if (!title) {
       return res.status(400).json({ success: false, error: "Title is required" });
     }
 
-    const newDuration = parts?.reduce((sum: number, p: any) => sum + (p.duration || 0), 0) || 0;
+    const newDuration = existing.isOngoing
+      ? existing.duration
+      : parts?.reduce((sum: number, p: any) => sum + (p.duration || 0), 0) || existing.duration;
+
+    const updateData: Record<string, any> = {
+      title,
+      thumbnail: thumbnail || "",
+      price: price || 0,
+      duration: newDuration,
+    };
+
+    if (existing.isOngoing) {
+      if (startDate) {
+        updateData.startDate = new Date(startDate);
+        updateData.meetingTime = new Date(startDate);
+      }
+      if (description !== undefined) updateData.description = description;
+      if (whatYouWillLearn !== undefined) updateData.whatYouWillLearn = whatYouWillLearn;
+      if (meetingUrl !== undefined) updateData.meetingUrl = meetingUrl;
+    }
 
     const course = await prisma.course.update({
       where: { id: courseId },
-      data: {
-        title,
-        thumbnail: thumbnail || "",
-        price: price || 0,
-        duration: newDuration,
-      },
+      data: updateData,
     });
 
-    await prisma.lesson.deleteMany({ where: { courseId } });
+    if (!existing.isOngoing) {
+      await prisma.lesson.deleteMany({ where: { courseId } });
 
-    if (parts?.length > 0) {
-      await prisma.lesson.createMany({
-        data: parts.map((part: any, index: number) => ({
-          courseId: course.id,
-          title: part.title,
-          videoUrl: part.videoUrl || "",
-          order: index + 1,
-          duration: part.duration || 0,
-        })),
-      });
+      if (parts?.length > 0) {
+        await prisma.lesson.createMany({
+          data: parts.map((part: any, index: number) => ({
+            courseId: course.id,
+            title: part.title,
+            videoUrl: part.videoUrl || "",
+            order: index + 1,
+            duration: part.duration || 0,
+          })),
+        });
+      }
     }
 
     res.status(200).json({ success: true, courseId: course.id });
